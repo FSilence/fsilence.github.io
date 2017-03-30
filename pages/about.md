@@ -7,9 +7,8 @@ comments: true
 menu: 关于
 permalink: /about/
 ---
-一枚Android工程师. 欢迎关注公众号CoderHouse:
+一枚软件工程师.
 
-![](../wx_code.jpg)
 ## 联系
 
 {% for website in site.data.social %}
