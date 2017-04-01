@@ -59,6 +59,8 @@ x\|y 	| 匹配x或y。例如，“z\|food”能匹配“z”或“food”(此处
 \\|         | 将两个匹配条件进行逻辑“或”（Or）运算。例如正则表达式(him\|her) 匹配"it belongs to him"和"it belongs to her"，但是不能匹配"it belongs to them."。注意：这个元字符不是所有的软件都支持的。|
 
 ## 常用匹配
+参考[http://tool.oschina.net/regex/](http://tool.oschina.net/regex/)  
+
 
 ## Vim 匹配实例
 	
