@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <title>博客测试 &mdash; FSilence's Blog</title>
+    <title>用GithubPages搭建个人Blog &mdash; FSilence's Blog</title>
     <link rel="stylesheet" href="/assets/vendor/primer-css/css/primer.css">
     <link rel="stylesheet" href="/assets/vendor/primer-markdown/dist/user-content.min.css">
     <link rel="stylesheet" href="/assets/vendor/octicons/octicons/octicons.css">
@@ -21,23 +21,23 @@
     
 
     
-    <link rel="canonical" href="http://localhost:4000/2017/03/29/FirstBlogTest/">
+    <link rel="canonical" href="http://localhost:4000/2017/03/29/github-pages-jekyll/">
     <link rel="alternate" type="application/atom+xml" title="FSilence's Blog" href="">
     <link rel="shortcut icon" href="/favicon.ico">
     
-    <meta property="og:title" content="博客测试">
+    <meta property="og:title" content="用GithubPages搭建个人Blog">
       
-    <meta name="keywords" content="test">
-    <meta name="og:keywords" content="test">
+    <meta name="keywords" content="githubpages, Blog, Jekyll">
+    <meta name="og:keywords" content="githubpages, Blog, Jekyll">
       
-    <meta name="description" content="博客第一次测试">
-    <meta name="og:description" content="博客第一次测试">
+    <meta name="description" content="用GithubPages + jekyll搭建你的个人Blog, 专注于内容。">
+    <meta name="og:description" content="用GithubPages + jekyll搭建你的个人Blog, 专注于内容。">
       
     
     
         
     
-    <meta property="og:url" content="http://localhost:4000/2017/03/29/FirstBlogTest/">
+    <meta property="og:url" content="http://localhost:4000/2017/03/29/github-pages-jekyll/">
     <meta property="og:site_name" content="FSilence's Blog">
     <meta property="og:type" content="article">
     <meta property="og:locale" content="zh_CN" />
@@ -83,12 +83,12 @@
     </header>
     <!-- / header -->
 
-    <section class="collection-head small geopattern" data-pattern-id="博客测试">
+    <section class="collection-head small geopattern" data-pattern-id="用GithubPages搭建个">
 <div class="container">
   <div class="columns">
     <div class="column three-fourths">
       <div class="collection-title">
-        <h1 class="collection-header">博客测试</h1>
+        <h1 class="collection-header">用GithubPages搭建个人Blog</h1>
         <div class="collection-info">
           
           <span class="meta-info">
@@ -98,7 +98,7 @@
           
           <span class="meta-info">
             <span class="octicon octicon-file-directory"></span>
-            <a href="/categories/#test" title="test">test</a>
+            <a href="/categories/#Blog" title="Blog">Blog</a>
           </span>
           
         </div>
@@ -112,10 +112,32 @@
 <div class="columns">
   <div class="column three-fourths" >
     <article class="article-content markdown-body">
-    <p>博客第一次测试</p>
+    <p>用GithubPages + jekyll搭建你的个人Blog, 专注于内容。</p>
 
-<p>欢迎关注公众号:<br />
-<img src="/wx_code.jpg" alt="" /></p>
+<pre>
+内容大纲：
+1.配置githubpages  
+2.选择你的jekyll模板    
+3.开始写Blog  
+</pre>
+<p>以前总是羡慕别人有自己的Blog，一直想有有个属于自己的Blog网站。之前断断续续写过一些，用过csdn 用过 eoe的blog（现在已经没有这个功能了）。 也尝试过wordpress等，买过云服务器。最后总是不了了之。前段时间偶然看到了githubpages, 眼前一亮
+，这么nb的功能以前竟然不知道。然后花了几天时间fork了别人的Blog 修改后搭建了自己的Blog。</p>
+
+<h2 id="配置githubs">配置githubs</h2>
+<p>官网上有很详细的介绍，基本就是你新建一个以你的github名字开始+github.io的仓库，具体的配置过程可以移步官网 <a href="http://github.io">github.io</a> 我就不做重复的搬运了 <br />
+之后可以在工程的Settings中做一些配置，比如指定你的个人域名，</p>
+
+<h2 id="配置jekyll">配置jekyll</h2>
+<p>关于jekyll 可以移步 <a href="https://help.github.com/articles/using-jekyll-as-a-static-site-generator-with-github-pages/">Using jekyll with GithubPages</a><br />
+基本是说jekyll是一个静态html的生成框架。<br />
+关于jekyll的配置模板网上有很多 你可以选择你喜欢的主题加以修改<a href="http://jekyllthemes.org/">jekyll themes</a><br />
+如果你像我一样对前端不了解的话，别着急你可以fork别人的blog 然后修改其中的内容，告诉你个小技巧 你可以在github上搜索github,io 然后选择你喜欢的blog fork后修改其中的关键内容就行，我就是fork的 <a href="https://github.com/mzlogin/mzlogin.github.io">https://github.com/mzlogin/mzlogin.github.io</a><br />
+一般你只需要修改_config.yml 和CNAME中的东西即可，是不是很容易啊。如果项目中设计到其它第三方的插件，你需要注册你个人的插件并替换相关内容，比如用到的评论模块,你需要换成你个人的。</p>
+
+<h2 id="开始blog">开始Blog</h2>
+<p>将项目push到你新建的github仓库中，之后你就可以开始写Blog了。</p>
+
+<p>本文只是一个阐述，详细过程可以参照其他人的Blog <a href="http://www.jianshu.com/p/3f355c7872d5">http://www.jianshu.com/p/3f355c7872d5</a></p>
 
     
 
@@ -138,9 +160,9 @@
           <div id="disqus_thread"></div>
           <script>
             var disqus_config = function () {
-              this.page.url = 'http://localhost:4000/2017/03/29/FirstBlogTest/';
-              this.page.identifier = '/2017/03/29/FirstBlogTest/';
-              this.page.title = '博客测试';
+              this.page.url = 'http://localhost:4000/2017/03/29/github-pages-jekyll/';
+              this.page.identifier = '/2017/03/29/github-pages-jekyll/';
+              this.page.title = '用GithubPages搭建个人Blog';
             };
             (function() { // DON'T EDIT BELOW THIS LINE
               var d = document, s = d.createElement('script');

@@ -1,4 +1,29 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="http://jekyllrb.com" version="3.4.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2017-03-29T08:46:25+00:00</updated><id>http://localhost:4000/</id><title type="html">FSilence’s Blog</title><subtitle>FSilence的个人博客</subtitle><author><name>FSilence</name></author><entry><title type="html">博客测试</title><link href="http://localhost:4000/2017/03/29/FirstBlogTest/" rel="alternate" type="text/html" title="博客测试" /><published>2017-03-29T00:00:00+00:00</published><updated>2017-03-29T00:00:00+00:00</updated><id>http://localhost:4000/2017/03/29/FirstBlogTest</id><content type="html" xml:base="http://localhost:4000/2017/03/29/FirstBlogTest/">&lt;p&gt;博客第一次测试&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="http://jekyllrb.com" version="3.4.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2017-04-01T09:06:16+00:00</updated><id>http://localhost:4000/</id><title type="html">FSilence’s Blog</title><subtitle>FSilence的个人博客</subtitle><author><name>FSilence</name></author><entry><title type="html">用GithubPages搭建个人Blog</title><link href="http://localhost:4000/2017/03/29/github-pages-jekyll/" rel="alternate" type="text/html" title="用GithubPages搭建个人Blog" /><published>2017-03-29T00:00:00+00:00</published><updated>2017-03-29T00:00:00+00:00</updated><id>http://localhost:4000/2017/03/29/github-pages-jekyll</id><content type="html" xml:base="http://localhost:4000/2017/03/29/github-pages-jekyll/">&lt;p&gt;用GithubPages + jekyll搭建你的个人Blog, 专注于内容。&lt;/p&gt;
+
+&lt;pre&gt;
+内容大纲：
+1.配置githubpages  
+2.选择你的jekyll模板    
+3.开始写Blog  
+&lt;/pre&gt;
+&lt;p&gt;以前总是羡慕别人有自己的Blog，一直想有有个属于自己的Blog网站。之前断断续续写过一些，用过csdn 用过 eoe的blog（现在已经没有这个功能了）。 也尝试过wordpress等，买过云服务器。最后总是不了了之。前段时间偶然看到了githubpages, 眼前一亮
+，这么nb的功能以前竟然不知道。然后花了几天时间fork了别人的Blog 修改后搭建了自己的Blog。&lt;/p&gt;
+
+&lt;h2 id=&quot;配置githubs&quot;&gt;配置githubs&lt;/h2&gt;
+&lt;p&gt;官网上有很详细的介绍，基本就是你新建一个以你的github名字开始+github.io的仓库，具体的配置过程可以移步官网 &lt;a href=&quot;http://github.io&quot;&gt;github.io&lt;/a&gt; 我就不做重复的搬运了 &lt;br /&gt;
+之后可以在工程的Settings中做一些配置，比如指定你的个人域名，&lt;/p&gt;
+
+&lt;h2 id=&quot;配置jekyll&quot;&gt;配置jekyll&lt;/h2&gt;
+&lt;p&gt;关于jekyll 可以移步 &lt;a href=&quot;https://help.github.com/articles/using-jekyll-as-a-static-site-generator-with-github-pages/&quot;&gt;Using jekyll with GithubPages&lt;/a&gt;&lt;br /&gt;
+基本是说jekyll是一个静态html的生成框架。&lt;br /&gt;
+关于jekyll的配置模板网上有很多 你可以选择你喜欢的主题加以修改&lt;a href=&quot;http://jekyllthemes.org/&quot;&gt;jekyll themes&lt;/a&gt;&lt;br /&gt;
+如果你像我一样对前端不了解的话，别着急你可以fork别人的blog 然后修改其中的内容，告诉你个小技巧 你可以在github上搜索github,io 然后选择你喜欢的blog fork后修改其中的关键内容就行，我就是fork的 &lt;a href=&quot;https://github.com/mzlogin/mzlogin.github.io&quot;&gt;https://github.com/mzlogin/mzlogin.github.io&lt;/a&gt;&lt;br /&gt;
+一般你只需要修改_config.yml 和CNAME中的东西即可，是不是很容易啊。如果项目中设计到其它第三方的插件，你需要注册你个人的插件并替换相关内容，比如用到的评论模块,你需要换成你个人的。&lt;/p&gt;
+
+&lt;h2 id=&quot;开始blog&quot;&gt;开始Blog&lt;/h2&gt;
+&lt;p&gt;将项目push到你新建的github仓库中，之后你就可以开始写Blog了。&lt;/p&gt;
+
+&lt;p&gt;本文只是一个阐述，详细过程可以参照其他人的Blog &lt;a href=&quot;http://www.jianshu.com/p/3f355c7872d5&quot;&gt;http://www.jianshu.com/p/3f355c7872d5&lt;/a&gt;&lt;/p&gt;</content><author><name>FSilence</name></author><summary type="html">用GithubPages + jekyll搭建你的个人Blog, 专注于内容。</summary></entry><entry><title type="html">博客测试</title><link href="http://localhost:4000/2017/03/29/FirstBlogTest/" rel="alternate" type="text/html" title="博客测试" /><published>2017-03-29T00:00:00+00:00</published><updated>2017-03-29T00:00:00+00:00</updated><id>http://localhost:4000/2017/03/29/FirstBlogTest</id><content type="html" xml:base="http://localhost:4000/2017/03/29/FirstBlogTest/">&lt;p&gt;博客第一次测试&lt;/p&gt;
 
 &lt;p&gt;欢迎关注公众号:&lt;br /&gt;
 &lt;img src=&quot;/wx_code.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;</content><author><name>FSilence</name></author><summary type="html">博客第一次测试</summary></entry></feed>
