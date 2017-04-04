@@ -80,6 +80,12 @@
     "category": "[&quot;Blog&quot;]"
   },
   
+  "wiki-mac-bash": {
+    "title": "mac-bash快捷键",
+    "url": "/wiki/mac-bash/",
+    "category": "[&quot;mac,&quot;, &quot;bash&quot;]"
+  },
+  
   "wiki-regex": {
     "title": "正则表达式",
     "url": "/wiki/regex/",

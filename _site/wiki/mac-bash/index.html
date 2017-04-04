@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans" prefix="og: http://ogp.me/ns#" class="han-init">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <title>mac-bash快捷键 &mdash; FSilence's Blog</title>
+    <link rel="stylesheet" href="/assets/vendor/primer-css/css/primer.css">
+    <link rel="stylesheet" href="/assets/vendor/primer-markdown/dist/user-content.min.css">
+    <link rel="stylesheet" href="/assets/vendor/octicons/octicons/octicons.css">
+    <link rel="stylesheet" href="/assets/css/components/collection.css">
+    <link rel="stylesheet" href="/assets/css/components/repo-card.css">
+    <link rel="stylesheet" href="/assets/css/sections/repo-list.css">
+    <link rel="stylesheet" href="/assets/css/sections/mini-repo-list.css">
+    <link rel="stylesheet" href="/assets/css/components/boxed-group.css">
+    <link rel="stylesheet" href="/assets/css/globals/common.css">
+    <link rel="stylesheet" href="/assets/vendor/share.js/dist/css/share.min.css">
+    <link rel="stylesheet" href="/assets/css/globals/responsive.css">
+    <link rel="stylesheet" href="/assets/css/posts/index.css">
+    <!-- Latest compiled and minified CSS -->
+    
+
+    
+    <link rel="canonical" href="http://localhost:4000/wiki/mac-bash/">
+    <link rel="alternate" type="application/atom+xml" title="FSilence's Blog" href="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    
+    <meta property="og:title" content="mac-bash快捷键">
+      
+    <meta name="keywords" content="沉默, FSilence, wlh, wei">
+    <meta name="og:keywords" content="沉默, FSilence, wlh, wei">
+      
+    <meta name="description" content="Mac Bash的快捷键,copy and modify form: Mac终端命令大全">
+    <meta name="og:description" content="Mac Bash的快捷键,copy and modify form: Mac终端命令大全">
+      
+    
+    
+        
+    
+    <meta property="og:url" content="http://localhost:4000/wiki/mac-bash/">
+    <meta property="og:site_name" content="FSilence's Blog">
+    <meta property="og:type" content="article">
+    <meta property="og:locale" content="zh_CN" />
+    
+    <meta property="article:published_time" content="2017-04-04">
+    
+    <script src="/assets/vendor/jquery/dist/jquery.min.js"></script>
+    <script src="/assets/js/jquery-ui.js"></script>
+    <script type="text/javascript">
+    function toggleMenu() {
+        var nav = document.getElementsByClassName("site-header-nav")[0];
+        if (nav.style.display == "inline-flex") {
+          nav.style.display = "none";
+        } else {
+          nav.style.display = "inline-flex";
+        }
+    }
+    </script>
+</head>
+<body class="" data-mz="">
+    <header class="site-header">
+        <div class="container">
+            <h1><a href="/" title="FSilence's Blog"><span class="octicon octicon-mark-github"></span> FSilence's Blog</a></h1>
+            <button class="collapsed mobile-visible" type="button" onclick="toggleMenu();">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <nav class="site-header-nav" role="navigation">
+                
+                <a href="/" class=" site-header-nav-item" target="" title="首页">首页</a>
+                
+                <a href="/categories/" class=" site-header-nav-item" target="" title="分类">分类</a>
+                
+                <a href="/wiki/" class=" site-header-nav-item" target="" title="维基">维基</a>
+                
+                <a href="/links/" class=" site-header-nav-item" target="" title="链接">链接</a>
+                
+                <a href="/about/" class=" site-header-nav-item" target="" title="关于">关于</a>
+                
+            </nav>
+        </div>
+    </header>
+    <!-- / header -->
+
+    <section class="collection-head small geopattern" data-pattern-id="mac-bash快捷键">
+<div class="container">
+  <div class="columns">
+    <div class="column three-fourths">
+      <div class="collection-title">
+        <h1 class="collection-header">mac-bash快捷键</h1>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+<!-- / .banner -->
+<section class="container content">
+<div class="columns">
+  <div class="column three-fourths" >
+    <article class="article-content markdown-body">
+    <p>Mac Bash的快捷键,<br />
+copy and modify form: <a href="http://www.jianshu.com/p/3291de46f3ff">Mac终端命令大全</a></p>
+
+<h2 id="目录操作">目录操作</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>命令名</th>
+      <th>功能描述</th>
+      <th>使用举例</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>mkdir</td>
+      <td>创建一个目录</td>
+      <td>mkdir dirname</td>
+    </tr>
+    <tr>
+      <td>rmdir</td>
+      <td>删除一个目录</td>
+      <td>rmdir dirname</td>
+    </tr>
+    <tr>
+      <td>mvdir</td>
+      <td>移动或重命名一个目录</td>
+      <td>mvdir dir1 dir2</td>
+    </tr>
+    <tr>
+      <td>cd</td>
+      <td>改变当前目录</td>
+      <td>cd dirname</td>
+    </tr>
+    <tr>
+      <td>pwd</td>
+      <td>显示当前目录的路径名</td>
+      <td>pwd</td>
+    </tr>
+    <tr>
+      <td>ls</td>
+      <td>显示当前目录的内容</td>
+      <td>ls -la</td>
+    </tr>
+    <tr>
+      <td>dircmp</td>
+      <td>比较两个目录的内容</td>
+      <td>dircmp dir1 dir2</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="文件操作">文件操作</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>命令名</th>
+      <th>功能描述</th>
+      <th>使用举例</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>cat</td>
+      <td>显示或连接文件</td>
+      <td>cat filename</td>
+    </tr>
+    <tr>
+      <td>pg</td>
+      <td>分页格式化显示文件内容</td>
+      <td>pg filename</td>
+    </tr>
+    <tr>
+      <td>more</td>
+      <td>分屏显示文件内容</td>
+      <td>more filename</td>
+    </tr>
+    <tr>
+      <td>od</td>
+      <td>显示非文本文件的内容</td>
+      <td>od -c filename</td>
+    </tr>
+    <tr>
+      <td>cp</td>
+      <td>复制文件或目录</td>
+      <td>cp file1 file2</td>
+    </tr>
+    <tr>
+      <td>rm</td>
+      <td>删除文件或目录</td>
+      <td>rm filename</td>
+    </tr>
+    <tr>
+      <td>mv</td>
+      <td>改变文件名或所在目录</td>
+      <td>mv file1 file2</td>
+    </tr>
+    <tr>
+      <td>ln</td>
+      <td>联接文件</td>
+      <td>ln -s file1 file2</td>
+    </tr>
+    <tr>
+      <td>find</td>
+      <td>使用匹配表达式查找文件</td>
+      <td>find . -name “*.c” -print</td>
+    </tr>
+    <tr>
+      <td>file</td>
+      <td>显示文件类型</td>
+      <td>file filename</td>
+    </tr>
+    <tr>
+      <td>open</td>
+      <td>使用默认的程序打开文件</td>
+      <td>open filename</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="选择操作">选择操作</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>命令名</th>
+      <th>功能描述</th>
+      <th>使用举例</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>head</td>
+      <td>显示文件的最初几行</td>
+      <td>head -20 filename</td>
+    </tr>
+    <tr>
+      <td>tail</td>
+      <td>显示文件的最后几行</td>
+      <td>tail -15 filename</td>
+    </tr>
+    <tr>
+      <td>cut</td>
+      <td>显示文件每行中的某些域</td>
+      <td>cut -f1,7 -d: /etc/passwd</td>
+    </tr>
+    <tr>
+      <td>colrm</td>
+      <td>从标准输入中删除若干列</td>
+      <td>colrm 8 20 file2</td>
+    </tr>
+    <tr>
+      <td>paste</td>
+      <td>横向连接文件</td>
+      <td>paste file1 file2</td>
+    </tr>
+    <tr>
+      <td>diff</td>
+      <td>比较并显示两个文件的差异</td>
+      <td>diff file1 file2</td>
+    </tr>
+    <tr>
+      <td>sed</td>
+      <td>非交互方式流编辑器</td>
+      <td>sed “s/red/green/g” filename</td>
+    </tr>
+    <tr>
+      <td>grep</td>
+      <td>在文件中按模式查找</td>
+      <td>grep “^[a-zA-Z]” filename</td>
+    </tr>
+    <tr>
+      <td>awk</td>
+      <td>在文件中查找并处理模式</td>
+      <td>awk ‘{print $1 $1}’ filename</td>
+    </tr>
+    <tr>
+      <td>sort</td>
+      <td>排序或归并文件</td>
+      <td>sort -d -f -u file1</td>
+    </tr>
+    <tr>
+      <td>uniq</td>
+      <td>去掉文件中的重复行</td>
+      <td>uniq file1 file2</td>
+    </tr>
+    <tr>
+      <td>comm</td>
+      <td>显示两有序文件的公共和非公共行</td>
+      <td>comm file1 file2</td>
+    </tr>
+    <tr>
+      <td>wc</td>
+      <td>统计文件的字符数、词数和行数</td>
+      <td>wc filename</td>
+    </tr>
+    <tr>
+      <td>nl</td>
+      <td>给文件加上行号</td>
+      <td>nl file1 &gt;file2</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="安全操作">安全操作</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>命令名</th>
+      <th>功能描述</th>
+      <th>使用举例</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>passwd</td>
+      <td>修改用户密码</td>
+      <td>passwd</td>
+    </tr>
+    <tr>
+      <td>chmod</td>
+      <td>改变文件或目录的权限</td>
+      <td>chmod ug+x filename</td>
+    </tr>
+    <tr>
+      <td>umask</td>
+      <td>定义创建文件的权限掩码</td>
+      <td>umask 027</td>
+    </tr>
+    <tr>
+      <td>chown</td>
+      <td>改变文件或目录的属主</td>
+      <td>chown newowner filename</td>
+    </tr>
+    <tr>
+      <td>chgrp</td>
+      <td>改变文件或目录的所属组</td>
+      <td>chgrp staff filename</td>
+    </tr>
+    <tr>
+      <td>xlock</td>
+      <td>给终端上锁</td>
+      <td>xlock -remote</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="编程操作">编程操作</h2>
+
+<table>
+  <tbody>
+    <tr>
+      <td>命令名</td>
+      <td>功能描述</td>
+      <td>使用举例</td>
+    </tr>
+    <tr>
+      <td>make</td>
+      <td>维护可执行程序的最新版本</td>
+      <td>make</td>
+    </tr>
+    <tr>
+      <td>touch</td>
+      <td>更新文件的访问和修改时间</td>
+      <td>touch -m 05202400 filename</td>
+    </tr>
+    <tr>
+      <td>dbx</td>
+      <td>命令行界面调试工具</td>
+      <td>dbx a.out</td>
+    </tr>
+    <tr>
+      <td>xde</td>
+      <td>图形用户界面调试工具</td>
+      <td>xde a.out：</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="进程操作">进程操作</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>命令名</th>
+      <th>功能描述</th>
+      <th>使用举例</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>ps</td>
+      <td>显示进程当前状态</td>
+      <td>ps u</td>
+    </tr>
+    <tr>
+      <td>kill</td>
+      <td>终止进程</td>
+      <td>kill -9 30142</td>
+    </tr>
+    <tr>
+      <td>nice</td>
+      <td>改变待执行命令的优先级</td>
+      <td>nice cc -c *.c</td>
+    </tr>
+    <tr>
+      <td>renice</td>
+      <td>改变已运行进程的优先级</td>
+      <td>renice +20 32768</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="时间操作">时间操作</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>命令名</th>
+      <th>功能描述</th>
+      <th>使用举例</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>date</td>
+      <td>显示系统的当前日期和时间</td>
+      <td>date</td>
+    </tr>
+    <tr>
+      <td>cal</td>
+      <td>显示日历</td>
+      <td>cal 8 1996</td>
+    </tr>
+    <tr>
+      <td>time</td>
+      <td>统计程序的执行时间</td>
+      <td>time a.out</td>
+    </tr>
+  </tbody>
+</table>
+
+<p></p>
+<h2 id="网络与通信操作">网络与通信操作</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>命令名</th>
+      <th>功能描述</th>
+      <th>使用举例</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>telnet</td>
+      <td>远程登录</td>
+      <td>telnet hpc.sp.net.edu.cn</td>
+    </tr>
+    <tr>
+      <td>rlogin</td>
+      <td>远程登录</td>
+      <td>rlogin hostname -l username</td>
+    </tr>
+    <tr>
+      <td>rsh</td>
+      <td>在远程主机执行指定命令</td>
+      <td>rsh f01n03 date</td>
+    </tr>
+    <tr>
+      <td>ftp</td>
+      <td>在本地主机与远程主机之间传输文件</td>
+      <td>ftp ftp.sp.net.edu.cn</td>
+    </tr>
+    <tr>
+      <td>rcp</td>
+      <td>在本地主机与远程主机 之间复制文件</td>
+      <td>rcp file1 host1:file2</td>
+    </tr>
+    <tr>
+      <td>ping</td>
+      <td>给一个网络主机发送 回应请求</td>
+      <td>ping hpc.sp.net.edu.cn</td>
+    </tr>
+    <tr>
+      <td>mail</td>
+      <td>阅读和发送电子邮件</td>
+      <td>mail</td>
+    </tr>
+    <tr>
+      <td>write</td>
+      <td>给另一用户发送报文</td>
+      <td>write username pts/1</td>
+    </tr>
+    <tr>
+      <td>mesg</td>
+      <td>允许或拒绝接收报文</td>
+      <td>mesg n</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="korn-shell-命令">Korn Shell 命令</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>命令名</th>
+      <th>功能描述</th>
+      <th>使用举例</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>history</td>
+      <td>列出最近执行过的 几条命令及编号</td>
+      <td>history</td>
+    </tr>
+    <tr>
+      <td>r</td>
+      <td>重复执行最近执行过的 某条命令</td>
+      <td>r -2</td>
+    </tr>
+    <tr>
+      <td>alias</td>
+      <td>给某个命令定义别名</td>
+      <td>alias del=rm -i</td>
+    </tr>
+    <tr>
+      <td>unalias</td>
+      <td>取消对某个别名的定义</td>
+      <td>unalias del</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="其它命令">其它命令</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>命令名</th>
+      <th>功能描述</th>
+      <th>使用举例</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>uname</td>
+      <td>显示操作系统的有关信息</td>
+      <td>uname -a</td>
+    </tr>
+    <tr>
+      <td>clear</td>
+      <td>清除屏幕或窗口内容</td>
+      <td>clear</td>
+    </tr>
+    <tr>
+      <td>env</td>
+      <td>显示当前所有设置过的环境变量</td>
+      <td>env</td>
+    </tr>
+    <tr>
+      <td>who</td>
+      <td>列出当前登录的所有用户</td>
+      <td>who</td>
+    </tr>
+    <tr>
+      <td>whoami</td>
+      <td>显示当前正进行操作的用户名</td>
+      <td>whoami</td>
+    </tr>
+    <tr>
+      <td>tty</td>
+      <td>显示终端或伪终端的名称</td>
+      <td>tty</td>
+    </tr>
+    <tr>
+      <td>stty</td>
+      <td>显示或重置控制键定义</td>
+      <td>stty -a</td>
+    </tr>
+    <tr>
+      <td>du</td>
+      <td>查询磁盘使用情况</td>
+      <td>du -k subdir</td>
+    </tr>
+    <tr>
+      <td>df</td>
+      <td>显示文件系统的总空间和可用空间</td>
+      <td>df /tmp</td>
+    </tr>
+    <tr>
+      <td>w</td>
+      <td>显示当前系统活动的总信息</td>
+      <td>w</td>
+    </tr>
+  </tbody>
+</table>
+
+
+    
+
+    </article>
+    <div class="share">
+      <div class="share-component"></div>
+    </div>
+    <div class="comment">
+      
+  
+      
+        
+        
+        
+      
+	  
+	
+
+<!--
+          <div id="disqus_thread"></div>
+          <script>
+            var disqus_config = function () {
+              this.page.url = 'http://localhost:4000/wiki/mac-bash/';
+              this.page.identifier = '/wiki/mac-bash/';
+              this.page.title = 'mac-bash快捷键';
+            };
+            (function() { // DON'T EDIT BELOW THIS LINE
+              var d = document, s = d.createElement('script');
+
+              s.type = 'text/javascript';
+              s.async = true;
+              var shortname = 'FSilence';
+
+              s.src = '//' + shortname + '.disqus.com/embed.js';
+
+              s.setAttribute('data-timestamp', +new Date());
+              (d.head || d.body).appendChild(s);
+            })();
+          </script>
+          <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+	  -->
+
+    </div>
+  </div>
+  <div class="column one-fourth">
+    
+<h3>Search</h3>
+<div id="site_search">
+    <input type="text" id="search_box" placeholder="Search">
+    <button class="btn btn-default" id="site_search_do"><span class="octicon octicon-search"></span></button>
+</div>
+
+<ul id="search_results"></ul>
+
+<link rel="stylesheet" type="text/css" href="/assets/css/modules/sidebar-search.css">
+<script src="/assets/js/lunr.min.js"></script>
+<script src="/assets/js/search.js"></script>
+
+
+    
+<h3 class="mobile-hidden">Post Directory</h3>
+<div id="post-directory-module" class="mobile-hidden">
+  <section class="post-directory">
+  <!-- Links that trigger the jumping -->
+  <!-- Added by javascript below -->
+  <dl></dl>
+  </section>
+</div>
+
+<script src="/assets/js/jquery.toc.js"></script>
+
+  </div>
+</div>
+</section>
+<!-- /section.content -->
+
+    <footer class="container">
+        <div class="site-footer" role="contentinfo">
+            <div class="copyright left mobile-block">
+                    © 2015
+                    <span title="FSilence">FSilence</span>
+                    <a href="javascript:window.scrollTo(0,0)" class="right mobile-visible">TOP</a>
+            </div>
+
+            <ul class="site-footer-links right mobile-hidden">
+                <li>
+                    <a href="javascript:window.scrollTo(0,0)" >TOP</a>
+                </li>
+            </ul>
+            <a href="http://github.com/FSilence/fsilence.github.io" target="_blank" aria-label="view source code">
+                <span class="mega-octicon octicon-mark-github" title="GitHub"></span>
+            </a>
+            <ul class="site-footer-links mobile-hidden">
+                
+                <li>
+                    <a href="/" title="首页" target="">首页</a>
+                </li>
+                
+                <li>
+                    <a href="/categories/" title="分类" target="">分类</a>
+                </li>
+                
+                <li>
+                    <a href="/wiki/" title="维基" target="">维基</a>
+                </li>
+                
+                <li>
+                    <a href="/links/" title="链接" target="">链接</a>
+                </li>
+                
+                <li>
+                    <a href="/about/" title="关于" target="">关于</a>
+                </li>
+                
+<!-- 注释Rss
+                <li><a href=""><span class="octicon octicon-rss" style="color:orange;"></span></a></li>
+ -->           
+		</ul>
+
+        </div>
+    </footer>
+    <!-- / footer -->
+    <script src="/assets/vendor/share.js/dist/js/share.min.js"></script>
+    <script src="/assets/js/geopattern.js"></script>
+    <script src="/assets/js/prism.js"></script>
+    <link rel="stylesheet" href="/assets/css/globals/prism.css">
+    <script>
+      jQuery(document).ready(function($) {
+        // geopattern
+        $('.geopattern').each(function(){
+          $(this).geopattern($(this).data('pattern-id'));
+        });
+       // hljs.initHighlightingOnLoad();
+      });
+    </script>
+    
+    <div style="display:none">
+      <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-80669434-1', 'auto');
+        ga('send', 'pageview');
+
+      </script>
+    </div>
+    
+</body>
+</html>
