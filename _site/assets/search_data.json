@@ -1,5 +1,11 @@
 {
   
+  "2017-04-10-gradlew-env-get": {
+    "title": "gradle在不同系统下适配",
+    "url": " /2017/04/10/gradlew-env-get/",
+    "category": "gradle"
+  },
+  
   "2017-03-29-github-pages-jekyll": {
     "title": "用GithubPages搭建个人Blog",
     "url": " /2017/03/29/github-pages-jekyll/",
@@ -78,6 +84,12 @@
     "title": "用GithubPages搭建个人Blog",
     "url": "/2017/03/29/github-pages-jekyll/",
     "category": "[&quot;Blog&quot;]"
+  },
+  
+  "2017-04-10-gradlew-env-get": {
+    "title": "gradle在不同系统下适配",
+    "url": "/2017/04/10/gradlew-env-get/",
+    "category": "[&quot;gradle&quot;]"
   },
   
   "wiki-mac-bash": {

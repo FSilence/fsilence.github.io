@@ -1,4 +1,40 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="http://jekyllrb.com" version="3.4.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2017-04-10T03:20:22+00:00</updated><id>http://localhost:4000/</id><title type="html">FSilence’s Blog</title><subtitle>FSilence的个人博客</subtitle><author><name>FSilence</name></author><entry><title type="html">用GithubPages搭建个人Blog</title><link href="http://localhost:4000/2017/03/29/github-pages-jekyll/" rel="alternate" type="text/html" title="用GithubPages搭建个人Blog" /><published>2017-03-29T00:00:00+00:00</published><updated>2017-03-29T00:00:00+00:00</updated><id>http://localhost:4000/2017/03/29/github-pages-jekyll</id><content type="html" xml:base="http://localhost:4000/2017/03/29/github-pages-jekyll/">&lt;p&gt;用GithubPages + jekyll搭建你的个人Blog, 专注于内容。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="http://jekyllrb.com" version="3.4.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2017-04-10T11:39:18+00:00</updated><id>http://localhost:4000/</id><title type="html">FSilence’s Blog</title><subtitle>FSilence的个人博客</subtitle><author><name>FSilence</name></author><entry><title type="html">gradle在不同系统下适配</title><link href="http://localhost:4000/2017/04/10/gradlew-env-get/" rel="alternate" type="text/html" title="gradle在不同系统下适配" /><published>2017-04-10T00:00:00+00:00</published><updated>2017-04-10T00:00:00+00:00</updated><id>http://localhost:4000/2017/04/10/gradlew-env-get</id><content type="html" xml:base="http://localhost:4000/2017/04/10/gradlew-env-get/">&lt;p&gt;有时我们需要自己定制一些gradle的执行task，可能会用到一些系统中的其它环境，这时需要我们针对不同的OS做一些适配。&lt;/p&gt;
+
+&lt;p&gt;##判断当前系统环境
+方法一：&lt;br /&gt;
+获取os的name判断其中是否包含windows字段&lt;/p&gt;
+
+&lt;pre&gt;
+&lt;code&gt;
+def isWindows() {
+    return System.properties['os.name'].contains('windows');
+}
+&lt;/code&gt;
+&lt;/pre&gt;
+
+&lt;p&gt;方法二： 
+通过OperatingSystem类中的方法来判断当前环境&lt;/p&gt;
+
+&lt;pre&gt;
+&lt;code&gt;
+def isWindows() {
+ return org.gradle.internal.os.OperatingSystem.current().isWindows()
+}
+&lt;/code&gt;
+&lt;/pre&gt;
+
+&lt;p&gt;##获取系统环境变量&lt;br /&gt;
+在windows环境下可以通过  $System.env来获取 比如获取ANDROID_HOME 可以调用$System.env.ANDROID_HOME（注意在path下配置ANDROID_HOME变量）&lt;/p&gt;
+
+&lt;p&gt;在linux和mac上可以通过which指令来获取环境变量，比如我要获取adb的环境变量可以通过以下代码获取：&lt;/p&gt;
+
+&lt;pre&gt;
+&lt;code&gt;
+&quot;which adb&quot;.execute().inputStream.readLines()[0]
+&lt;/code&gt;
+&lt;/pre&gt;
+&lt;p&gt;mark：&lt;br /&gt;
+TODO此方法可以在命令行中调用gradlew命令的时候获取到adb的环境变量，但是如果在Android Studio上直接运行时获取不到的，暂时不知道为什么先mark以下&lt;/p&gt;</content><author><name>FSilence</name></author><summary type="html">有时我们需要自己定制一些gradle的执行task，可能会用到一些系统中的其它环境，这时需要我们针对不同的OS做一些适配。</summary></entry><entry><title type="html">用GithubPages搭建个人Blog</title><link href="http://localhost:4000/2017/03/29/github-pages-jekyll/" rel="alternate" type="text/html" title="用GithubPages搭建个人Blog" /><published>2017-03-29T00:00:00+00:00</published><updated>2017-03-29T00:00:00+00:00</updated><id>http://localhost:4000/2017/03/29/github-pages-jekyll</id><content type="html" xml:base="http://localhost:4000/2017/03/29/github-pages-jekyll/">&lt;p&gt;用GithubPages + jekyll搭建你的个人Blog, 专注于内容。&lt;/p&gt;
 
 &lt;pre&gt;
 内容大纲：
