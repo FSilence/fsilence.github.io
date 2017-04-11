@@ -1,5 +1,11 @@
 {
   
+  "2017-04-11-gradle-debug": {
+    "title": "gradle调试断点",
+    "url": " /2017/04/11/gradle-debug/",
+    "category": "gradle"
+  },
+  
   "2017-04-10-gradlew-env-get": {
     "title": "gradle在不同系统下适配",
     "url": " /2017/04/10/gradlew-env-get/",
@@ -89,6 +95,12 @@
   "2017-04-10-gradlew-env-get": {
     "title": "gradle在不同系统下适配",
     "url": "/2017/04/10/gradlew-env-get/",
+    "category": "[&quot;gradle&quot;]"
+  },
+  
+  "2017-04-11-gradle-debug": {
+    "title": "gradle调试断点",
+    "url": "/2017/04/11/gradle-debug/",
     "category": "[&quot;gradle&quot;]"
   },
   
