@@ -6,6 +6,12 @@
     "category": "gradle"
   },
   
+  "2017-04-11-dabin-book": {
+    "title": "《乖，摸摸头》读后感",
+    "url": " /2017/04/11/dabin-book/",
+    "category": "Others"
+  },
+  
   "2017-04-10-gradlew-env-get": {
     "title": "gradle在不同系统下适配",
     "url": " /2017/04/10/gradlew-env-get/",
@@ -96,6 +102,12 @@
     "title": "gradle在不同系统下适配",
     "url": "/2017/04/10/gradlew-env-get/",
     "category": "[&quot;gradle&quot;]"
+  },
+  
+  "2017-04-11-dabin-book": {
+    "title": "《乖，摸摸头》读后感",
+    "url": "/2017/04/11/dabin-book/",
+    "category": "[&quot;Others&quot;]"
   },
   
   "2017-04-11-gradle-debug": {

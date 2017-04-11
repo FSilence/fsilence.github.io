@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="http://jekyllrb.com" version="3.4.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2017-04-11T09:38:20+00:00</updated><id>http://localhost:4000/</id><title type="html">FSilence’s Blog</title><subtitle>FSilence的个人博客</subtitle><author><name>FSilence</name></author><entry><title type="html">gradle调试断点</title><link href="http://localhost:4000/2017/04/11/gradle-debug/" rel="alternate" type="text/html" title="gradle调试断点" /><published>2017-04-11T00:00:00+00:00</published><updated>2017-04-11T00:00:00+00:00</updated><id>http://localhost:4000/2017/04/11/gradle-debug</id><content type="html" xml:base="http://localhost:4000/2017/04/11/gradle-debug/">&lt;p&gt;调试断点我们的gradle插件&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="http://jekyllrb.com" version="3.4.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2017-04-11T16:12:36+00:00</updated><id>http://localhost:4000/</id><title type="html">FSilence’s Blog</title><subtitle>FSilence的个人博客</subtitle><author><name>FSilence</name></author><entry><title type="html">gradle调试断点</title><link href="http://localhost:4000/2017/04/11/gradle-debug/" rel="alternate" type="text/html" title="gradle调试断点" /><published>2017-04-11T00:00:00+00:00</published><updated>2017-04-11T00:00:00+00:00</updated><id>http://localhost:4000/2017/04/11/gradle-debug</id><content type="html" xml:base="http://localhost:4000/2017/04/11/gradle-debug/">&lt;p&gt;调试断点我们的gradle插件&lt;/p&gt;
 
 &lt;p&gt;我们免不了需要调试gradle脚本。但是要特殊说明的是， 现在还没有办法调试gradle的脚本文件， 我们只能通过pringln 来输出message， 然后在Gradle Console中查看。&lt;br /&gt;
 我们这里要说的是利用远程调试，去断点调试自己编写的gradle插件。其实gradle的脚本使用groovy编写的而groovy也是运行在jvm上的，所以这里的调试方法就是远程调试jvm的方法，此方法同样适用于调试编译时注解（编译时注解 要注意clean项目）。&lt;/p&gt;
@@ -39,7 +39,29 @@
 
 &lt;pre&gt;
   org.gradle.jvmargs=-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005
-  &lt;/pre&gt;</content><author><name>FSilence</name></author><summary type="html">调试断点我们的gradle插件</summary></entry><entry><title type="html">gradle在不同系统下适配</title><link href="http://localhost:4000/2017/04/10/gradlew-env-get/" rel="alternate" type="text/html" title="gradle在不同系统下适配" /><published>2017-04-10T00:00:00+00:00</published><updated>2017-04-10T00:00:00+00:00</updated><id>http://localhost:4000/2017/04/10/gradlew-env-get</id><content type="html" xml:base="http://localhost:4000/2017/04/10/gradlew-env-get/">&lt;p&gt;有时我们需要自己定制一些gradle的执行task，可能会用到一些系统中的其它环境，这时需要我们针对不同的OS做一些适配。&lt;/p&gt;
+  &lt;/pre&gt;</content><author><name>FSilence</name></author><summary type="html">调试断点我们的gradle插件</summary></entry><entry><title type="html">《乖，摸摸头》读后感</title><link href="http://localhost:4000/2017/04/11/dabin-book/" rel="alternate" type="text/html" title="《乖，摸摸头》读后感" /><published>2017-04-11T00:00:00+00:00</published><updated>2017-04-11T00:00:00+00:00</updated><id>http://localhost:4000/2017/04/11/dabin-book</id><content type="html" xml:base="http://localhost:4000/2017/04/11/dabin-book/">&lt;p&gt;之前听朋友推荐过大冰的书，最近在地铁上拜读了一下其中的一本《乖，摸摸头》，其实我很久没看过非专业的书籍了，看完后还是有很多感慨的，想要在这里发发牢骚。&lt;/p&gt;
+
+&lt;p&gt;大冰系列的读物基本上是在描述在作者的生涯中所经历的各种人各种事，用作者身边的个性鲜明的人和故事来向我们展示一个不一样的世界。其实大冰的故事何尝不是在这个金钱至上的社会的一股清流，何尝不是对现在充满钱味的社会的一次度化。&lt;/p&gt;
+
+&lt;h2 id=&quot;关于幸福&quot;&gt;关于幸福&lt;/h2&gt;
+&lt;p&gt;大冰的周围充斥着各种个性鲜明的人，在我看来大冰将的故事中的主人公都有一个鲜明的特征，那就是他们自己是感觉到幸福的。他们很多人并不富裕，可能不满足现在社会上对成功人士，对幸福的定义，但是他们的确是幸福的。他们的心是幸福的。&lt;/p&gt;
+
+&lt;p&gt;听完这些故事，我的感触就是我们每个认都有属于自己的幸福，我们应该好好想想我们自己想要的到底是什么，追求的又是个什么，不能在时间洪流中一步步盲目的前行。&lt;/p&gt;
+
+&lt;p&gt;我想说的并不是我们都应该向书中的主人公那样去四处旅游，去做流浪歌手等等。。我们有自己对幸福的定义。并不是说我们都要视金钱如粪土等等。我们应该去追寻我们的
+内心，保留心中的纯净。&lt;/p&gt;
+
+&lt;p&gt;还记得以前在校的时候我也说过大话，说我虽然改变不了世界，但是世界也别想改变我。但是现实狠狠的打了我的脸，在步入社会后，这个世界确实在潜移默化的改变了我们。回收想想在学校的那个我们，现在我们也不得不去考虑房子，票子等等。。。&lt;/p&gt;
+
+&lt;h2 id=&quot;关于和平&quot;&gt;关于和平&lt;/h2&gt;
+&lt;p&gt;书中介绍了一个老兵的故事，，老兵参加过越南战争。老兵的部队最后活着的没有几个，其他都牺牲了。 真正能感受到战争的残酷，我们应该珍惜和平，我们现在的生活其实挺好的。&lt;/p&gt;
+
+&lt;h2 id=&quot;关于自身&quot;&gt;关于自身&lt;/h2&gt;
+&lt;p&gt;我觉得最大的收获就是又一次督促我能够追求自己想要的生活。为自己想过的生活加油吧。。。&lt;/p&gt;
+
+&lt;p&gt;说了很多碎碎念，，别介意，书真的不错，可以一看，你就当看故事了，听听故事收获一份属于你的感动。&lt;/p&gt;
+
+&lt;p&gt;现在我开始接着看大冰的其它书了，期待其它的感动。&lt;/p&gt;</content><author><name>FSilence</name></author><summary type="html">之前听朋友推荐过大冰的书，最近在地铁上拜读了一下其中的一本《乖，摸摸头》，其实我很久没看过非专业的书籍了，看完后还是有很多感慨的，想要在这里发发牢骚。</summary></entry><entry><title type="html">gradle在不同系统下适配</title><link href="http://localhost:4000/2017/04/10/gradlew-env-get/" rel="alternate" type="text/html" title="gradle在不同系统下适配" /><published>2017-04-10T00:00:00+00:00</published><updated>2017-04-10T00:00:00+00:00</updated><id>http://localhost:4000/2017/04/10/gradlew-env-get</id><content type="html" xml:base="http://localhost:4000/2017/04/10/gradlew-env-get/">&lt;p&gt;有时我们需要自己定制一些gradle的执行task，可能会用到一些系统中的其它环境，这时需要我们针对不同的OS做一些适配。&lt;/p&gt;
 
 &lt;p&gt;##判断当前系统环境
 方法一：&lt;br /&gt;
