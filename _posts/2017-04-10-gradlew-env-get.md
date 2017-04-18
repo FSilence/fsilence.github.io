@@ -44,3 +44,5 @@ def isWindows() {
 </pre>
 mark：  
 TODO此方法可以在命令行中调用gradlew命令的时候获取到adb的环境变量，但是如果在Android Studio上直接运行时获取不到的，暂时不知道为什么先mark以下
+
+最近发现其实我们不必滴啊用which adb ，我门可以配置统一的ANDROID_HOME来解决，以前是不知道mac 怎么配置ANDROID_HOME，其实mac配置系统变量也很简单 只需要调用 export命令即可，我们可以修改~/.bash_profile 添加export ANROID_HOME=""即可。
