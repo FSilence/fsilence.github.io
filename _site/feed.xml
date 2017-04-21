@@ -1,4 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="http://jekyllrb.com" version="3.4.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2017-04-11T16:12:36+00:00</updated><id>http://localhost:4000/</id><title type="html">FSilence’s Blog</title><subtitle>FSilence的个人博客</subtitle><author><name>FSilence</name></author><entry><title type="html">gradle调试断点</title><link href="http://localhost:4000/2017/04/11/gradle-debug/" rel="alternate" type="text/html" title="gradle调试断点" /><published>2017-04-11T00:00:00+00:00</published><updated>2017-04-11T00:00:00+00:00</updated><id>http://localhost:4000/2017/04/11/gradle-debug</id><content type="html" xml:base="http://localhost:4000/2017/04/11/gradle-debug/">&lt;p&gt;调试断点我们的gradle插件&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="http://jekyllrb.com" version="3.4.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2017-04-21T11:46:30+00:00</updated><id>http://localhost:4000/</id><title type="html">FSilence’s Blog</title><subtitle>FSilence的个人博客</subtitle><author><name>FSilence</name></author><entry><title type="html">Spock资料汇总</title><link href="http://localhost:4000/2017/04/21/spock-docs/" rel="alternate" type="text/html" title="Spock资料汇总" /><published>2017-04-21T00:00:00+00:00</published><updated>2017-04-21T00:00:00+00:00</updated><id>http://localhost:4000/2017/04/21/spock-docs</id><content type="html" xml:base="http://localhost:4000/2017/04/21/spock-docs/">&lt;p&gt;Spock单元测试资料汇总&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;http://www.open-open.com/lib/view/open1439793373083.html&quot;&gt;使用Spock框架进行单元测试&lt;/a&gt;&lt;/p&gt;</content><author><name>FSilence</name></author><summary type="html">Spock单元测试资料汇总</summary></entry><entry><title type="html">git分支恢复</title><link href="http://localhost:4000/2017/04/13/git-recover-branch/" rel="alternate" type="text/html" title="git分支恢复" /><published>2017-04-13T00:00:00+00:00</published><updated>2017-04-13T00:00:00+00:00</updated><id>http://localhost:4000/2017/04/13/git-recover-branch</id><content type="html" xml:base="http://localhost:4000/2017/04/13/git-recover-branch/">&lt;p&gt;今天误删了git分支，还好可以恢复&lt;/p&gt;
+
+&lt;p&gt;今天git push之后 以为merge了 就把本地和远程分支都删掉了，然后悲催的发现并没有执行merge操作。。还好分支可以恢复。。&lt;/p&gt;
+
+&lt;p&gt;这个时候我们可以从之前提交的那次merge request中查找到提交的版本号，然后本地执行&lt;/p&gt;
+&lt;pre&gt;
+ git branch 分支名称 commit号
+&lt;/pre&gt;
+&lt;p&gt;然后重新push即可。。。&lt;/p&gt;</content><author><name>FSilence</name></author><summary type="html">今天误删了git分支，还好可以恢复</summary></entry><entry><title type="html">gradle调试断点</title><link href="http://localhost:4000/2017/04/11/gradle-debug/" rel="alternate" type="text/html" title="gradle调试断点" /><published>2017-04-11T00:00:00+00:00</published><updated>2017-04-11T00:00:00+00:00</updated><id>http://localhost:4000/2017/04/11/gradle-debug</id><content type="html" xml:base="http://localhost:4000/2017/04/11/gradle-debug/">&lt;p&gt;调试断点我们的gradle插件&lt;/p&gt;
 
 &lt;p&gt;我们免不了需要调试gradle脚本。但是要特殊说明的是， 现在还没有办法调试gradle的脚本文件， 我们只能通过pringln 来输出message， 然后在Gradle Console中查看。&lt;br /&gt;
 我们这里要说的是利用远程调试，去断点调试自己编写的gradle插件。其实gradle的脚本使用groovy编写的而groovy也是运行在jvm上的，所以这里的调试方法就是远程调试jvm的方法，此方法同样适用于调试编译时注解（编译时注解 要注意clean项目）。&lt;/p&gt;
@@ -97,7 +107,9 @@ def isWindows() {
 &lt;/code&gt;
 &lt;/pre&gt;
 &lt;p&gt;mark：&lt;br /&gt;
-TODO此方法可以在命令行中调用gradlew命令的时候获取到adb的环境变量，但是如果在Android Studio上直接运行时获取不到的，暂时不知道为什么先mark以下&lt;/p&gt;</content><author><name>FSilence</name></author><summary type="html">有时我们需要自己定制一些gradle的执行task，可能会用到一些系统中的其它环境，这时需要我们针对不同的OS做一些适配。</summary></entry><entry><title type="html">用GithubPages搭建个人Blog</title><link href="http://localhost:4000/2017/03/29/github-pages-jekyll/" rel="alternate" type="text/html" title="用GithubPages搭建个人Blog" /><published>2017-03-29T00:00:00+00:00</published><updated>2017-03-29T00:00:00+00:00</updated><id>http://localhost:4000/2017/03/29/github-pages-jekyll</id><content type="html" xml:base="http://localhost:4000/2017/03/29/github-pages-jekyll/">&lt;p&gt;用GithubPages + jekyll搭建你的个人Blog, 专注于内容。&lt;/p&gt;
+TODO此方法可以在命令行中调用gradlew命令的时候获取到adb的环境变量，但是如果在Android Studio上直接运行时获取不到的，暂时不知道为什么先mark以下&lt;/p&gt;
+
+&lt;p&gt;最近发现其实我们不必滴啊用which adb ，我门可以配置统一的ANDROID_HOME来解决，以前是不知道mac 怎么配置ANDROID_HOME，其实mac配置系统变量也很简单 只需要调用 export命令即可，我们可以修改~/.bash_profile 添加export ANROID_HOME=”“即可。&lt;/p&gt;</content><author><name>FSilence</name></author><summary type="html">有时我们需要自己定制一些gradle的执行task，可能会用到一些系统中的其它环境，这时需要我们针对不同的OS做一些适配。</summary></entry><entry><title type="html">用GithubPages搭建个人Blog</title><link href="http://localhost:4000/2017/03/29/github-pages-jekyll/" rel="alternate" type="text/html" title="用GithubPages搭建个人Blog" /><published>2017-03-29T00:00:00+00:00</published><updated>2017-03-29T00:00:00+00:00</updated><id>http://localhost:4000/2017/03/29/github-pages-jekyll</id><content type="html" xml:base="http://localhost:4000/2017/03/29/github-pages-jekyll/">&lt;p&gt;用GithubPages + jekyll搭建你的个人Blog, 专注于内容。&lt;/p&gt;
 
 &lt;pre&gt;
 内容大纲：

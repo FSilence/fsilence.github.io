@@ -1,5 +1,17 @@
 {
   
+  "2017-04-21-spock-docs": {
+    "title": "Spock资料汇总",
+    "url": " /2017/04/21/spock-docs/",
+    "category": "单元测试"
+  },
+  
+  "2017-04-13-git-recover-branch": {
+    "title": "git分支恢复",
+    "url": " /2017/04/13/git-recover-branch/",
+    "category": "git"
+  },
+  
   "2017-04-11-gradle-debug": {
     "title": "gradle调试断点",
     "url": " /2017/04/11/gradle-debug/",
@@ -114,6 +126,18 @@
     "title": "gradle调试断点",
     "url": "/2017/04/11/gradle-debug/",
     "category": "[&quot;gradle&quot;]"
+  },
+  
+  "2017-04-13-git-recover-branch": {
+    "title": "git分支恢复",
+    "url": "/2017/04/13/git-recover-branch/",
+    "category": "[&quot;git&quot;]"
+  },
+  
+  "2017-04-21-spock-docs": {
+    "title": "Spock资料汇总",
+    "url": "/2017/04/21/spock-docs/",
+    "category": "[&quot;单元测试&quot;]"
   },
   
   "wiki-mac-bash": {
