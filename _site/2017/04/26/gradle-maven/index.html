@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans" prefix="og: http://ogp.me/ns#" class="han-init">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <title>Android Gradle上传Maven仓库 &mdash; FSilence's Blog</title>
+    <link rel="stylesheet" href="/assets/vendor/primer-css/css/primer.css">
+    <link rel="stylesheet" href="/assets/vendor/primer-markdown/dist/user-content.min.css">
+    <link rel="stylesheet" href="/assets/vendor/octicons/octicons/octicons.css">
+    <link rel="stylesheet" href="/assets/css/components/collection.css">
+    <link rel="stylesheet" href="/assets/css/components/repo-card.css">
+    <link rel="stylesheet" href="/assets/css/sections/repo-list.css">
+    <link rel="stylesheet" href="/assets/css/sections/mini-repo-list.css">
+    <link rel="stylesheet" href="/assets/css/components/boxed-group.css">
+    <link rel="stylesheet" href="/assets/css/globals/common.css">
+    <link rel="stylesheet" href="/assets/vendor/share.js/dist/css/share.min.css">
+    <link rel="stylesheet" href="/assets/css/globals/responsive.css">
+    <link rel="stylesheet" href="/assets/css/posts/index.css">
+    <!-- Latest compiled and minified CSS -->
+    
+
+    
+    <link rel="canonical" href="http://localhost:4000/2017/04/26/gradle-maven/">
+    <link rel="alternate" type="application/atom+xml" title="FSilence's Blog" href="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    
+    <meta property="og:title" content="Android Gradle上传Maven仓库">
+      
+    <meta name="keywords" content="gradle, maven">
+    <meta name="og:keywords" content="gradle, maven">
+      
+    <meta name="description" content="在Android的gradle配置上追加上传Maven的相关操作">
+    <meta name="og:description" content="在Android的gradle配置上追加上传Maven的相关操作">
+      
+    
+    
+        
+    
+    <meta property="og:url" content="http://localhost:4000/2017/04/26/gradle-maven/">
+    <meta property="og:site_name" content="FSilence's Blog">
+    <meta property="og:type" content="article">
+    <meta property="og:locale" content="zh_CN" />
+    
+    <meta property="article:published_time" content="2017-04-26">
+    
+    <script src="/assets/vendor/jquery/dist/jquery.min.js"></script>
+    <script src="/assets/js/jquery-ui.js"></script>
+    <script type="text/javascript">
+    function toggleMenu() {
+        var nav = document.getElementsByClassName("site-header-nav")[0];
+        if (nav.style.display == "inline-flex") {
+          nav.style.display = "none";
+        } else {
+          nav.style.display = "inline-flex";
+        }
+    }
+
+	var _hmt = _hmt || [];
+	(function() {
+		var hm = document.createElement("script");
+		hm.src = "https://hm.baidu.com/hm.js?3a8f3e5734d78efb8fc1edf92dadd19e";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+	})();
+
+    </script>
+</head>
+<body class="" data-mz="">
+    <header class="site-header">
+        <div class="container">
+            <h1><a href="/" title="FSilence's Blog"><span class="octicon octicon-mark-github"></span> FSilence's Blog</a></h1>
+            <button class="collapsed mobile-visible" type="button" onclick="toggleMenu();">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <nav class="site-header-nav" role="navigation">
+                
+                <a href="/" class=" site-header-nav-item" target="" title="首页">首页</a>
+                
+                <a href="/categories/" class=" site-header-nav-item" target="" title="分类">分类</a>
+                
+                <a href="/wiki/" class=" site-header-nav-item" target="" title="维基">维基</a>
+                
+                <a href="/links/" class=" site-header-nav-item" target="" title="链接">链接</a>
+                
+                <a href="/about/" class=" site-header-nav-item" target="" title="关于">关于</a>
+                
+            </nav>
+        </div>
+    </header>
+    <!-- / header -->
+
+    <section class="collection-head small geopattern" data-pattern-id="Android Gradle上">
+<div class="container">
+  <div class="columns">
+    <div class="column three-fourths">
+      <div class="collection-title">
+        <h1 class="collection-header">Android Gradle上传Maven仓库</h1>
+        <div class="collection-info">
+          
+          <span class="meta-info">
+            <span class="octicon octicon-calendar"></span> 2017/04/26
+          </span>
+          
+          
+          <span class="meta-info">
+            <span class="octicon octicon-file-directory"></span>
+            <a href="/categories/#gradle" title="gradle">gradle</a>
+          </span>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+<!-- / .banner -->
+<section class="container content">
+<div class="columns">
+  <div class="column three-fourths" >
+    <article class="article-content markdown-body">
+    <p>在Android的gradle配置上追加上传Maven的相关操作</p>
+
+<h2 id="maven的gradle插件">maven的gradle插件</h2>
+<p>Android里内置了maven插件 只需要apply plugin: “maven” 即可使用maven插件</p>
+
+<h2 id="配置maven">配置maven</h2>
+<h3 id="配置maven仓库地址">配置maven仓库地址</h3>
+<p>在root 下的build.gradle 的subprojects下的repositories中追加一下maven仓库地址，表示给子项目添加仓库地址</p>
+<pre>
+  maven {
+            url "http://maven.release.test" 
+        }
+  maven {
+            url "http://maven.test"
+        }
+</pre>
+<h3 id="统一配置maven的账号信息">统一配置maven的账号信息</h3>
+<p>我们现在setting.gradle中统一配置账号信息，留待下面使用</p>
+
+<pre>
+gradle.ext {
+    // maven config
+    mavenUrl = "http://maven.test.release"
+    mavenDevUrl = "http://maven.test.snapshot"
+    mavenUserName = "deployer"
+    mavenPwd = "test"
+}
+</pre>
+<p>其中：<br />
+mavenUrl表示正式仓库地址<br />
+mavenDevUrl表示snapshot的仓库（这里我们分了2个仓库 你也可以使用一个）<br />
+mavenUserName maven账号的用户名<br />
+mavenPwd macen账号密码</p>
+
+<h3 id="配置maven上传">配置maven上传</h3>
+<p>这里用到的gradle.mavenUrl等 都是刚才在setting.gradle中配置好的</p>
+<pre>
+uploadArchives{
+    repositories {
+        mavenDeployer {
+            repository(url: gradle.mavenUrl) {
+                authentication(userName: gradle.mavenUserName, password: gradle.mavenPwd)
+            }
+            project.afterEvaluate {
+                def versionName = "${android.defaultConfig.versionName}"
+                def version = versionName;
+                //修改pom文件（maven的配置文件）
+                pom('aar').version = version;
+                pom('aar').artifactId = "$project.name"
+                pom('aar').groupId = "com.fsilence"  
+            }
+        }
+    }
+}
+</pre>
+<p>然后我们调用gradle 的uploadArchives 的task就可以了，之后可以在你的maven仓库中查看代码。在这里我们的artifactid直接使用了当前项目的名称，version使用了当前项目android中配置的版本号，你也可以手动设置不过不建议。 <br />
+我们可以直接在build中调用 compile “com.fsilence:{$project.name}:{$version}”来应用了 例如 compile “com.fsilence:test:1.0.0”</p>
+
+<h2 id="配置snapshot-和-sources版本">配置SNAPSHOT 和 sources版本</h2>
+<p>我们在其它的开源软件上经常能看到snapshot版本 和 带源码的版本，那么我们要怎么配置呢？ 我们先来看snapshot版本的配置, snapshot和release的区分主要是在版本号的结尾 如果版本号是以SNAPSHOT结尾的就会本认为是快照版本(其实合理可以用其它的字符串只要和仓库的开头能匹配上即可)，我们可以给snapshot版本配置特殊的仓库:</p>
+<pre>
+   snapshotRepository(url: gradle.mavenDevUrl) {
+          authentication(userName: gradle.mavenUserName, password: gradle.mavenPwd)
+       }
+</pre>
+<p>为了标识打包的是snapshot还是其它版本，我会在项目下的gradle.properties文件中定义个isSnapshot的变量如下:</p>
+<pre>
+isSnapshot = true
+</pre>
+<p>然后我们就可以在项目中通过project.isSnapshot来划分版本了，然后我们将上面的配置代码加入snapshot版本的控制，</p>
+<pre>
+uploadArchives{
+    repositories {
+        mavenDeployer {
+            repository(url: gradle.mavenUrl) {
+                authentication(userName: gradle.mavenUserName, password: gradle.mavenPwd)
+            }
+            project.afterEvaluate {
+                def versionName = "${android.defaultConfig.versionName}"
+                def version = versionName;
+                if (project.isSnapshot) {
+                    version = "$versionName-SNAPSHOT"
+                }
+                //修改pom文件（maven的配置文件）
+                pom('aar').version = version;
+                pom('aar').artifactId = "$project.name"
+                pom('aar').groupId = "com.fsilence"  
+            }
+        }
+    }
+}
+</pre>
+
+<p>然后我们再追加一个sources的版本控制，我们在每个版本都添加一个-sources的版本（包含源码的），首先我们得有一个打包源码的task：</p>
+<pre>
+task generateSourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier 'sources'
+}
+</pre>
+<p>然后我们再次修改上面的配置，也就是我们最终的配置：</p>
+<pre>
+
+uploadArchives{
+    repositories {
+        mavenDeployer {
+            repository(url: gradle.mavenUrl) {
+                authentication(userName: gradle.mavenUserName, password: gradle.mavenPwd)
+            }
+            snapshotRepository(url: gradle.mavenDevUrl) {
+                authentication(userName: gradle.mavenUserName, password: gradle.mavenPwd)
+            }
+            addFilter("aar-src"){artifact, file -&gt;
+                artifact.name == 'aar-src' || artifact.name == 'aar'
+            }
+            addFilter("aar"){artifact, file -&gt;
+                artifact.name == 'aar'
+            }
+            project.afterEvaluate {
+                print project.isSnapshot
+                def versionName = "${android.defaultConfig.versionName}"
+                def version = versionName;
+                def aarSrcVersion = "$versionName-sources";
+                if (project.isSnapshot) {
+                    version = "$versionName-SNAPSHOT"
+                    aarSrcVersion += "-SNAPSHOT"
+                }
+                pom('aar').version = version;
+                pom('aar').artifactId = "$project.name"
+                pom('aar').groupId = "com.fsilence"
+                pom('aar-src').artifactId = "$project.name"
+                pom('aar-src').groupId = "com.fsilence"
+                pom('aar-src').version = aarSrcVersion
+            }
+        }
+    }
+}
+</pre>
+<p>我们现在达到了这个效果：</p>
+<ol>
+  <li>我们可以手动通过配置 isSnapshot来决定打包的是SnapSHot还是正式版本</li>
+  <li>每个版本都有一个-sources的包是包含项目源码的<br />
+举个例子我们的版本号可以是: 1.0.0 1.0.0-sources 1.0.0-SNAPSHOT 或者 1.0.0-sources-SNAPSHOT是不是很清晰。</li>
+</ol>
+
+<h2 id="解决gradle上使用maven版本不同步的问题">解决gradle上使用maven版本不同步的问题</h2>
+<p>你以为这样就ok了吗,在实际中我还遇到一个问题，当你在开发发布snap版本的时候，其它引用的地方总是不能及时更新，这是为什么呢？最后我发现是因为gradle对jar包的缓存问题，我们可以才用户目录的.android下的caches/modules-2/files中查找到缓存的文件，这给实际开发造成了很大影响，解决方案有2个：<br />
+1.每次发的版本号都不相同，我们可以在版本号中间再插入一个git的版本号（或者你使用的是svn），git获取版本号的代码如下:</p>
+<pre>
+def gitVersion = 'git rev-parse --short HEAD'.execute().text.trim()
+</pre>
+<p>这样可以解决我们的问题但是有一个麻烦支出在于 ，引用包的地方必须知道你的git版本号，这可是很麻烦的，如果你又不希望对方知道你的git地址。所以这种方式个人不推荐<br />
+2.让gradle每次都能去下载最新版本的maven仓库,我们有一个dsl的配置如下:</p>
+<pre>
+configurations.all {
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
+</pre>
+<p>然后在引用的地方我们改为：</p>
+<pre>
+compile ("com.fsilence:test:1.0.0-SNAPSHOT"){changing = true}
+</pre>
+<p>这样我们每次调用的时候都会更新到最新版本，如果改成正式版本后曲调后面的changing配置即可。</p>
+
+    
+
+    </article>
+    <div class="share">
+      <div class="share-component"></div>
+    </div>
+    <div class="comment">
+      
+  
+      
+        
+        
+        
+      
+	  
+	
+
+<!--
+          <div id="disqus_thread"></div>
+          <script>
+            var disqus_config = function () {
+              this.page.url = 'http://localhost:4000/2017/04/26/gradle-maven/';
+              this.page.identifier = '/2017/04/26/gradle-maven/';
+              this.page.title = 'Android Gradle上传Maven仓库';
+            };
+            (function() { // DON'T EDIT BELOW THIS LINE
+              var d = document, s = d.createElement('script');
+
+              s.type = 'text/javascript';
+              s.async = true;
+              var shortname = 'FSilence';
+
+              s.src = '//' + shortname + '.disqus.com/embed.js';
+
+              s.setAttribute('data-timestamp', +new Date());
+              (d.head || d.body).appendChild(s);
+            })();
+          </script>
+          <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+	  -->
+
+    </div>
+  </div>
+  <div class="column one-fourth">
+    
+<h3>Search</h3>
+<div id="site_search">
+    <input type="text" id="search_box" placeholder="Search">
+    <button class="btn btn-default" id="site_search_do"><span class="octicon octicon-search"></span></button>
+</div>
+
+<ul id="search_results"></ul>
+
+<link rel="stylesheet" type="text/css" href="/assets/css/modules/sidebar-search.css">
+<script src="/assets/js/lunr.min.js"></script>
+<script src="/assets/js/search.js"></script>
+
+
+    
+<h3 class="mobile-hidden">Post Directory</h3>
+<div id="post-directory-module" class="mobile-hidden">
+  <section class="post-directory">
+  <!-- Links that trigger the jumping -->
+  <!-- Added by javascript below -->
+  <dl></dl>
+  </section>
+</div>
+
+<script src="/assets/js/jquery.toc.js"></script>
+
+  </div>
+</div>
+</section>
+<!-- /section.content -->
+
+    <footer class="container">
+        <div class="site-footer" role="contentinfo">
+            <div class="copyright left mobile-block">
+                    © 2015
+                    <span title="FSilence">FSilence</span>
+                    <a href="javascript:window.scrollTo(0,0)" class="right mobile-visible">TOP</a>
+            </div>
+
+            <ul class="site-footer-links right mobile-hidden">
+                <li>
+                    <a href="javascript:window.scrollTo(0,0)" >TOP</a>
+                </li>
+            </ul>
+            <a href="http://github.com/FSilence/fsilence.github.io" target="_blank" aria-label="view source code">
+                <span class="mega-octicon octicon-mark-github" title="GitHub"></span>
+            </a>
+            <ul class="site-footer-links mobile-hidden">
+                
+                <li>
+                    <a href="/" title="首页" target="">首页</a>
+                </li>
+                
+                <li>
+                    <a href="/categories/" title="分类" target="">分类</a>
+                </li>
+                
+                <li>
+                    <a href="/wiki/" title="维基" target="">维基</a>
+                </li>
+                
+                <li>
+                    <a href="/links/" title="链接" target="">链接</a>
+                </li>
+                
+                <li>
+                    <a href="/about/" title="关于" target="">关于</a>
+                </li>
+                
+<!-- 注释Rss
+                <li><a href=""><span class="octicon octicon-rss" style="color:orange;"></span></a></li>
+ -->           
+		</ul>
+
+        </div>
+    </footer>
+    <!-- / footer -->
+    <script src="/assets/vendor/share.js/dist/js/share.min.js"></script>
+    <script src="/assets/js/geopattern.js"></script>
+    <script src="/assets/js/prism.js"></script>
+    <link rel="stylesheet" href="/assets/css/globals/prism.css">
+    <script>
+      jQuery(document).ready(function($) {
+        // geopattern
+        $('.geopattern').each(function(){
+          $(this).geopattern($(this).data('pattern-id'));
+        });
+       // hljs.initHighlightingOnLoad();
+      });
+    </script>
+    
+    <div style="display:none">
+      <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-80669434-1', 'auto');
+        ga('send', 'pageview');
+
+      </script>
+    </div>
+    
+</body>
+</html>

@@ -1,5 +1,11 @@
 {
   
+  "2017-04-26-gradle-maven": {
+    "title": "Android Gradle上传Maven仓库",
+    "url": " /2017/04/26/gradle-maven/",
+    "category": "gradle"
+  },
+  
   "2017-04-21-spock-docs": {
     "title": "Spock资料汇总",
     "url": " /2017/04/21/spock-docs/",
@@ -138,6 +144,12 @@
     "title": "Spock资料汇总",
     "url": "/2017/04/21/spock-docs/",
     "category": "[&quot;单元测试&quot;]"
+  },
+  
+  "2017-04-26-gradle-maven": {
+    "title": "Android Gradle上传Maven仓库",
+    "url": "/2017/04/26/gradle-maven/",
+    "category": "[&quot;gradle&quot;]"
   },
   
   "wiki-mac-bash": {
