@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <title>在线工具 &mdash; FSilence's Blog</title>
+    <title>用gradle构建java项目 &mdash; FSilence's Blog</title>
     <link rel="stylesheet" href="/assets/vendor/primer-css/css/primer.css">
     <link rel="stylesheet" href="/assets/vendor/primer-markdown/dist/user-content.min.css">
     <link rel="stylesheet" href="/assets/vendor/octicons/octicons/octicons.css">
@@ -21,23 +21,23 @@
     
 
     
-    <link rel="canonical" href="http://localhost:4000/wiki/tools/">
+    <link rel="canonical" href="http://localhost:4000/2017/05/03/gradle-server-project/">
     <link rel="alternate" type="application/atom+xml" title="FSilence's Blog" href="">
     <link rel="shortcut icon" href="/favicon.ico">
     
-    <meta property="og:title" content="在线工具">
+    <meta property="og:title" content="用gradle构建java项目">
       
-    <meta name="keywords" content="tools, 工具">
-    <meta name="og:keywords" content="tools, 工具">
+    <meta name="keywords" content="gradle, project, java">
+    <meta name="og:keywords" content="gradle, project, java">
       
-    <meta name="description" content="其它在线工具网站oschina 在线工具十六进制颜色转换器">
-    <meta name="og:description" content="其它在线工具网站oschina 在线工具十六进制颜色转换器">
+    <meta name="description" content="一般像后台的项目都是用maven构建的，我们来看一下使用gradle来构建java项目，本文不涉及到具体的gradle配置">
+    <meta name="og:description" content="一般像后台的项目都是用maven构建的，我们来看一下使用gradle来构建java项目，本文不涉及到具体的gradle配置">
       
     
     
         
     
-    <meta property="og:url" content="http://localhost:4000/wiki/tools/">
+    <meta property="og:url" content="http://localhost:4000/2017/05/03/gradle-server-project/">
     <meta property="og:site_name" content="FSilence's Blog">
     <meta property="og:type" content="article">
     <meta property="og:locale" content="zh_CN" />
@@ -92,12 +92,25 @@
     </header>
     <!-- / header -->
 
-    <section class="collection-head small geopattern" data-pattern-id="在线工具">
+    <section class="collection-head small geopattern" data-pattern-id="用gradle构建java项目">
 <div class="container">
   <div class="columns">
     <div class="column three-fourths">
       <div class="collection-title">
-        <h1 class="collection-header">在线工具</h1>
+        <h1 class="collection-header">用gradle构建java项目</h1>
+        <div class="collection-info">
+          
+          <span class="meta-info">
+            <span class="octicon octicon-calendar"></span> 2017/05/03
+          </span>
+          
+          
+          <span class="meta-info">
+            <span class="octicon octicon-file-directory"></span>
+            <a href="/categories/#gradle" title="gradle">gradle</a>
+          </span>
+          
+        </div>
       </div>
     </div>
   </div>
@@ -108,10 +121,19 @@
 <div class="columns">
   <div class="column three-fourths" >
     <article class="article-content markdown-body">
-    <h2 id="其它在线工具网站">其它在线工具网站</h2>
-<p><a href="http://tool.oschina.net/">oschina 在线工具</a><br />
-<a href="http://www.sioe.cn/yingyong/yanse-rgb-16/">十六进制颜色转换器</a></p>
+    <p>一般像后台的项目都是用maven构建的，我们来看一下使用gradle来构建java项目，本文不涉及到具体的gradle配置</p>
 
+<p>IDE: idea</p>
+
+<ol>
+  <li>首先安装gradle 并配置环境变量</li>
+  <li>在项目目录下执行 gradle wrapper 生成wrapper文件（之后再idea中配置使用wrapper构建，使用wrapper的好处在于使用项目配置的gradle版本 不会因为版本冲突引发问题)可以通过–verison 来制定特定的版本</li>
+  <li>在idea 设置中搜索gradle 选择使用gradle wrapper 并勾选use-auto-import然后即可</li>
+  <li>根据需求自己定义setting.gradle 和 build.gradle中的内容</li>
+</ol>
+
+<p>在新建完项目执行单元测试的时候你可能会遇到Error:gradle-resources-test:di_test: java.lang.NoClassDefFoundError: org/apache/tools/ant/util/ReaderInputStream 的错误这是你可以执行以下操作：<br />
+File → Invalidate Caches / Restart 然后重启idea即可</p>
 
     
 
@@ -134,9 +156,9 @@
           <div id="disqus_thread"></div>
           <script>
             var disqus_config = function () {
-              this.page.url = 'http://localhost:4000/wiki/tools/';
-              this.page.identifier = '/wiki/tools/';
-              this.page.title = '在线工具';
+              this.page.url = 'http://localhost:4000/2017/05/03/gradle-server-project/';
+              this.page.identifier = '/2017/05/03/gradle-server-project/';
+              this.page.title = '用gradle构建java项目';
             };
             (function() { // DON'T EDIT BELOW THIS LINE
               var d = document, s = d.createElement('script');

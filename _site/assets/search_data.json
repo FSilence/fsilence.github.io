@@ -1,5 +1,11 @@
 {
   
+  "2017-05-03-gradle-server-project": {
+    "title": "用gradle构建java项目",
+    "url": " /2017/05/03/gradle-server-project/",
+    "category": "gradle"
+  },
+  
   "2017-04-26-gradle-maven": {
     "title": "Android Gradle上传Maven仓库",
     "url": " /2017/04/26/gradle-maven/",
@@ -102,6 +108,8 @@
   
   
   
+  
+  
 
   
   "2017-03-29-firstblogtest": {
@@ -149,6 +157,12 @@
   "2017-04-26-gradle-maven": {
     "title": "Android Gradle上传Maven仓库",
     "url": "/2017/04/26/gradle-maven/",
+    "category": "[&quot;gradle&quot;]"
+  },
+  
+  "2017-05-03-gradle-server-project": {
+    "title": "用gradle构建java项目",
+    "url": "/2017/05/03/gradle-server-project/",
     "category": "[&quot;gradle&quot;]"
   },
   

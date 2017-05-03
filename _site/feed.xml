@@ -1,4 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="http://jekyllrb.com" version="3.4.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2017-04-26T14:33:10+00:00</updated><id>http://localhost:4000/</id><title type="html">FSilence’s Blog</title><subtitle>FSilence的个人博客</subtitle><author><name>FSilence</name></author><entry><title type="html">Android Gradle上传Maven仓库</title><link href="http://localhost:4000/2017/04/26/gradle-maven/" rel="alternate" type="text/html" title="Android Gradle上传Maven仓库" /><published>2017-04-26T00:00:00+00:00</published><updated>2017-04-26T00:00:00+00:00</updated><id>http://localhost:4000/2017/04/26/gradle-maven</id><content type="html" xml:base="http://localhost:4000/2017/04/26/gradle-maven/">&lt;p&gt;在Android的gradle配置上追加上传Maven的相关操作&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="http://jekyllrb.com" version="3.4.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2017-05-03T08:20:20+00:00</updated><id>http://localhost:4000/</id><title type="html">FSilence’s Blog</title><subtitle>FSilence的个人博客</subtitle><author><name>FSilence</name></author><entry><title type="html">用gradle构建java项目</title><link href="http://localhost:4000/2017/05/03/gradle-server-project/" rel="alternate" type="text/html" title="用gradle构建java项目" /><published>2017-05-03T00:00:00+00:00</published><updated>2017-05-03T00:00:00+00:00</updated><id>http://localhost:4000/2017/05/03/gradle-server-project</id><content type="html" xml:base="http://localhost:4000/2017/05/03/gradle-server-project/">&lt;p&gt;一般像后台的项目都是用maven构建的，我们来看一下使用gradle来构建java项目，本文不涉及到具体的gradle配置&lt;/p&gt;
+
+&lt;p&gt;IDE: idea&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;首先安装gradle 并配置环境变量&lt;/li&gt;
+  &lt;li&gt;在项目目录下执行 gradle wrapper 生成wrapper文件（之后再idea中配置使用wrapper构建，使用wrapper的好处在于使用项目配置的gradle版本 不会因为版本冲突引发问题)可以通过–verison 来制定特定的版本&lt;/li&gt;
+  &lt;li&gt;在idea 设置中搜索gradle 选择使用gradle wrapper 并勾选use-auto-import然后即可&lt;/li&gt;
+  &lt;li&gt;根据需求自己定义setting.gradle 和 build.gradle中的内容&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;在新建完项目执行单元测试的时候你可能会遇到Error:gradle-resources-test:di_test: java.lang.NoClassDefFoundError: org/apache/tools/ant/util/ReaderInputStream 的错误这是你可以执行以下操作：&lt;br /&gt;
+File → Invalidate Caches / Restart 然后重启idea即可&lt;/p&gt;</content><author><name>FSilence</name></author><summary type="html">一般像后台的项目都是用maven构建的，我们来看一下使用gradle来构建java项目，本文不涉及到具体的gradle配置</summary></entry><entry><title type="html">Android Gradle上传Maven仓库</title><link href="http://localhost:4000/2017/04/26/gradle-maven/" rel="alternate" type="text/html" title="Android Gradle上传Maven仓库" /><published>2017-04-26T00:00:00+00:00</published><updated>2017-04-26T00:00:00+00:00</updated><id>http://localhost:4000/2017/04/26/gradle-maven</id><content type="html" xml:base="http://localhost:4000/2017/04/26/gradle-maven/">&lt;p&gt;在Android的gradle配置上追加上传Maven的相关操作&lt;/p&gt;
 
 &lt;h2 id=&quot;maven的gradle插件&quot;&gt;maven的gradle插件&lt;/h2&gt;
 &lt;p&gt;Android里内置了maven插件 只需要apply plugin: “maven” 即可使用maven插件&lt;/p&gt;
