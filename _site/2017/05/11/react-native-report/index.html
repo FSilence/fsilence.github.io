@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans" prefix="og: http://ogp.me/ns#" class="han-init">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <title>ReactNative调研报告 &mdash; FSilence's Blog</title>
+    <link rel="stylesheet" href="/assets/vendor/primer-css/css/primer.css">
+    <link rel="stylesheet" href="/assets/vendor/primer-markdown/dist/user-content.min.css">
+    <link rel="stylesheet" href="/assets/vendor/octicons/octicons/octicons.css">
+    <link rel="stylesheet" href="/assets/css/components/collection.css">
+    <link rel="stylesheet" href="/assets/css/components/repo-card.css">
+    <link rel="stylesheet" href="/assets/css/sections/repo-list.css">
+    <link rel="stylesheet" href="/assets/css/sections/mini-repo-list.css">
+    <link rel="stylesheet" href="/assets/css/components/boxed-group.css">
+    <link rel="stylesheet" href="/assets/css/globals/common.css">
+    <link rel="stylesheet" href="/assets/vendor/share.js/dist/css/share.min.css">
+    <link rel="stylesheet" href="/assets/css/globals/responsive.css">
+    <link rel="stylesheet" href="/assets/css/posts/index.css">
+    <!-- Latest compiled and minified CSS -->
+    
+
+    
+    <link rel="canonical" href="http://localhost:4000/2017/05/11/react-native-report/">
+    <link rel="alternate" type="application/atom+xml" title="FSilence's Blog" href="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    
+    <meta property="og:title" content="ReactNative调研报告">
+      
+    <meta name="keywords" content="ReactNative, RN, reactnative, 跨平台">
+    <meta name="og:keywords" content="ReactNative, RN, reactnative, 跨平台">
+      
+    <meta name="description" content="2015年9月15日Facebook发布了ReactNative for Android，引发了学习使用ReactNative开发跨平台引用的热潮。目前React Native发布到了0.44的版本。最近项目中考虑是否要接入ReactNative, 所以对ReactNative进行了一些调研性的工作。">
+    <meta name="og:description" content="2015年9月15日Facebook发布了ReactNative for Android，引发了学习使用ReactNative开发跨平台引用的热潮。目前React Native发布到了0.44的版本。最近项目中考虑是否要接入ReactNative, 所以对ReactNative进行了一些调研性的工作。">
+      
+    
+    
+        
+    
+    <meta property="og:url" content="http://localhost:4000/2017/05/11/react-native-report/">
+    <meta property="og:site_name" content="FSilence's Blog">
+    <meta property="og:type" content="article">
+    <meta property="og:locale" content="zh_CN" />
+    
+    <meta property="article:published_time" content="2017-05-11">
+    
+    <script src="/assets/vendor/jquery/dist/jquery.min.js"></script>
+    <script src="/assets/js/jquery-ui.js"></script>
+    <script type="text/javascript">
+    function toggleMenu() {
+        var nav = document.getElementsByClassName("site-header-nav")[0];
+        if (nav.style.display == "inline-flex") {
+          nav.style.display = "none";
+        } else {
+          nav.style.display = "inline-flex";
+        }
+    }
+
+	var _hmt = _hmt || [];
+	(function() {
+		var hm = document.createElement("script");
+		hm.src = "https://hm.baidu.com/hm.js?3a8f3e5734d78efb8fc1edf92dadd19e";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+	})();
+
+    </script>
+</head>
+<body class="" data-mz="">
+    <header class="site-header">
+        <div class="container">
+            <h1><a href="/" title="FSilence's Blog"><span class="octicon octicon-mark-github"></span> FSilence's Blog</a></h1>
+            <button class="collapsed mobile-visible" type="button" onclick="toggleMenu();">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <nav class="site-header-nav" role="navigation">
+                
+                <a href="/" class=" site-header-nav-item" target="" title="首页">首页</a>
+                
+                <a href="/categories/" class=" site-header-nav-item" target="" title="分类">分类</a>
+                
+                <a href="/wiki/" class=" site-header-nav-item" target="" title="维基">维基</a>
+                
+                <a href="/links/" class=" site-header-nav-item" target="" title="链接">链接</a>
+                
+                <a href="/about/" class=" site-header-nav-item" target="" title="关于">关于</a>
+                
+            </nav>
+        </div>
+    </header>
+    <!-- / header -->
+
+    <section class="collection-head small geopattern" data-pattern-id="ReactNative调研报告">
+<div class="container">
+  <div class="columns">
+    <div class="column three-fourths">
+      <div class="collection-title">
+        <h1 class="collection-header">ReactNative调研报告</h1>
+        <div class="collection-info">
+          
+          <span class="meta-info">
+            <span class="octicon octicon-calendar"></span> 2017/05/11
+          </span>
+          
+          
+          <span class="meta-info">
+            <span class="octicon octicon-file-directory"></span>
+            <a href="/categories/#ReactNative" title="ReactNative">ReactNative</a>
+          </span>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+<!-- / .banner -->
+<section class="container content">
+<div class="columns">
+  <div class="column three-fourths" >
+    <article class="article-content markdown-body">
+    <p>2015年9月15日Facebook发布了ReactNative for Android，引发了学习使用ReactNative开发跨平台引用的热潮。目前React Native发布到了0.44的版本。最近项目中考虑是否要接入ReactNative, 所以对ReactNative进行了一些调研性的工作。</p>
+
+<h2 id="reactnative简介">ReactNative简介</h2>
+<p>在reactnative中文网上有以下简介:</p>
+<pre>
+React Native使你能够在Javascript和React的基础上获得完全一致的开发体验，构建世界一流的原生APP。  
+React Native着力于提高多平台开发的开发效率 —— 仅需学习一次，编写任何平台。(Learn once, write anywhere)  
+Facebook已经在多项产品中使用了React Native，并且将持续地投入建设React Native。
+</pre>
+<p>React Native是使用javascript和react来实现跨平台开发的, React Native提倡组件化开发: 即提供一个个封装好的组件，组件相互嵌套形成新的组件.你可以完全将App使用ReactNative编写，也可以使用原生和react native混合和的方式。由于目前React Native才发布到0.44版本，还没有发布正式的1.0, 其变动相对比较频繁，在react native升级后经常导致项目不能运行，你必须去做额外的工作来保证项目正常的运行。不过最近React Native的发布已经慢慢趋于稳定了，现在基本是1-2个月发一次版本更新，更新内容也没有之前变化那么大了。</p>
+
+<p>众所周知Android的碎片化和厂商的定制化是影响app稳定的很重要的原因之一,尤其是在国内，各个手机厂商都对Android系统进行了深度定制。这样的问题在ReactNative上也有很明显的体现，ReactNative在兼容Android各个系统版本和厂商版本的时候会暴露出不少的问题，目前React Native只支持Android 4.1以上，IOS 7.0以上的版本.附上最新的Android版本分布，<a href="https://zhuanlan.zhihu.com/p/25737474">Android3月份分版本分布</a>可以看到Android 4.0的应用占比基本在%1左右，所以影响不大。</p>
+
+<p>在2017年3月爆发了一股苹果商店禁止热更新的事件，很多人都担心苹果是否会封掉Reactnative，其实苹果想要禁止的是热更新的功能。在苹果的拒绝邮件上也只是说明拒绝热更新的能力。从目前来看，这2个月苹果ReactNative依然可以过审。在各个论坛上也并未发现此次禁止热更新对ReactNative有较为明显的影响。</p>
+
+<h2 id="reactnative-vs-原生-vs-hybrid">ReactNative VS 原生 VS Hybrid</h2>
+<h3 id="实现">实现</h3>
+<p>(hybrid和 phoneGap APICloud AppCan等思想相同)
+hybrid是一款h5的跨终端的解决方案，思想是 编写一次，就可以跨平台。
+本质上hybrid还是web界面，只不过针对各个平台提供了一些调用native方法的api，通过js 和 native交互进行通信。<br />
+用web渲染界面是比较耗时的，为了解决界面的渲染耗时，react-native将界面用原生实现，而js部分只负责描述界面并将描述后的界面通过js和native的交互机制通知给终端，让终端根据js传递过来的界面描述信息来选择本地的控件进行界面的拼装。react-native的思想是 学习一次，可以跨平台开发（仍需要各个终端的人配合）。</p>
+
+<h3 id="性能">性能</h3>
+<p>原生 &gt; ReactNative &gt; Hybrid<br />
+具体的性能对比参数可以查看<a href="http://blog.csdn.net/yczz/article/details/50468181">H5、React Native、Native应用对比分析</a></p>
+<h3 id="开发维护">开发&amp;维护</h3>
+<p>以下成本和更新能力模块参考了<a href="http://blog.csdn.net/yczz/article/details/50468181">H5、React Native、Native应用对比分析</a></p>
+<h3 id="维护成本">维护成本</h3>
+<p>Hybrid &lt; ReactNative &lt; 原生<br />
+Hybrid是H5的夸平台解决方案，ReactNative可以达到百分之90左右的代码共用，但仍需要终端支持。</p>
+
+<p>H5/Hybird： Web代码 ＋ iOS/Android平台支持</p>
+
+<p>React Native：可以一个开发团队 ＋ iOS/Android工程师；业务组件颗粒度小，不用把握全局即可修改业务代码。</p>
+
+<p>Native：iOS/Android开发周期长，两个开发团队。</p>
+
+<p>总结：React Native 统一了开发人员技术栈，代码维护相对容易。</p>
+<h4 id="更新能力">更新能力</h4>
+<p>H5/Hybird： 随时更新，适合做营销页面，目前携程一些BU全部都是H5页面；但是重要的部分还是Native。</p>
+
+<p>React Native：React Native部分可以热更新，bug及时修复。</p>
+
+<p>Native：随版本更新，尤其iOS审核严格，需要测试过关，否则影响用户。</p>
+
+<h2 id="react-canvas">React-Canvas</h2>
+<p>为了解决webapp渲染dom的效率问题，Flipboard推出了一款react-canvas，它的思想是用做游戏的方式来做app。界面渲染针对到canvas上，通过重新定义绘制过程来减少web界面渲染时候的开销问题。<br />
+react-canvas 也是使用的css-layout和react-native一致，也集成了react，只是最终界面是通过canvas展示的。
+react-canvas因为是针对webapp的，所以它的灵活性要比react-native强，渲染的卡顿问题比较接近原生,由于react-canvas还是一个webapp所以有一些原生的界面效果不太好处理。react-canvas如果要和native交互需要单独提供本地的基础库和js和native的通信机制。
+其实react-native可以理解成重写了一个简版的web浏览器，它只支持一些特殊的定制化界面，用native实现界面渲染来达到原生的体验效果。</p>
+
+<h2 id="案例">案例</h2>
+<p>目前国内使用ReactNative的还不是很多（有些小的应用是完全用React Native来实现的）, 比较出名的是 携程的火车票模块， QQ空间，销售易的包中也发现了React Native的痕迹。要想看到更多的国内案例可以通过react native中文网收集的案例上查看: <a href="http://reactnative.cn/cases.html">ReactNative案例</a>。</p>
+
+
+    
+
+    </article>
+    <div class="share">
+      <div class="share-component"></div>
+    </div>
+    <div class="comment">
+      
+  
+      
+        
+        
+        
+      
+	  
+	
+
+<!--
+          <div id="disqus_thread"></div>
+          <script>
+            var disqus_config = function () {
+              this.page.url = 'http://localhost:4000/2017/05/11/react-native-report/';
+              this.page.identifier = '/2017/05/11/react-native-report/';
+              this.page.title = 'ReactNative调研报告';
+            };
+            (function() { // DON'T EDIT BELOW THIS LINE
+              var d = document, s = d.createElement('script');
+
+              s.type = 'text/javascript';
+              s.async = true;
+              var shortname = 'FSilence';
+
+              s.src = '//' + shortname + '.disqus.com/embed.js';
+
+              s.setAttribute('data-timestamp', +new Date());
+              (d.head || d.body).appendChild(s);
+            })();
+          </script>
+          <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+	  -->
+
+    </div>
+  </div>
+  <div class="column one-fourth">
+    
+<h3>Search</h3>
+<div id="site_search">
+    <input type="text" id="search_box" placeholder="Search">
+    <button class="btn btn-default" id="site_search_do"><span class="octicon octicon-search"></span></button>
+</div>
+
+<ul id="search_results"></ul>
+
+<link rel="stylesheet" type="text/css" href="/assets/css/modules/sidebar-search.css">
+<script src="/assets/js/lunr.min.js"></script>
+<script src="/assets/js/search.js"></script>
+
+
+    
+<h3 class="mobile-hidden">Post Directory</h3>
+<div id="post-directory-module" class="mobile-hidden">
+  <section class="post-directory">
+  <!-- Links that trigger the jumping -->
+  <!-- Added by javascript below -->
+  <dl></dl>
+  </section>
+</div>
+
+<script src="/assets/js/jquery.toc.js"></script>
+
+  </div>
+</div>
+</section>
+<!-- /section.content -->
+
+    <footer class="container">
+        <div class="site-footer" role="contentinfo">
+            <div class="copyright left mobile-block">
+                    © 2015
+                    <span title="FSilence">FSilence</span>
+                    <a href="javascript:window.scrollTo(0,0)" class="right mobile-visible">TOP</a>
+            </div>
+
+            <ul class="site-footer-links right mobile-hidden">
+                <li>
+                    <a href="javascript:window.scrollTo(0,0)" >TOP</a>
+                </li>
+            </ul>
+            <a href="http://github.com/FSilence/fsilence.github.io" target="_blank" aria-label="view source code">
+                <span class="mega-octicon octicon-mark-github" title="GitHub"></span>
+            </a>
+            <ul class="site-footer-links mobile-hidden">
+                
+                <li>
+                    <a href="/" title="首页" target="">首页</a>
+                </li>
+                
+                <li>
+                    <a href="/categories/" title="分类" target="">分类</a>
+                </li>
+                
+                <li>
+                    <a href="/wiki/" title="维基" target="">维基</a>
+                </li>
+                
+                <li>
+                    <a href="/links/" title="链接" target="">链接</a>
+                </li>
+                
+                <li>
+                    <a href="/about/" title="关于" target="">关于</a>
+                </li>
+                
+<!-- 注释Rss
+                <li><a href=""><span class="octicon octicon-rss" style="color:orange;"></span></a></li>
+ -->           
+		</ul>
+
+        </div>
+    </footer>
+    <!-- / footer -->
+    <script src="/assets/vendor/share.js/dist/js/share.min.js"></script>
+    <script src="/assets/js/geopattern.js"></script>
+    <script src="/assets/js/prism.js"></script>
+    <link rel="stylesheet" href="/assets/css/globals/prism.css">
+    <script>
+      jQuery(document).ready(function($) {
+        // geopattern
+        $('.geopattern').each(function(){
+          $(this).geopattern($(this).data('pattern-id'));
+        });
+       // hljs.initHighlightingOnLoad();
+      });
+    </script>
+    
+    <div style="display:none">
+      <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-80669434-1', 'auto');
+        ga('send', 'pageview');
+
+      </script>
+    </div>
+    
+</body>
+</html>
