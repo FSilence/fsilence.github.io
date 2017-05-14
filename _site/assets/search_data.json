@@ -1,5 +1,11 @@
 {
   
+  "2017-05-12-ipc-aidl-android-1": {
+    "title": "IPC之AIDL(1)实现AIDL",
+    "url": " /2017/05/12/IPC-AIDL-Android-1/",
+    "category": "Android"
+  },
+  
   "2017-05-11-react-native-report": {
     "title": "ReactNative调研报告",
     "url": " /2017/05/11/react-native-report/",
@@ -176,6 +182,12 @@
     "title": "ReactNative调研报告",
     "url": "/2017/05/11/react-native-report/",
     "category": "[&quot;ReactNative&quot;]"
+  },
+  
+  "2017-05-12-ipc-aidl-android-1": {
+    "title": "IPC之AIDL(1)实现AIDL",
+    "url": "/2017/05/12/IPC-AIDL-Android-1/",
+    "category": "[&quot;Android&quot;]"
   },
   
   "wiki-mac-bash": {

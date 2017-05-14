@@ -1,4 +1,128 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="http://jekyllrb.com" version="3.4.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2017-05-12T06:40:03+00:00</updated><id>http://localhost:4000/</id><title type="html">FSilence’s Blog</title><subtitle>FSilence的个人博客</subtitle><author><name>FSilence</name></author><entry><title type="html">ReactNative调研报告</title><link href="http://localhost:4000/2017/05/11/react-native-report/" rel="alternate" type="text/html" title="ReactNative调研报告" /><published>2017-05-11T00:00:00+00:00</published><updated>2017-05-11T00:00:00+00:00</updated><id>http://localhost:4000/2017/05/11/react-native-report</id><content type="html" xml:base="http://localhost:4000/2017/05/11/react-native-report/">&lt;p&gt;2015年9月15日Facebook发布了ReactNative for Android，引发了学习使用ReactNative开发跨平台引用的热潮。目前React Native发布到了0.44的版本。最近项目中考虑是否要接入ReactNative, 所以对ReactNative进行了一些调研性的工作。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="http://jekyllrb.com" version="3.4.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2017-05-14T15:22:31+00:00</updated><id>http://localhost:4000/</id><title type="html">FSilence’s Blog</title><subtitle>FSilence的个人博客</subtitle><author><name>FSilence</name></author><entry><title type="html">IPC之AIDL(1)实现AIDL</title><link href="http://localhost:4000/2017/05/12/IPC-AIDL-Android-1/" rel="alternate" type="text/html" title="IPC之AIDL(1)实现AIDL" /><published>2017-05-12T00:00:00+00:00</published><updated>2017-05-12T00:00:00+00:00</updated><id>http://localhost:4000/2017/05/12/IPC-AIDL-Android-1</id><content type="html" xml:base="http://localhost:4000/2017/05/12/IPC-AIDL-Android-1/">&lt;p&gt;内容大纲&lt;/p&gt;
+&lt;pre&gt;
+1.使用AIDL实现IPC
+&lt;/pre&gt;
+
+&lt;p&gt;本文是基于Android studio来说明的。我们先明确2个基本概念客户端和服务端。在本例中客户端是指发起处理请求的进程（app的主进程）， 服务端（service端）指一个另外一个提供服务的进程（主要是指service）。&lt;/p&gt;
+
+&lt;p&gt;##AIDL文件
+AIDL 全程 Android Interface Definition Language，即接口定义语言。Android通过aidl文件将服务的接口公开，来实现跨进程的调用。 &lt;br /&gt;
+在Android studio中创建aidl文件，你只需要右键-&amp;gt;新建 -&amp;gt;aidl即可，其目录结构基本如下：&lt;br /&gt;
+&lt;img src=&quot;/images/ipc-aidle1-1.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;我们来明确一些AIDL的规则：&lt;br /&gt;
+1.aidl文件中的参数只能从以下类型选择： 基本数据类型， parcelable的类， Aidl接口&lt;br /&gt;
+2.即使在同一个包下，aidl文件也必须指明import&lt;br /&gt;
+3.parcelable的类作为方法参数时要指明in out inout&lt;br /&gt;
+4.接口中使用到的Parcelable类 必须建立同名的aidl文件，包名必须与实际的java类文件相同&lt;/p&gt;
+
+&lt;p&gt;我们来看一个具体的例子：&lt;br /&gt;
+IBookManager.aidl：&lt;/p&gt;
+&lt;pre&gt;
+&lt;code&gt;
+package com.wlh.animation.ipctest;
+import com.wlh.animation.ipctest.Book;
+import com.wlh.animation.ipctest.IBookListener;
+
+interface IBookManager {
+
+    List&lt;Book&gt; getBookList();
+    void addBook(in Book book);
+
+    void registerListener(IBookListener listener);
+
+    void unRegisterListener(IBookListener listener);
+}
+&amp;lt;/code&amp;gt;
+&amp;lt;/pre&amp;gt;
+
+Book.aidl:
+&lt;pre&gt;
+&lt;code&gt;
+package com.wlh.animation.ipctest;
+parcelable Book;
+&lt;/code&gt;
+&lt;/pre&gt;
+在例子中我们定义了一个IBookManager的接口来实现进程通信，它又4个方法 getBookList()(不带参数)， add Book(in Book book)带Parcelable参数必须指明in out inout中的一个，registerListener 和 unRegisterListener，也是Aidl的接口。
+写完aidl文件后我们 make一下可以看到系统为我们生成的类：  
+![](/images/ipc-aidle1-2.png)  
+关于系统为我们做了什么 我们在下一篇中再进行详细的介绍，现在我们来看一下服务端的代码实现：  
+&lt;pre&gt;
+&lt;code&gt;
+public class AIDLService extends Service{
+    RemoteCallbackList&lt;IBookListener&gt; mCallbacks = new RemoteCallbackList&amp;lt;&amp;gt;();
+    private IBinder mBinder = new IBookManager.Stub() {
+        @Override
+        public List&lt;Book&gt; getBookList() throws RemoteException {
+            Log.i(&quot;wlh&quot;, &quot;getBookList&quot;);
+            return null;
+        }
+
+        @Override
+        public void addBook(Book book) throws RemoteException {
+            Log.i(&quot;wlh&quot;, &quot;addBook : &quot; + book.name);
+            int N = mCallbacks.beginBroadcast();
+            book.name += &quot; : server&quot;;
+            for (int i = 0; i &amp;lt; N; i++ ) {
+                mCallbacks.getBroadcastItem(i).onBookAdd(book);
+            }
+            mCallbacks.finishBroadcast();
+
+        }
+
+        @Override
+        public void registerListener(IBookListener listener) throws RemoteException {
+            mCallbacks.register(listener);
+        }
+
+        @Override
+        public void unRegisterListener(IBookListener listener) throws RemoteException {
+            mCallbacks.unregister(listener);
+        }
+    };
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return mBinder;
+    }
+}
+&amp;lt;/code&amp;gt;
+&amp;lt;/pre&amp;gt;
+我们只要实现IBookManager.Stub 然后再onBind方法中返回即可，我们再来看下客户端是如何实现的：  
+&lt;pre&gt;
+&lt;code&gt;
+        mServiceConnection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                mBookManager = IBookManager.Stub.asInterface(service);
+                try {
+                    mBookManager.registerListener(new IBookListener.Stub() {
+                        @Override
+                        public void onBookAdd(Book book) throws RemoteException {
+                            Log.i(&quot;wlh &quot; , &quot;addBook callback : &quot; + book.name);
+                        }
+                    });
+                    Book book = new Book();
+                    book.name = &quot;TestBook&quot;;
+                    mBookManager.addBook(book);
+                    Log.i(&quot;wlh&quot;,  book.name);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+                unbindService(mServiceConnection);
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+
+            }
+        };
+      
+&lt;/code&gt;
+&lt;/pre&gt;
+我们以Bind的方式启动Service然后再onServiceConnected中的使用IBookManager.Stub.asInterface来转换成我们定义的接口即可实现和服务端的交互。 
+&lt;/Book&gt;&lt;/IBookListener&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/Book&gt;&lt;/code&gt;&lt;/pre&gt;</content><author><name>FSilence</name></author><summary type="html">内容大纲 1.使用AIDL实现IPC 本文是基于Android studio来说明的。我们先明确2个基本概念客户端和服务端。在本例中客户端是指发起处理请求的进程（app的主进程）， 服务端（service端）指一个另外一个提供服务的进程（主要是指service）。</summary></entry><entry><title type="html">ReactNative调研报告</title><link href="http://localhost:4000/2017/05/11/react-native-report/" rel="alternate" type="text/html" title="ReactNative调研报告" /><published>2017-05-11T00:00:00+00:00</published><updated>2017-05-11T00:00:00+00:00</updated><id>http://localhost:4000/2017/05/11/react-native-report</id><content type="html" xml:base="http://localhost:4000/2017/05/11/react-native-report/">&lt;p&gt;2015年9月15日Facebook发布了ReactNative for Android，引发了学习使用ReactNative开发跨平台引用的热潮。目前React Native发布到了0.44的版本。最近项目中考虑是否要接入ReactNative, 所以对ReactNative进行了一些调研性的工作。&lt;/p&gt;
 
 &lt;h2 id=&quot;reactnative简介&quot;&gt;ReactNative简介&lt;/h2&gt;
 &lt;p&gt;在reactnative中文网上有以下简介:&lt;/p&gt;
@@ -360,7 +484,4 @@ TODO此方法可以在命令行中调用gradlew命令的时候获取到adb的环
 &lt;h2 id=&quot;开始blog&quot;&gt;开始Blog&lt;/h2&gt;
 &lt;p&gt;将项目push到你新建的github仓库中，之后你就可以开始写Blog了。&lt;/p&gt;
 
-&lt;p&gt;本文只是一个阐述，详细过程可以参照其他人的Blog &lt;a href=&quot;http://www.jianshu.com/p/3f355c7872d5&quot;&gt;http://www.jianshu.com/p/3f355c7872d5&lt;/a&gt;&lt;/p&gt;</content><author><name>FSilence</name></author><summary type="html">用GithubPages + jekyll搭建你的个人Blog, 专注于内容。</summary></entry><entry><title type="html">博客测试</title><link href="http://localhost:4000/2017/03/29/FirstBlogTest/" rel="alternate" type="text/html" title="博客测试" /><published>2017-03-29T00:00:00+00:00</published><updated>2017-03-29T00:00:00+00:00</updated><id>http://localhost:4000/2017/03/29/FirstBlogTest</id><content type="html" xml:base="http://localhost:4000/2017/03/29/FirstBlogTest/">&lt;p&gt;博客第一次测试&lt;/p&gt;
-
-&lt;p&gt;欢迎关注公众号:&lt;br /&gt;
-&lt;img src=&quot;/wx_code.jpg&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;</content><author><name>FSilence</name></author><summary type="html">博客第一次测试</summary></entry></feed>
+&lt;p&gt;本文只是一个阐述，详细过程可以参照其他人的Blog &lt;a href=&quot;http://www.jianshu.com/p/3f355c7872d5&quot;&gt;http://www.jianshu.com/p/3f355c7872d5&lt;/a&gt;&lt;/p&gt;</content><author><name>FSilence</name></author><summary type="html">用GithubPages + jekyll搭建你的个人Blog, 专注于内容。</summary></entry></feed>

@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans" prefix="og: http://ogp.me/ns#" class="han-init">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <title>IPC之AIDL(1)实现AIDL &mdash; FSilence's Blog</title>
+    <link rel="stylesheet" href="/assets/vendor/primer-css/css/primer.css">
+    <link rel="stylesheet" href="/assets/vendor/primer-markdown/dist/user-content.min.css">
+    <link rel="stylesheet" href="/assets/vendor/octicons/octicons/octicons.css">
+    <link rel="stylesheet" href="/assets/css/components/collection.css">
+    <link rel="stylesheet" href="/assets/css/components/repo-card.css">
+    <link rel="stylesheet" href="/assets/css/sections/repo-list.css">
+    <link rel="stylesheet" href="/assets/css/sections/mini-repo-list.css">
+    <link rel="stylesheet" href="/assets/css/components/boxed-group.css">
+    <link rel="stylesheet" href="/assets/css/globals/common.css">
+    <link rel="stylesheet" href="/assets/vendor/share.js/dist/css/share.min.css">
+    <link rel="stylesheet" href="/assets/css/globals/responsive.css">
+    <link rel="stylesheet" href="/assets/css/posts/index.css">
+    <!-- Latest compiled and minified CSS -->
+    
+
+    
+    <link rel="canonical" href="http://localhost:4000/2017/05/12/IPC-AIDL-Android-1/">
+    <link rel="alternate" type="application/atom+xml" title="FSilence's Blog" href="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    
+    <meta property="og:title" content="IPC之AIDL(1)实现AIDL">
+      
+    <meta name="keywords" content="IPC, Android, AIDL">
+    <meta name="og:keywords" content="IPC, Android, AIDL">
+      
+    <meta name="description" content="内容大纲1.使用AIDL实现IPC本文是基于Android studio来说明的。我们先明确2个基本概念客户端和服务端。在本例中客户端是指发起处理请求的进程（app的主进程）， 服务端（service端）指一个另外一个提供服务的进程（主要是指service）。">
+    <meta name="og:description" content="内容大纲1.使用AIDL实现IPC本文是基于Android studio来说明的。我们先明确2个基本概念客户端和服务端。在本例中客户端是指发起处理请求的进程（app的主进程）， 服务端（service端）指一个另外一个提供服务的进程（主要是指service）。">
+      
+    
+    
+        
+    
+    <meta property="og:url" content="http://localhost:4000/2017/05/12/IPC-AIDL-Android-1/">
+    <meta property="og:site_name" content="FSilence's Blog">
+    <meta property="og:type" content="article">
+    <meta property="og:locale" content="zh_CN" />
+    
+    <meta property="article:published_time" content="2017-05-12">
+    
+    <script src="/assets/vendor/jquery/dist/jquery.min.js"></script>
+    <script src="/assets/js/jquery-ui.js"></script>
+    <script type="text/javascript">
+    function toggleMenu() {
+        var nav = document.getElementsByClassName("site-header-nav")[0];
+        if (nav.style.display == "inline-flex") {
+          nav.style.display = "none";
+        } else {
+          nav.style.display = "inline-flex";
+        }
+    }
+
+	var _hmt = _hmt || [];
+	(function() {
+		var hm = document.createElement("script");
+		hm.src = "https://hm.baidu.com/hm.js?3a8f3e5734d78efb8fc1edf92dadd19e";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+	})();
+
+    </script>
+</head>
+<body class="" data-mz="">
+    <header class="site-header">
+        <div class="container">
+            <h1><a href="/" title="FSilence's Blog"><span class="octicon octicon-mark-github"></span> FSilence's Blog</a></h1>
+            <button class="collapsed mobile-visible" type="button" onclick="toggleMenu();">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <nav class="site-header-nav" role="navigation">
+                
+                <a href="/" class=" site-header-nav-item" target="" title="首页">首页</a>
+                
+                <a href="/categories/" class=" site-header-nav-item" target="" title="分类">分类</a>
+                
+                <a href="/wiki/" class=" site-header-nav-item" target="" title="维基">维基</a>
+                
+                <a href="/links/" class=" site-header-nav-item" target="" title="链接">链接</a>
+                
+                <a href="/about/" class=" site-header-nav-item" target="" title="关于">关于</a>
+                
+            </nav>
+        </div>
+    </header>
+    <!-- / header -->
+
+    <section class="collection-head small geopattern" data-pattern-id="IPC之AIDL(1)实现AI">
+<div class="container">
+  <div class="columns">
+    <div class="column three-fourths">
+      <div class="collection-title">
+        <h1 class="collection-header">IPC之AIDL(1)实现AIDL</h1>
+        <div class="collection-info">
+          
+          <span class="meta-info">
+            <span class="octicon octicon-calendar"></span> 2017/05/12
+          </span>
+          
+          
+          <span class="meta-info">
+            <span class="octicon octicon-file-directory"></span>
+            <a href="/categories/#Android" title="Android">Android</a>
+          </span>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+<!-- / .banner -->
+<section class="container content">
+<div class="columns">
+  <div class="column three-fourths" >
+    <article class="article-content markdown-body">
+    <p>内容大纲</p>
+<pre>
+1.使用AIDL实现IPC
+</pre>
+
+<p>本文是基于Android studio来说明的。我们先明确2个基本概念客户端和服务端。在本例中客户端是指发起处理请求的进程（app的主进程）， 服务端（service端）指一个另外一个提供服务的进程（主要是指service）。</p>
+
+<p>##AIDL文件
+AIDL 全程 Android Interface Definition Language，即接口定义语言。Android通过aidl文件将服务的接口公开，来实现跨进程的调用。 <br />
+在Android studio中创建aidl文件，你只需要右键-&gt;新建 -&gt;aidl即可，其目录结构基本如下：<br />
+<img src="/images/ipc-aidle1-1.png" alt="" /></p>
+
+<p>我们来明确一些AIDL的规则：<br />
+1.aidl文件中的参数只能从以下类型选择： 基本数据类型， parcelable的类， Aidl接口<br />
+2.即使在同一个包下，aidl文件也必须指明import<br />
+3.parcelable的类作为方法参数时要指明in out inout<br />
+4.接口中使用到的Parcelable类 必须建立同名的aidl文件，包名必须与实际的java类文件相同</p>
+
+<p>我们来看一个具体的例子：<br />
+IBookManager.aidl：</p>
+<pre>
+<code>
+package com.wlh.animation.ipctest;
+import com.wlh.animation.ipctest.Book;
+import com.wlh.animation.ipctest.IBookListener;
+
+interface IBookManager {
+
+    List<Book> getBookList();
+    void addBook(in Book book);
+
+    void registerListener(IBookListener listener);
+
+    void unRegisterListener(IBookListener listener);
+}
+&lt;/code&gt;
+&lt;/pre&gt;
+
+Book.aidl:
+<pre>
+<code>
+package com.wlh.animation.ipctest;
+parcelable Book;
+</code>
+</pre>
+在例子中我们定义了一个IBookManager的接口来实现进程通信，它又4个方法 getBookList()(不带参数)， add Book(in Book book)带Parcelable参数必须指明in out inout中的一个，registerListener 和 unRegisterListener，也是Aidl的接口。
+写完aidl文件后我们 make一下可以看到系统为我们生成的类：  
+![](/images/ipc-aidle1-2.png)  
+关于系统为我们做了什么 我们在下一篇中再进行详细的介绍，现在我们来看一下服务端的代码实现：  
+<pre>
+<code>
+public class AIDLService extends Service{
+    RemoteCallbackList<IBookListener> mCallbacks = new RemoteCallbackList&lt;&gt;();
+    private IBinder mBinder = new IBookManager.Stub() {
+        @Override
+        public List<Book> getBookList() throws RemoteException {
+            Log.i("wlh", "getBookList");
+            return null;
+        }
+
+        @Override
+        public void addBook(Book book) throws RemoteException {
+            Log.i("wlh", "addBook : " + book.name);
+            int N = mCallbacks.beginBroadcast();
+            book.name += " : server";
+            for (int i = 0; i &lt; N; i++ ) {
+                mCallbacks.getBroadcastItem(i).onBookAdd(book);
+            }
+            mCallbacks.finishBroadcast();
+
+        }
+
+        @Override
+        public void registerListener(IBookListener listener) throws RemoteException {
+            mCallbacks.register(listener);
+        }
+
+        @Override
+        public void unRegisterListener(IBookListener listener) throws RemoteException {
+            mCallbacks.unregister(listener);
+        }
+    };
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return mBinder;
+    }
+}
+&lt;/code&gt;
+&lt;/pre&gt;
+我们只要实现IBookManager.Stub 然后再onBind方法中返回即可，我们再来看下客户端是如何实现的：  
+<pre>
+<code>
+        mServiceConnection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                mBookManager = IBookManager.Stub.asInterface(service);
+                try {
+                    mBookManager.registerListener(new IBookListener.Stub() {
+                        @Override
+                        public void onBookAdd(Book book) throws RemoteException {
+                            Log.i("wlh " , "addBook callback : " + book.name);
+                        }
+                    });
+                    Book book = new Book();
+                    book.name = "TestBook";
+                    mBookManager.addBook(book);
+                    Log.i("wlh",  book.name);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+                unbindService(mServiceConnection);
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+
+            }
+        };
+      
+</code>
+</pre>
+我们以Bind的方式启动Service然后再onServiceConnected中的使用IBookManager.Stub.asInterface来转换成我们定义的接口即可实现和服务端的交互。 
+</Book></IBookListener></code></pre></Book></code></pre>
+
+    
+
+    </article>
+    <div class="share">
+      <div class="share-component"></div>
+    </div>
+    <div class="comment">
+      
+  
+      
+        
+        
+        
+      
+	  
+	
+
+<!--
+          <div id="disqus_thread"></div>
+          <script>
+            var disqus_config = function () {
+              this.page.url = 'http://localhost:4000/2017/05/12/IPC-AIDL-Android-1/';
+              this.page.identifier = '/2017/05/12/IPC-AIDL-Android-1/';
+              this.page.title = 'IPC之AIDL(1)实现AIDL';
+            };
+            (function() { // DON'T EDIT BELOW THIS LINE
+              var d = document, s = d.createElement('script');
+
+              s.type = 'text/javascript';
+              s.async = true;
+              var shortname = 'FSilence';
+
+              s.src = '//' + shortname + '.disqus.com/embed.js';
+
+              s.setAttribute('data-timestamp', +new Date());
+              (d.head || d.body).appendChild(s);
+            })();
+          </script>
+          <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+	  -->
+
+    </div>
+  </div>
+  <div class="column one-fourth">
+    
+<h3>Search</h3>
+<div id="site_search">
+    <input type="text" id="search_box" placeholder="Search">
+    <button class="btn btn-default" id="site_search_do"><span class="octicon octicon-search"></span></button>
+</div>
+
+<ul id="search_results"></ul>
+
+<link rel="stylesheet" type="text/css" href="/assets/css/modules/sidebar-search.css">
+<script src="/assets/js/lunr.min.js"></script>
+<script src="/assets/js/search.js"></script>
+
+
+    
+<h3 class="mobile-hidden">Post Directory</h3>
+<div id="post-directory-module" class="mobile-hidden">
+  <section class="post-directory">
+  <!-- Links that trigger the jumping -->
+  <!-- Added by javascript below -->
+  <dl></dl>
+  </section>
+</div>
+
+<script src="/assets/js/jquery.toc.js"></script>
+
+  </div>
+</div>
+</section>
+<!-- /section.content -->
+
+    <footer class="container">
+        <div class="site-footer" role="contentinfo">
+            <div class="copyright left mobile-block">
+                    © 2015
+                    <span title="FSilence">FSilence</span>
+                    <a href="javascript:window.scrollTo(0,0)" class="right mobile-visible">TOP</a>
+            </div>
+
+            <ul class="site-footer-links right mobile-hidden">
+                <li>
+                    <a href="javascript:window.scrollTo(0,0)" >TOP</a>
+                </li>
+            </ul>
+            <a href="http://github.com/FSilence/fsilence.github.io" target="_blank" aria-label="view source code">
+                <span class="mega-octicon octicon-mark-github" title="GitHub"></span>
+            </a>
+            <ul class="site-footer-links mobile-hidden">
+                
+                <li>
+                    <a href="/" title="首页" target="">首页</a>
+                </li>
+                
+                <li>
+                    <a href="/categories/" title="分类" target="">分类</a>
+                </li>
+                
+                <li>
+                    <a href="/wiki/" title="维基" target="">维基</a>
+                </li>
+                
+                <li>
+                    <a href="/links/" title="链接" target="">链接</a>
+                </li>
+                
+                <li>
+                    <a href="/about/" title="关于" target="">关于</a>
+                </li>
+                
+<!-- 注释Rss
+                <li><a href=""><span class="octicon octicon-rss" style="color:orange;"></span></a></li>
+ -->           
+		</ul>
+
+        </div>
+    </footer>
+    <!-- / footer -->
+    <script src="/assets/vendor/share.js/dist/js/share.min.js"></script>
+    <script src="/assets/js/geopattern.js"></script>
+    <script src="/assets/js/prism.js"></script>
+    <link rel="stylesheet" href="/assets/css/globals/prism.css">
+    <script>
+      jQuery(document).ready(function($) {
+        // geopattern
+        $('.geopattern').each(function(){
+          $(this).geopattern($(this).data('pattern-id'));
+        });
+       // hljs.initHighlightingOnLoad();
+      });
+    </script>
+    
+    <div style="display:none">
+      <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-80669434-1', 'auto');
+        ga('send', 'pageview');
+
+      </script>
+    </div>
+    
+</body>
+</html>
