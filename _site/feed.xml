@@ -1,4 +1,704 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="http://jekyllrb.com" version="3.4.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2017-05-14T15:22:31+00:00</updated><id>http://localhost:4000/</id><title type="html">FSilence’s Blog</title><subtitle>FSilence的个人博客</subtitle><author><name>FSilence</name></author><entry><title type="html">IPC之AIDL(1)实现AIDL</title><link href="http://localhost:4000/2017/05/12/IPC-AIDL-Android-1/" rel="alternate" type="text/html" title="IPC之AIDL(1)实现AIDL" /><published>2017-05-12T00:00:00+00:00</published><updated>2017-05-12T00:00:00+00:00</updated><id>http://localhost:4000/2017/05/12/IPC-AIDL-Android-1</id><content type="html" xml:base="http://localhost:4000/2017/05/12/IPC-AIDL-Android-1/">&lt;p&gt;内容大纲&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="http://jekyllrb.com" version="3.4.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2017-05-16T07:47:14+00:00</updated><id>http://localhost:4000/</id><title type="html">FSilence’s Blog</title><subtitle>FSilence的个人博客</subtitle><author><name>FSilence</name></author><entry><title type="html">IPC之Messenger</title><link href="http://localhost:4000/2017/05/16/ipc-messenger/" rel="alternate" type="text/html" title="IPC之Messenger" /><published>2017-05-16T00:00:00+00:00</published><updated>2017-05-16T00:00:00+00:00</updated><id>http://localhost:4000/2017/05/16/ipc-messenger</id><content type="html" xml:base="http://localhost:4000/2017/05/16/ipc-messenger/">&lt;p&gt;内容大纲：&lt;/p&gt;
+&lt;pre&gt;
+1.学会使用Messenger进行进程间通信
+&lt;/pre&gt;
+
+&lt;p&gt;在进行具体的探讨之前，我们先明确2个基本概念客户端和服务端。在本例中客户端是指发起处理请求的进程（app的主进程）， 服务端（service端）指一个另外一个提供服务的进程（主要是指service）。&lt;/p&gt;
+
+&lt;p&gt;Messenger可以理解为信使，它可以实现消息的发送，底层使用Binder实现的（所以可以跨进程）。我们来看Messenger的构造函数：&lt;/p&gt;
+&lt;pre&gt;
+&lt;code&gt;
+   public Messenger(IBinder target) {
+        mTarget = IMessenger.Stub.asInterface(target);
+    }
+
+   public Messenger(Handler target) {
+        mTarget = target.getIMessenger();
+    }
+&lt;/code&gt;
+&lt;/pre&gt;
+&lt;p&gt;Messenger的构造函数主要有2个 一个 接受一个IBinder参数 一个接受一个Handler参数，我们可以看到它们参数的名称都是叫target，从字面上我们也不难理解，这个参数的作用就是定义消息发送的目标。我们看下Handler中MessengerImpl的具体实现：&lt;/p&gt;
+&lt;pre&gt;
+&lt;code&gt;
+    private final class MessengerImpl extends IMessenger.Stub {
+        public void send(Message msg) {
+            msg.sendingUid = Binder.getCallingUid();
+            Handler.this.sendMessage(msg);
+        }
+    }
+&lt;/code&gt;
+&lt;/pre&gt;
+&lt;p&gt;我们可以看到在发送消息的时候，给msg添加了一个属性，CallingUid,这个CallingUid又是什么呢，我们来看一下Binder中的注释：&lt;/p&gt;
+&lt;pre&gt;
+&lt;code&gt;
+  /**
+     * Return the Linux uid assigned to the process that sent you the
+     * current transaction that is being processed.  This uid can be used with
+     * higher-level system services to determine its identity and check
+     * permissions.  If the current thread is not currently executing an
+     * incoming transaction, then its own uid is returned.
+     */
+    public static final native int getCallingUid();
+&lt;/code&gt;
+&lt;/pre&gt;
+&lt;p&gt;不难发现这个UId其实就是调用方进程的UID(用户身份的标识符)。
+那么这个IMessenger.Stub是什么呢？这里我们不加讨论，在AIDL的实现中我们会重点讨论这个。&lt;br /&gt;
+我们接着再来看下如何用Messenger实现IPC，我们先看下客户端的实现:&lt;/p&gt;
+&lt;pre&gt;
+&lt;code&gt;
+     mServiceConnection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                Messenger messenger = new Messenger(service);
+                Message message = new Message();
+                Bundle data = new Bundle();
+                data.putString(&quot;info&quot;, &quot;this is from client&quot;);
+                message.setData(data);
+                try {
+                    messenger.send(message);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+                unbindService(mServiceConnection);
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+
+            }
+        };
+        bindService(new Intent(this, MessengerService.class), mServiceConnection, Context.BIND_AUTO_CREATE);
+&lt;/code&gt;
+&lt;/pre&gt;
+&lt;p&gt;我们在onServiceConnected中用返回的IBinder new一个Messenger（消息的发送者），然后创建Message直接send即可，那么服务端又是如何接收处理这个消息的呢：&lt;/p&gt;
+&lt;pre&gt;
+&lt;code&gt;
+public class MessengerService extends Service{
+    Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            Log.i(&quot;wlh&quot;, &quot;service : &quot; + msg.getData().getString(&quot;info&quot;));
+        }
+    };
+    Messenger messenger = new Messenger(handler);
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return messenger.getBinder();
+    }
+}
+&lt;/code&gt;
+&lt;/pre&gt;
+&lt;p&gt;服务端的实现也很简单 定义一个Handler 和 Messenger（消息的接收者，交给Handler处理） 然后返回messenger的getBinder即可。这样我们就实现了进程的单向通信，那么如何实现双向通信呢，其实也很简单我们只要给message添加一个replyTo的对象（也是一个Messenger）然后使用这个replyTo就可以进行消息的应答。其实我们可以思考一下如果我们需要实现双向沟通是不是需要一个发送者来发送消息， 一个接收者来接受消息。我们来一下基于上面单向通信的改进，首先来看客户端的实现：&lt;/p&gt;
+&lt;pre&gt;
+&lt;code&gt;
+  	Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            Log.i(&quot;wlh&quot;, &quot;reply info : &quot; + msg.getData().getString(&quot;info&quot;));
+        }
+    };
+
+    Messenger receiveMessenger = new Messenger(handler);
+
+     mServiceConnection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                Messenger messenger = new Messenger(service);
+                Message message = new Message();
+                Bundle data = new Bundle();
+                data.putString(&quot;info&quot;, &quot;this is from client&quot;);
+                message.setData(data);
+				message.replyTo = receiveMessenger;
+                try {
+                    messenger.send(message);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+                unbindService(mServiceConnection);
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+
+            }
+        };
+        bindService(new Intent(this, MessengerService.class), mServiceConnection, Context.BIND_AUTO_CREATE);
+&lt;/code&gt;
+&lt;/pre&gt;
+&lt;p&gt;我们可以发现在单向通信的基础上我们添加了一个接收者 receiverMessenter, 然后将其赋值给msg的replyTo， 服务端就可以取到这个Messenger来进行消息回复。&lt;br /&gt;
+我们再来看下服务端的改进：&lt;/p&gt;
+&lt;pre&gt;
+&lt;code&gt;
+    Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            Log.i(&quot;wlh&quot;, &quot;service : &quot; + msg.getData().getString(&quot;info&quot;));
+            Message replyMsg = new Message();
+            Bundle data = new Bundle();
+            data.putString(&quot;info&quot;, &quot; this is from server&quot;);
+            replyMsg.setData(data);
+            try {
+                msg.replyTo.send(replyMsg);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }
+    };
+&lt;/code&gt;
+&lt;/pre&gt;
+&lt;p&gt;我们只需要通过msg.replyTo来发送消息回复就可以了，是不是很简单。&lt;/p&gt;</content><author><name>FSilence</name></author><summary type="html">内容大纲： 1.学会使用Messenger进行进程间通信</summary></entry><entry><title type="html">EventBus Q&amp;amp;A</title><link href="http://localhost:4000/2017/05/16/eventbus-qa/" rel="alternate" type="text/html" title="EventBus Q&amp;A" /><published>2017-05-16T00:00:00+00:00</published><updated>2017-05-16T00:00:00+00:00</updated><id>http://localhost:4000/2017/05/16/eventbus-qa</id><content type="html" xml:base="http://localhost:4000/2017/05/16/eventbus-qa/">&lt;p&gt;阅读EventBus源码过程中总结的一些问题和答案&lt;/p&gt;
+
+&lt;h3 id=&quot;eventbus-中如果一个subscriber中的父类也注册了相同的监听事件以哪个为准&quot;&gt;EventBus 中如果一个subscriber中的父类也注册了相同的监听事件，以哪个为准&lt;/h3&gt;
+&lt;hr /&gt;
+&lt;p&gt;以子类中的事件为准，在SubscriberMethodFinder方法中，在添加一个subscribeMethod的时候  会调用FindState的checkAdd方法，其中有这么一段逻辑：&lt;/p&gt;
+&lt;pre&gt;
+&lt;code&gt;
+   if (methodClassOld == null || methodClassOld.isAssignableFrom(methodClass)) {
+                // Only add if not already found in a sub class
+                return true;
+            } else {
+                // Revert the put, old class is further down the class hierarchy
+                subscriberClassByMethodKey.put(methodKey, methodClassOld);
+                return false;
+            }
+&lt;/code&gt;
+&lt;/pre&gt;
+
+&lt;p&gt;如果原先注册过的methodClass 是当前想要注册的methodClass的父类的话，返回true，（isAssignableFrom 判断类是否是另一个类的父类）
+在结束后&lt;/p&gt;
+&lt;pre&gt;
+&lt;code&gt;
+ if (findState.checkAdd(method, eventType)) {
+ThreadMode threadMode = subscribeAnnotation.threadMode();
+findState.subscriberMethods.add(new SubscriberMethod(method, eventType, threadMode,
+                                    subscribeAnnotation.priority(), subscribeAnnotation.sticky()));
+                        }
+&lt;/code&gt;
+&lt;/pre&gt;
+&lt;p&gt;如果checkAdd返回了true的话 表示可以添加当前method到列表中&lt;/p&gt;
+
+&lt;p&gt;###SubscribeMethodFinder中的FindStat有什么用
+FindStat用来记录一次查找的中间变量和结果，其中的superClass用来帮助查找器进行递归查找。&lt;/p&gt;
+
+&lt;h3 id=&quot;eventbus中的event-对象是如何管理的&quot;&gt;EventBus中的event 对象是如何管理的&lt;/h3&gt;
+&lt;p&gt;当用户通过post来发送一个消息的时候，EventBus会首先获取一个PostThreadStat对象（通过ThreadLocal存放的 每个线程都会有一份，来记录当前线程的一些发送状态），然后将消息放入到PostThreadStat中的event队列，然后会依次取队列中的消息，进行发送操作。&lt;br /&gt;
+单次的发送操作： 
+如果eventInheritance为true(默认为true)，就先查找出所有的父类 和 接口，都记录为event，发送，如果为false 则只发送当前消息。如果没有找到对应的订阅者，则抛出一个NoSubscriberEvent的消息。如果有订阅者，则根据订阅者的类型来选择发送的方式。&lt;br /&gt;
+EventBus中有3个变量来保存消息，1.subscriptionsByEventType 一个Map,key是eventType value是subscribtions，主要用来post消息的时候可以找到对应的subscribtion来换起方法。2.typesBySubscriber 一个Map,key是订阅者 value是订阅的事件列表，主要用来在unregister订阅者的时候方便去清空对应的数据。3.stickyEvents 主要是用来存放sticky消息的。&lt;/p&gt;
+
+&lt;h3 id=&quot;eventbus的register的过程&quot;&gt;EventBus的register的过程&lt;/h3&gt;
+&lt;p&gt;register一个订阅者的时候，会进行以下几步：&lt;br /&gt;
+1.通过subscriberMethodFinder查找到所有注释的订阅方法&lt;br /&gt;
+2.循环依次注册方法&lt;br /&gt;
+3.每一次注册的时候，根据优先级加入到列表中（subscriptionsByEventType的value），优先级高的在前面&lt;br /&gt;
+4.更新typesBySubscriber&lt;br /&gt;
+5.如果注册的方法是sticky的，则检查当前的stickyEvents列表，触发sticky消息的相应&lt;/p&gt;
+
+&lt;h3 id=&quot;subscribermethodfinder的查找过程&quot;&gt;SubscriberMethodFinder的查找过程&lt;/h3&gt;
+&lt;p&gt;Finder中每次查找结果都有缓存（不会有泄露 因为缓存的应用都是Class Method这些）,可以通过EventBus的clearCache来清空。（我们可以考虑在onLowMemory的时候调用此方法）
+SubscirberMethodFinder中有一个FindStat类用来帮助记录一次查找的中间状态和结果 以及帮助递归查找（里面有一个superClass的参数），每次遍历类和父类找到注册方法。&lt;br /&gt;
+FindStat中有一个checkAdd方法 来判断当前方法是否应该添加到subscribMethod中。在checkAdd方法中，会根据当前类是否注册过来判断是否可以添加。&lt;/p&gt;
+
+&lt;h3 id=&quot;eventbus的poststicky-和-post消息有什么区别&quot;&gt;EventBus的postSticky 和 post消息有什么区别&lt;/h3&gt;
+&lt;p&gt;post过程见上。&lt;br /&gt;
+postSticky 先将消息放入到stickyEvents的map中 然后再调用post消息&lt;/p&gt;
+
+&lt;h3 id=&quot;eventbus的threadmode类型&quot;&gt;EventBus的threadMode类型&lt;/h3&gt;
+&lt;p&gt;POSTING:在发送事件的线程中通知订阅者&lt;br /&gt;
+MAIN:如果当前是主线程直接通知订阅者，否则调用HandlePoster的enque方法在主线程中通知订阅者&lt;br /&gt;
+BACKGROUD:如果当前不是主线程中则直接通知订阅者，否则启动一个后台线程来通知订阅者（不同的消息共用一个线程）&lt;br /&gt;
+ASYN:启动不同的线程来通知订阅者&lt;/p&gt;
+
+&lt;p&gt;HandlerPoster:帮助主线程中的调度，其中维护一个PendingPost的队列，在handleMessage中依次弹出消息并通知。&lt;/p&gt;
+
+&lt;p&gt;BackgroundPoster:帮助实现BACKGROUND模式，BackgroundPoster本身是一个runable，通过enque一个event对象，如果当前有线程正在处理post消息则直接在此线程中处理，否则会通过eventBus调用
+builder中设置的线程池来执行线程（在run方法中循环取出消息队列中的消息来处理）&lt;/p&gt;
+
+&lt;p&gt;AsyncPoster：帮助实现ASYN模式，本事是一个Runnable,enque一个event对象后会直接换起线程池来执行线程，在run中poll一个消息来处理&lt;/p&gt;
+
+&lt;h3 id=&quot;eventbus中的eventtypescache是干什么用的&quot;&gt;EventBus中的eventTypesCache是干什么用的&lt;/h3&gt;
+&lt;p&gt;在eventInheritance为true的时候 会通过发送的event对象 查找event对象的所有父类和接口，这个cache就是用来缓存这个的。&lt;br /&gt;
+通过clearCaches来清空缓存&lt;/p&gt;
+
+&lt;h3 id=&quot;如何理解pendingpost&quot;&gt;如何理解PendingPost&lt;/h3&gt;
+&lt;p&gt;PendingPost是一次post的意图，其中定义了要发送的事件event 和 订阅方法 以及next 意图（用来和pendingPostQueue配合 实现队列）&lt;/p&gt;
+
+&lt;h3 id=&quot;eventbus中用到了哪些设计模式&quot;&gt;EventBus中用到了哪些设计模式&lt;/h3&gt;
+&lt;p&gt;创建者模式： Builder&lt;br /&gt;
+订阅者模式： 整体就是订阅模式&lt;/p&gt;
+
+&lt;h3 id=&quot;subscribermethodfinder中的findstat是如何确定一个方法是否应该被记录的&quot;&gt;*SubscriberMethodFinder中的FindStat是如何确定一个方法是否应该被记录的&lt;/h3&gt;
+&lt;p&gt;（重点是FindStat中的2个临时变量 之后再做补充说明）&lt;/p&gt;</content><author><name>FSilence</name></author><summary type="html">阅读EventBus源码过程中总结的一些问题和答案</summary></entry><entry><title type="html">IPC之AIDL(3)系统为我们做了什么</title><link href="http://localhost:4000/2017/05/12/IPC-AIDL-Android-3/" rel="alternate" type="text/html" title="IPC之AIDL(3)系统为我们做了什么" /><published>2017-05-12T00:00:00+00:00</published><updated>2017-05-12T00:00:00+00:00</updated><id>http://localhost:4000/2017/05/12/IPC-AIDL-Android-3</id><content type="html" xml:base="http://localhost:4000/2017/05/12/IPC-AIDL-Android-3/">&lt;p&gt;内容大纲：&lt;/p&gt;
+&lt;pre&gt;
+1.了解基本的aidl原理（不涉及底层）
+&lt;/pre&gt;
+
+&lt;p&gt;前面几篇我们介绍了如何使用AIDL实现IPC 那么你会有疑问了 我们用的asInterface是什么， Stub又是什么，现在让我们一点一点来看。在我们编译的时候，系统会吧aidl生成对应的java类（这就是为什么支持aidl这种文件格式了），我们先来看一下系统生成的类(本文涉及到的系统源码都是基于android-23)：&lt;br /&gt;
+&lt;code&gt;&lt;/code&gt;&lt;/p&gt;
+&lt;pre&gt;
+package com.wlh.animation.ipctest;
+// Declare any non-default types here with import statements
+
+public interface IBookManager extends android.os.IInterface {
+    /**
+     * Local-side IPC implementation stub class.
+     */
+    public static abstract class Stub extends android.os.Binder implements com.wlh.animation.ipctest.IBookManager {
+        private static final java.lang.String DESCRIPTOR = &quot;com.wlh.animation.ipctest.IBookManager&quot;;
+
+        /**
+         * Construct the stub at attach it to the interface.
+         */
+        public Stub() {
+            this.attachInterface(this, DESCRIPTOR);
+        }
+
+        /**
+         * Cast an IBinder object into an com.wlh.animation.ipctest.IBookManager interface,
+         * generating a proxy if needed.
+         */
+        public static com.wlh.animation.ipctest.IBookManager asInterface(android.os.IBinder obj) {
+    		...
+        }
+
+        @Override
+        public android.os.IBinder asBinder() {
+            return this;
+        }
+
+        @Override
+        public boolean onTransact(int code, android.os.Parcel data, android.os.Parcel reply, int flags)
+                throws android.os.RemoteException {
+            switch (code) {
+                case INTERFACE_TRANSACTION: {
+                   ...
+                }
+                case TRANSACTION_getBookList: {
+                   ...
+                }
+                case TRANSACTION_addBook: {
+                  ...
+                }
+                case TRANSACTION_registerListener: {
+                   ...
+                }
+                case TRANSACTION_unRegisterListener: {
+                   ...
+                }
+            }
+            return super.onTransact(code, data, reply, flags);
+        }
+
+        private static class Proxy implements com.wlh.animation.ipctest.IBookManager {
+            private android.os.IBinder mRemote;
+
+            Proxy(android.os.IBinder remote) {
+                mRemote = remote;
+            }
+
+            @Override
+            public android.os.IBinder asBinder() {
+                return mRemote;
+            }
+
+            public java.lang.String getInterfaceDescriptor() {
+                return DESCRIPTOR;
+            }
+
+            @Override
+            public java.util.List&lt;com.wlh.animation.ipctest.Book&gt; getBookList() throws android.os.RemoteException {
+       			...
+            }
+
+            @Override
+            public void addBook(com.wlh.animation.ipctest.Book book) throws android.os.RemoteException {
+     			...
+            }
+
+            @Override
+            public void registerListener(com.wlh.animation.ipctest.IBookListener listener)
+                    throws android.os.RemoteException {
+               		...
+            }
+
+            @Override
+            public void unRegisterListener(com.wlh.animation.ipctest.IBookListener listener)
+                    throws android.os.RemoteException {
+          		...
+            }
+        }
+
+        static final int TRANSACTION_getBookList = (android.os.IBinder.FIRST_CALL_TRANSACTION + 0);
+        static final int TRANSACTION_addBook = (android.os.IBinder.FIRST_CALL_TRANSACTION + 1);
+        static final int TRANSACTION_registerListener = (android.os.IBinder.FIRST_CALL_TRANSACTION + 2);
+        static final int TRANSACTION_unRegisterListener = (android.os.IBinder.FIRST_CALL_TRANSACTION + 3);
+    }
+
+    public java.util.List&lt;com.wlh.animation.ipctest.Book&gt; getBookList() throws android.os.RemoteException;
+
+    public void addBook(com.wlh.animation.ipctest.Book book) throws android.os.RemoteException;
+
+    public void registerListener(com.wlh.animation.ipctest.IBookListener listener) throws android.os.RemoteException;
+
+    public void unRegisterListener(com.wlh.animation.ipctest.IBookListener listener) throws android.os.RemoteException;
+}
+&amp;lt;/pre&amp;gt;
+&amp;lt;/code&amp;gt;
+
+我们先忽略方法的具体实现，来看一下这个系统为我们生成的类中都有哪些东西：  
+1.整个文件是一个IBookManager(你aidl文件名字)的接口 继承IInterface  
+2.一个抽象类Stub继承Binder（前面我们说过  Binder有跨进程的能力）实现了这个IBookManager接口  
+3.一个代理类实现了IBookManager(注意没有继承Binder)  
+然后我们依次来解析一下这写类：  
+##IBookManager IInterface 
+首先是IBookManager,它是一个继承自IInterface的接口，我们先来看下IInterface接口中有哪些东西：  
+&lt;pre&gt;
+&lt;code&gt;
+public interface IInterface
+{
+    public IBinder asBinder();
+}
+&lt;/code&gt;
+&lt;/pre&gt;
+我们可以看到IInterface中只有一个方法 就是asBinder 返回一个IBinder,IBinder也是一个接口。
+
+##Stub Binder
+Stub是一个抽象类继承了Binder 实现了IBookManager接口
+
+###Binder
+Binder实现了IBinder，我们来看下IBinder中的内容.我们这里只介绍一些重要的变量和方法，其它的说明读者可自行查阅源码中的注释。  
+###getInterfaceDescriptor
+源码定义如下：  
+&lt;pre&gt;
+&lt;code&gt;
+  /**
+     * Get the canonical name of the interface supported by this binder.
+     */
+    public String getInterfaceDescriptor() throws RemoteException;
+&lt;/code&gt;
+&lt;/pre&gt;
+这个返回接口的名称，我们在Binder中可以看到它的具体实现：  
+&lt;pre&gt;
+&lt;code&gt;
+   public void attachInterface(IInterface owner, String descriptor) {
+        mOwner = owner;
+        mDescriptor = descriptor;
+    }
+
+      public String getInterfaceDescriptor() {
+        return mDescriptor;
+    }
+&lt;/code&gt;
+&lt;/pre&gt;
+我们可以看到系统通过attachInterface来给接口名称赋值，主要是为了作为跨进程通信时候接口的标识，我们可以在Binder的子类Stub也就是系统为我们生成的类中看到具体的接口名称：  
+&lt;pre&gt;
+&lt;code&gt;
+        private static final java.lang.String DESCRIPTOR = &quot;com.wlh.animation.ipctest.IBookManager&quot;;
+
+        /**
+         * Construct the stub at attach it to the interface.
+         */
+        public Stub() {
+            this.attachInterface(this, DESCRIPTOR);
+        }
+&lt;/code&gt;
+&lt;/pre&gt;
+我们可以看到其实就是接口的全路径。  
+
+###pingBinder, isBinderAlive, 
+&lt;pre&gt;
+&lt;code&gt;
+  /**
+     * Check to see if the object still exists.
+     * 
+     * @return Returns false if the
+     * hosting process is gone, otherwise the result (always by default
+     * true) returned by the pingBinder() implementation on the other
+     * side.
+     */
+    public boolean pingBinder();
+&lt;/code&gt;
+&lt;/pre&gt;
+就是字面意思ping一下 来确认Binder是否可以链接到Binder，只有当宿主进程不存在的时候才返回false。  
+
+&lt;pre&gt;
+&lt;code&gt;
+   /**
+     * Check to see if the process that the binder is in is still alive.
+     *
+     * @return false if the process is not alive.  Note that if it returns
+     * true, the process may have died while the call is returning.
+     */
+    public boolean isBinderAlive();
+&lt;/code&gt;
+&lt;/pre&gt;
+返回Binder是否存活。如果进程不是存活状态，那么返回false。  
+
+
+###queryLocalInterface
+
+&lt;pre&gt;
+&lt;code&gt;
+ /**
+     * Attempt to retrieve a local implementation of an interface
+     * for this Binder object.  If null is returned, you will need
+     * to instantiate a proxy class to marshall calls through
+     * the transact() method.
+     */
+    public IInterface queryLocalInterface(String descriptor);
+&lt;/code&gt;
+&lt;/pre&gt;
+根据接口的描述返回一个本地接口，如果返回的是null的话（就是跨进程），需要你去实现代理（在使用aidl的时候系统为我们已经实现好了）  
+
+
+###transact
+&lt;pre&gt;
+&lt;code&gt;
+/**
+     * Perform a generic operation with the object.
+     * 
+     * @param code The action to perform.  This should
+     * be a number between {@link #FIRST_CALL_TRANSACTION} and
+     * {@link #LAST_CALL_TRANSACTION}.
+     * @param data Marshalled data to send to the target.  Must not be null.
+     * If you are not sending any data, you must create an empty Parcel
+     * that is given here.
+     * @param reply Marshalled data to be received from the target.  May be
+     * null if you are not interested in the return value.
+     * @param flags Additional operation flags.  Either 0 for a normal
+     * RPC, or {@link #FLAG_ONEWAY} for a one-way RPC.
+     */
+    public boolean transact(int code, Parcel data, Parcel reply, int flags)
+        throws RemoteException;
+&lt;/code&gt;
+&lt;/pre&gt;
+这个基本上是IBinder中最重要的一个函数了，它用来相应对象的操作，例如我们本例中的一个addBook操作，它的参数主要有如下几个：  
+1.code 一次操作的唯一标识，要介于常量FIRST_CALL_TRANSACTION（ 0x00000001）和 LAST_CALL_TRANSACTION（0x00ffffff）之间  
+
+2.data 需要传递的数据不能为空   
+
+3.reply 返回的数据  
+
+4.flats 附加的操作标识，通常返回0. 如果设置成FLAG_ONEWAY表示呼叫方不会等待被呼叫方放回结果（只在跨进程的时候生效）。  
+
+
+我们再来看下Stub中的具体实现：  
+
+###asInterface
+&lt;pre&gt;
+&lt;code&gt;
+     public static com.wlh.animation.ipctest.IBookManager asInterface(android.os.IBinder obj) {
+            if ((obj == null)) {
+                return null;
+            }
+            android.os.IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
+            if (((iin != null) &amp;amp;&amp;amp; (iin instanceof com.wlh.animation.ipctest.IBookManager))) {
+                return ((com.wlh.animation.ipctest.IBookManager) iin);
+            }
+            return new com.wlh.animation.ipctest.IBookManager.Stub.Proxy(obj);
+        }
+&lt;/code&gt;
+&lt;/pre&gt;
+将IBinder转换成我们需要的接口，我们可以看到基本的逻辑是：如果从本地找到了接口就返回本地接口（没有跨进程），否则返回Stub的代理类，关于代理类我们稍后再说，这个逻辑规则基本贯穿了Stub中的所有方法：即先找本地，如果没有（跨进程）则返回代理。  
+
+###onTransact
+&lt;pre&gt;
+&lt;code&gt;
+ @Override
+        public boolean onTransact(int code, android.os.Parcel data, android.os.Parcel reply, int flags)
+                throws android.os.RemoteException {
+
+
+   switch (code) {
+                case INTERFACE_TRANSACTION: {
+                    reply.writeString(DESCRIPTOR);
+                    return true;
+                }
+                case TRANSACTION_addBook: {
+                   。。。
+                }
+}
+}
+&lt;/code&gt;
+&lt;/pre&gt;
+首先在Stub类中 系统为我们的每一个方法值都赋予了一个id
+&lt;pre&gt;
+    static final int TRANSACTION_getBookList = (android.os.IBinder.FIRST_CALL_TRANSACTION + 0);
+        static final int TRANSACTION_addBook = (android.os.IBinder.FIRST_CALL_TRANSACTION + 1);
+        static final int TRANSACTION_registerListener = (android.os.IBinder.FIRST_CALL_TRANSACTION + 2);
+        static final int TRANSACTION_unRegisterListener = (android.os.IBinder.FIRST_CALL_TRANSACTION + 3);
+&lt;/pre&gt;
+可以看到是基于TRANSACTIOn_{$method name}来命名的参数是基于FIRST_CALL_TRANSACTION递增的。然后再onTransaction方法中系统会switch code判断当前调用的是哪个方法然后做相应的操作 我们来看下addBook的具体实现：  
+&lt;pre&gt;
+&lt;code&gt;
+  case TRANSACTION_addBook: {
+    data.enforceInterface(DESCRIPTOR);
+                    com.wlh.animation.ipctest.Book _arg0;
+                    if ((0 != data.readInt())) {
+                        _arg0 = com.wlh.animation.ipctest.Book.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg0 = null;
+                    }
+                    this.addBook(_arg0);
+                    reply.writeNoException();
+                    if ((_arg0 != null)) {
+                        reply.writeInt(1);
+                        _arg0.writeToParcel(reply, android.os.Parcelable.PARCELABLE_WRITE_RETURN_VALUE);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+	}
+&lt;/code&gt;
+&lt;/pre&gt;  
+我们不难看出，基本思路就是将对象和Parceable之间转换处理。  
+
+我们再来看下代理类Proxy:  
+Proxy是实现了接口IBookManager的代理类，其构造方法如下：  
+&lt;pre&gt;
+&lt;code&gt;
+  Proxy(android.os.IBinder remote) {
+                mRemote = remote;
+   }
+&lt;/code&gt;
+&lt;/pre&gt;
+
+构造函数是一个IBinder,之后代理中的相关调用都会转到这个Binder中去处理，我们还是来看一下addBookManager接口：  
+&lt;pre&gt;
+&lt;code&gt;
+     @Override
+            public void addBook(com.wlh.animation.ipctest.Book book) throws android.os.RemoteException {
+                android.os.Parcel _data = android.os.Parcel.obtain();
+                android.os.Parcel _reply = android.os.Parcel.obtain();
+                try {
+                    _data.writeInterfaceToken(DESCRIPTOR);
+                    if ((book != null)) {
+                        _data.writeInt(1);
+                        book.writeToParcel(_data, 0);
+                    } else {
+                        _data.writeInt(0);
+                    }
+                    mRemote.transact(Stub.TRANSACTION_addBook, _data, _reply, 0);
+                    _reply.readException();
+                    if ((0 != _reply.readInt())) {
+                        book.readFromParcel(_reply);
+                    }
+                } finally {
+                    _reply.recycle();
+                    _data.recycle();
+                }
+            }
+&lt;/code&gt;
+&lt;/pre&gt;
+
+可以看到和onTransact中最大的区别在于 它将具体的处理时间交给了跨进程的Binder处理。  
+
+以上就是在我们编写AIDL文件后 系统为我们生成文件的解析。
+
+
+
+
+&lt;/com.wlh.animation.ipctest.Book&gt;&lt;/com.wlh.animation.ipctest.Book&gt;&lt;/pre&gt;</content><author><name>FSilence</name></author><summary type="html">内容大纲： 1.了解基本的aidl原理（不涉及底层）</summary></entry><entry><title type="html">IPC之AIDL(2)in out inout</title><link href="http://localhost:4000/2017/05/12/IPC-AIDL-Android-2/" rel="alternate" type="text/html" title="IPC之AIDL(2)in out inout" /><published>2017-05-12T00:00:00+00:00</published><updated>2017-05-12T00:00:00+00:00</updated><id>http://localhost:4000/2017/05/12/IPC-AIDL-Android-2</id><content type="html" xml:base="http://localhost:4000/2017/05/12/IPC-AIDL-Android-2/">&lt;p&gt;内容大纲：&lt;/p&gt;
+&lt;pre&gt;
+1.在AIDL的时候正确使用in out inout
+&lt;/pre&gt;
+
+&lt;p&gt;上一篇我们用AIDL简单实现了一个IPC，其中我们谈到在定义aidl接口中的除基本类型和AIDL接口外的参数要调价修饰符in out 或 inout中的一种，本文将帮助大家理解in out inout，并让读者可以正确的使用in out inout。&lt;br /&gt;
+在介绍in out inout的区别之前我们先明确两个基本概念：起点 和 终点，起点指调用方，终点指响应方，比如我在客户端调用aidl接口那么客户端就是起点 服务端就是重点，在一次调用中服务端如果要调用一个aidl接口回调给客户端，那么服务端就是起点，客户端就是重点。&lt;br /&gt;
+然后我们来定义in out inout:&lt;br /&gt;
+in ： 将对象从起点传递给终点，在终点部分中对对象的修改不会反映到起点，即只输入&lt;br /&gt;
+out : 对象中的值不会传递给终点，但是在终点部分对对象的修改会反映到起点，即只输出&lt;br /&gt;
+intout : 将对象从起点传递给终点，在终点部分的修改会反应到起点，即输入输出都有影响&lt;/p&gt;
+
+&lt;p&gt;我们再用一个具体的例子来看一下这个区分：
+我们来看下客户端的代码：&lt;br /&gt;
+&lt;code&gt;&lt;/code&gt;&lt;/p&gt;
+&lt;pre&gt;
+        mServiceConnection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                mBookManager = IBookManager.Stub.asInterface(service);
+                try {
+                    mBookManager.registerListener(new IBookListener.Stub() {
+                        @Override
+                        public void onBookAdd(Book book) throws RemoteException {
+                            Log.i(&quot;wlh &quot; , &quot;addBook callback : &quot; + book.name);
+                        }
+                    });
+                    Book book = new Book();
+                    book.name = &quot;TestBook&quot;;
+                    mBookManager.addBook(book);
+                    Log.i(&quot;wlh&quot;,  book.name);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+                unbindService(mServiceConnection);
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+
+            }
+        };
+&lt;/pre&gt;
+&lt;p&gt;&amp;lt;/code&amp;gt;&lt;/p&gt;
+
+&lt;p&gt;我们输出了callback 调用addBook 和调用后book对象的名称。我们再来看下服务端的代码：&lt;br /&gt;
+&lt;code&gt;&lt;/code&gt;&lt;/p&gt;
+&lt;pre&gt;
+    private IBinder mBinder = new IBookManager.Stub() {
+        @Override
+        public List&lt;Book&gt; getBookList() throws RemoteException {
+            Log.i(&quot;wlh&quot;, &quot;getBookList&quot;);
+            return null;
+        }
+
+        @Override
+        public void addBook(Book book) throws RemoteException {
+            Log.i(&quot;wlh&quot;, &quot;addBook : &quot; + book.name);
+            int N = mCallbacks.beginBroadcast();
+            book.name += &quot; : server&quot;;
+            for (int i = 0; i &amp;lt; N; i++ ) {
+                mCallbacks.getBroadcastItem(i).onBookAdd(book);
+            }
+            mCallbacks.finishBroadcast();
+
+        }
+
+        @Override
+        public void registerListener(IBookListener listener) throws RemoteException {
+            mCallbacks.register(listener);
+        }
+
+        @Override
+        public void unRegisterListener(IBookListener listener) throws RemoteException {
+            mCallbacks.unregister(listener);
+        }
+    };
+&amp;lt;/pre&amp;gt;
+&amp;lt;/code&amp;gt;
+
+观察addBook方法 我们在客户端传过来的book中修改了name字段 追加了一个：server，然后我们输出了客户端传递过来的book名称。现在我们来看在book的修饰符分别为in out 和inout时候的系统输出。（我们假设BookListener中的参数都是in,其实BookListener中的in out inout修饰就是起点 和 终点的转换，这个时候起点是调用方服务端 终点是响应方客户端，具体的读者可自行分析）  
+
+in:   
+ 我们可以先猜测一下输出，in表示数据会传递到终点，那么服务端会输出TestBook，然后由于对对象的修改不会反映到起点，所以对象不会反映到客户端，客户端依然输出的是TestBook，而callback中的回调是TestBook : server,我们来看下实际效果：  
+
+![](/images/aidl2-1.png)  
+
+out:  
+out不会将数据传递到终点在这里也就是服务端，那么服务端会输出null， 然后由于对象修改会反应到起点也就是客户端，所以客户端会输出 null : server,我们来看下实际效果：  
+![](/images/aidl2-2.png)  
+
+inout:
+inout即会把数据传递到终点，起点也会响应终点的变化，那么服务端会输出 TestBook
+然后客户端输出 TestBook : server, 我们来看下实际效果：  
+![](/images/aidl2-3.png)  
+
+&lt;/Book&gt;&lt;/pre&gt;</content><author><name>FSilence</name></author><summary type="html">内容大纲： 1.在AIDL的时候正确使用in out inout</summary></entry><entry><title type="html">IPC之AIDL(1)实现AIDL</title><link href="http://localhost:4000/2017/05/12/IPC-AIDL-Android-1/" rel="alternate" type="text/html" title="IPC之AIDL(1)实现AIDL" /><published>2017-05-12T00:00:00+00:00</published><updated>2017-05-12T00:00:00+00:00</updated><id>http://localhost:4000/2017/05/12/IPC-AIDL-Android-1</id><content type="html" xml:base="http://localhost:4000/2017/05/12/IPC-AIDL-Android-1/">&lt;p&gt;内容大纲&lt;/p&gt;
 &lt;pre&gt;
 1.使用AIDL实现IPC
 &lt;/pre&gt;
@@ -186,7 +886,22 @@ react-canvas因为是针对webapp的，所以它的灵活性要比react-native�
 &lt;/ol&gt;
 
 &lt;p&gt;在新建完项目执行单元测试的时候你可能会遇到Error:gradle-resources-test:di_test: java.lang.NoClassDefFoundError: org/apache/tools/ant/util/ReaderInputStream 的错误这是你可以执行以下操作：&lt;br /&gt;
-File → Invalidate Caches / Restart 然后重启idea即可&lt;/p&gt;</content><author><name>FSilence</name></author><summary type="html">一般像后台的项目都是用maven构建的，我们来看一下使用gradle来构建java项目，本文不涉及到具体的gradle配置</summary></entry><entry><title type="html">Android Gradle上传Maven仓库</title><link href="http://localhost:4000/2017/04/26/gradle-maven/" rel="alternate" type="text/html" title="Android Gradle上传Maven仓库" /><published>2017-04-26T00:00:00+00:00</published><updated>2017-04-26T00:00:00+00:00</updated><id>http://localhost:4000/2017/04/26/gradle-maven</id><content type="html" xml:base="http://localhost:4000/2017/04/26/gradle-maven/">&lt;p&gt;在Android的gradle配置上追加上传Maven的相关操作&lt;/p&gt;
+File → Invalidate Caches / Restart 然后重启idea即可&lt;/p&gt;</content><author><name>FSilence</name></author><summary type="html">一般像后台的项目都是用maven构建的，我们来看一下使用gradle来构建java项目，本文不涉及到具体的gradle配置</summary></entry><entry><title type="html">IPC概述</title><link href="http://localhost:4000/2017/05/01/ipc-about/" rel="alternate" type="text/html" title="IPC概述" /><published>2017-05-01T00:00:00+00:00</published><updated>2017-05-01T00:00:00+00:00</updated><id>http://localhost:4000/2017/05/01/ipc-about</id><content type="html" xml:base="http://localhost:4000/2017/05/01/ipc-about/">&lt;p&gt;摘要：&lt;/p&gt;
+&lt;pre&gt;
+1.什么是IPC
+2.android实现IPC的几种方式
+&lt;/pre&gt;
+
+&lt;p&gt;##IPC
+IPC全称Inter-Process Communication 是指进程间通信。Android的一个app是运行在一个进程上的（除非你启动了另外一个进程），每一个进程都是运行在一个JVM上的，所以进程和进程之间的内存空间不共享，那么如何完成进程间的通信就非常重要了。&lt;/p&gt;
+
+&lt;p&gt;##Android IPC的几种通信方式
+实现进程间的通信的思路大致就是将各个进程理解为2个不可直接交互的系统（比如 客户端 和 服务端必须通过网络来交互），要实现2个系统的数据交换无非2种方式：&lt;br /&gt;
+1.系统和系统之间建立消息系统，通过将需要对方知道的消息发送过去进行处理返回，Android提供了Binder来实现进程间的通信，Binder会将一个数据从一个进程clone到另外一个进程（实际上是二进制流的传送，实际上你在不同进程拿到的对象并不是同一个)，像Messenger AIDL 和 ContentProvider实现进程交互，底层都是使用的Binder机制。除了Binder机制外我们还可以像客户端和服务端交互那样，使用socket来完成通信。&lt;/p&gt;
+
+&lt;p&gt;2.系统共享资源，例如共同存储维护一个文件系统， 数据库等等，需要特殊说明，虽然SharePreference是使用的文件读写xml来存储数据的，但是在多进程中操作SharePreference是有问题的，因为SharePreference为了提高性能添加了内存缓存，但是进程间的内存空间是不共享的，所以会造成数据丢失的情况。&lt;/p&gt;
+
+&lt;p&gt;在后面的文章中，作者将陆续为大家介绍使用不同的方式来实现IPC。&lt;/p&gt;</content><author><name>FSilence</name></author><summary type="html">摘要： 1.什么是IPC 2.android实现IPC的几种方式 ##IPC IPC全称Inter-Process Communication 是指进程间通信。Android的一个app是运行在一个进程上的（除非你启动了另外一个进程），每一个进程都是运行在一个JVM上的，所以进程和进程之间的内存空间不共享，那么如何完成进程间的通信就非常重要了。 ##Android IPC的几种通信方式 实现进程间的通信的思路大致就是将各个进程理解为2个不可直接交互的系统（比如 客户端 和 服务端必须通过网络来交互），要实现2个系统的数据交换无非2种方式： 1.系统和系统之间建立消息系统，通过将需要对方知道的消息发送过去进行处理返回，Android提供了Binder来实现进程间的通信，Binder会将一个数据从一个进程clone到另外一个进程（实际上是二进制流的传送，实际上你在不同进程拿到的对象并不是同一个)，像Messenger AIDL 和 ContentProvider实现进程交互，底层都是使用的Binder机制。除了Binder机制外我们还可以像客户端和服务端交互那样，使用socket来完成通信。 2.系统共享资源，例如共同存储维护一个文件系统， 数据库等等，需要特殊说明，虽然SharePreference是使用的文件读写xml来存储数据的，但是在多进程中操作SharePreference是有问题的，因为SharePreference为了提高性能添加了内存缓存，但是进程间的内存空间是不共享的，所以会造成数据丢失的情况。 在后面的文章中，作者将陆续为大家介绍使用不同的方式来实现IPC。</summary></entry><entry><title type="html">Android Gradle上传Maven仓库</title><link href="http://localhost:4000/2017/04/26/gradle-maven/" rel="alternate" type="text/html" title="Android Gradle上传Maven仓库" /><published>2017-04-26T00:00:00+00:00</published><updated>2017-04-26T00:00:00+00:00</updated><id>http://localhost:4000/2017/04/26/gradle-maven</id><content type="html" xml:base="http://localhost:4000/2017/04/26/gradle-maven/">&lt;p&gt;在Android的gradle配置上追加上传Maven的相关操作&lt;/p&gt;
 
 &lt;h2 id=&quot;maven的gradle插件&quot;&gt;maven的gradle插件&lt;/h2&gt;
 &lt;p&gt;Android里内置了maven插件 只需要apply plugin: “maven” 即可使用maven插件&lt;/p&gt;
@@ -350,138 +1065,4 @@ compile (&quot;com.fsilence:test:1.0.0-SNAPSHOT&quot;){changing = true}
 &lt;/pre&gt;
 &lt;p&gt;这样我们每次调用的时候都会更新到最新版本，如果改成正式版本后曲调后面的changing配置即可。&lt;/p&gt;</content><author><name>FSilence</name></author><summary type="html">在Android的gradle配置上追加上传Maven的相关操作</summary></entry><entry><title type="html">Spock资料汇总</title><link href="http://localhost:4000/2017/04/21/spock-docs/" rel="alternate" type="text/html" title="Spock资料汇总" /><published>2017-04-21T00:00:00+00:00</published><updated>2017-04-21T00:00:00+00:00</updated><id>http://localhost:4000/2017/04/21/spock-docs</id><content type="html" xml:base="http://localhost:4000/2017/04/21/spock-docs/">&lt;p&gt;Spock单元测试资料汇总&lt;/p&gt;
 
-&lt;p&gt;&lt;a href=&quot;http://www.open-open.com/lib/view/open1439793373083.html&quot;&gt;使用Spock框架进行单元测试&lt;/a&gt;&lt;/p&gt;</content><author><name>FSilence</name></author><summary type="html">Spock单元测试资料汇总</summary></entry><entry><title type="html">git分支恢复</title><link href="http://localhost:4000/2017/04/13/git-recover-branch/" rel="alternate" type="text/html" title="git分支恢复" /><published>2017-04-13T00:00:00+00:00</published><updated>2017-04-13T00:00:00+00:00</updated><id>http://localhost:4000/2017/04/13/git-recover-branch</id><content type="html" xml:base="http://localhost:4000/2017/04/13/git-recover-branch/">&lt;p&gt;今天误删了git分支，还好可以恢复&lt;/p&gt;
-
-&lt;p&gt;今天git push之后 以为merge了 就把本地和远程分支都删掉了，然后悲催的发现并没有执行merge操作。。还好分支可以恢复。。&lt;/p&gt;
-
-&lt;p&gt;这个时候我们可以从之前提交的那次merge request中查找到提交的版本号，然后本地执行&lt;/p&gt;
-&lt;pre&gt;
- git branch 分支名称 commit号
-&lt;/pre&gt;
-&lt;p&gt;然后重新push即可。。。&lt;/p&gt;</content><author><name>FSilence</name></author><summary type="html">今天误删了git分支，还好可以恢复</summary></entry><entry><title type="html">gradle调试断点</title><link href="http://localhost:4000/2017/04/11/gradle-debug/" rel="alternate" type="text/html" title="gradle调试断点" /><published>2017-04-11T00:00:00+00:00</published><updated>2017-04-11T00:00:00+00:00</updated><id>http://localhost:4000/2017/04/11/gradle-debug</id><content type="html" xml:base="http://localhost:4000/2017/04/11/gradle-debug/">&lt;p&gt;调试断点我们的gradle插件&lt;/p&gt;
-
-&lt;p&gt;我们免不了需要调试gradle脚本。但是要特殊说明的是， 现在还没有办法调试gradle的脚本文件， 我们只能通过pringln 来输出message， 然后在Gradle Console中查看。&lt;br /&gt;
-我们这里要说的是利用远程调试，去断点调试自己编写的gradle插件。其实gradle的脚本使用groovy编写的而groovy也是运行在jvm上的，所以这里的调试方法就是远程调试jvm的方法，此方法同样适用于调试编译时注解（编译时注解 要注意clean项目）。&lt;/p&gt;
-
-&lt;h2 id=&quot;配置remote&quot;&gt;配置remote&lt;/h2&gt;
-&lt;p&gt;首先我们先点击Edit Config 点击+号选择remote: &lt;br /&gt;
-&lt;img src=&quot;/images/gradle-debug1.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;然后复制下面代码，将suspend=n改为suspend=y，表示一直阻塞等待:&lt;br /&gt;
-&lt;img src=&quot;/images/gradle-debug2.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;你也可以修改name为你喜欢的名字，然后点击ok。&lt;/p&gt;
-
-&lt;h2 id=&quot;配置运行时候的参数&quot;&gt;配置运行时候的参数&lt;/h2&gt;
-&lt;p&gt;然后我们有几种方法来运行我们的gradle命令，，&lt;/p&gt;
-
-&lt;h3 id=&quot;方法一&quot;&gt;方法一&lt;/h3&gt;
-&lt;p&gt;我们可以在命令行执行:&lt;/p&gt;
-&lt;pre&gt;
- export GRADLE_OPTS=&quot;-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005&quot;
- &lt;/pre&gt;
-&lt;p&gt;然后直接运行你的gradle命令，你会方法会一直等待5005的端口，知识后依旧可以debug运行刚才的remote，进行断点调试了。&lt;br /&gt;
- 你可以通过 unset GRADLE_OPTS 来取消这个配置&lt;/p&gt;
-
-&lt;h3 id=&quot;方法二&quot;&gt;方法二&lt;/h3&gt;
-&lt;p&gt;在gradle中找到你要断点的命令，点击create config:&lt;br /&gt;
- &lt;img src=&quot;/images/gradle-debug3.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;然后在VM options中输入你刚才复制并修改的参数：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/images/gradle-debug4.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;然后点击运行，效果同上 会等待设置的5005端口，然后再切到remote 执行debug即可。&lt;/p&gt;
-
-&lt;h3 id=&quot;方法三&quot;&gt;方法三&lt;/h3&gt;
-
-&lt;p&gt;直接在gradle.properties中设置jvm参数（刚才复制的内容）:&lt;/p&gt;
-
-&lt;pre&gt;
-  org.gradle.jvmargs=-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005
-  &lt;/pre&gt;</content><author><name>FSilence</name></author><summary type="html">调试断点我们的gradle插件</summary></entry><entry><title type="html">《乖，摸摸头》读后感</title><link href="http://localhost:4000/2017/04/11/dabin-book/" rel="alternate" type="text/html" title="《乖，摸摸头》读后感" /><published>2017-04-11T00:00:00+00:00</published><updated>2017-04-11T00:00:00+00:00</updated><id>http://localhost:4000/2017/04/11/dabin-book</id><content type="html" xml:base="http://localhost:4000/2017/04/11/dabin-book/">&lt;p&gt;之前听朋友推荐过大冰的书，最近在地铁上拜读了一下其中的一本《乖，摸摸头》，其实我很久没看过非专业的书籍了，看完后还是有很多感慨的，想要在这里发发牢骚。&lt;/p&gt;
-
-&lt;p&gt;大冰系列的读物基本上是在描述在作者的生涯中所经历的各种人各种事，用作者身边的个性鲜明的人和故事来向我们展示一个不一样的世界。其实大冰的故事何尝不是在这个金钱至上的社会的一股清流，何尝不是对现在充满钱味的社会的一次度化。&lt;/p&gt;
-
-&lt;h2 id=&quot;关于幸福&quot;&gt;关于幸福&lt;/h2&gt;
-&lt;p&gt;大冰的周围充斥着各种个性鲜明的人，在我看来大冰将的故事中的主人公都有一个鲜明的特征，那就是他们自己是感觉到幸福的。他们很多人并不富裕，可能不满足现在社会上对成功人士，对幸福的定义，但是他们的确是幸福的。他们的心是幸福的。&lt;/p&gt;
-
-&lt;p&gt;听完这些故事，我的感触就是我们每个认都有属于自己的幸福，我们应该好好想想我们自己想要的到底是什么，追求的又是个什么，不能在时间洪流中一步步盲目的前行。&lt;/p&gt;
-
-&lt;p&gt;我想说的并不是我们都应该向书中的主人公那样去四处旅游，去做流浪歌手等等。。我们有自己对幸福的定义。并不是说我们都要视金钱如粪土等等。我们应该去追寻我们的
-内心，保留心中的纯净。&lt;/p&gt;
-
-&lt;p&gt;还记得以前在校的时候我也说过大话，说我虽然改变不了世界，但是世界也别想改变我。但是现实狠狠的打了我的脸，在步入社会后，这个世界确实在潜移默化的改变了我们。回收想想在学校的那个我们，现在我们也不得不去考虑房子，票子等等。。。&lt;/p&gt;
-
-&lt;h2 id=&quot;关于和平&quot;&gt;关于和平&lt;/h2&gt;
-&lt;p&gt;书中介绍了一个老兵的故事，，老兵参加过越南战争。老兵的部队最后活着的没有几个，其他都牺牲了。 真正能感受到战争的残酷，我们应该珍惜和平，我们现在的生活其实挺好的。&lt;/p&gt;
-
-&lt;h2 id=&quot;关于自身&quot;&gt;关于自身&lt;/h2&gt;
-&lt;p&gt;我觉得最大的收获就是又一次督促我能够追求自己想要的生活。为自己想过的生活加油吧。。。&lt;/p&gt;
-
-&lt;p&gt;说了很多碎碎念，，别介意，书真的不错，可以一看，你就当看故事了，听听故事收获一份属于你的感动。&lt;/p&gt;
-
-&lt;p&gt;现在我开始接着看大冰的其它书了，期待其它的感动。&lt;/p&gt;</content><author><name>FSilence</name></author><summary type="html">之前听朋友推荐过大冰的书，最近在地铁上拜读了一下其中的一本《乖，摸摸头》，其实我很久没看过非专业的书籍了，看完后还是有很多感慨的，想要在这里发发牢骚。</summary></entry><entry><title type="html">gradle在不同系统下适配</title><link href="http://localhost:4000/2017/04/10/gradlew-env-get/" rel="alternate" type="text/html" title="gradle在不同系统下适配" /><published>2017-04-10T00:00:00+00:00</published><updated>2017-04-10T00:00:00+00:00</updated><id>http://localhost:4000/2017/04/10/gradlew-env-get</id><content type="html" xml:base="http://localhost:4000/2017/04/10/gradlew-env-get/">&lt;p&gt;有时我们需要自己定制一些gradle的执行task，可能会用到一些系统中的其它环境，这时需要我们针对不同的OS做一些适配。&lt;/p&gt;
-
-&lt;p&gt;##判断当前系统环境
-方法一：&lt;br /&gt;
-获取os的name判断其中是否包含windows字段&lt;/p&gt;
-
-&lt;pre&gt;
-&lt;code&gt;
-def isWindows() {
-    return System.properties['os.name'].contains('windows');
-}
-&lt;/code&gt;
-&lt;/pre&gt;
-
-&lt;p&gt;方法二： 
-通过OperatingSystem类中的方法来判断当前环境&lt;/p&gt;
-
-&lt;pre&gt;
-&lt;code&gt;
-def isWindows() {
- return org.gradle.internal.os.OperatingSystem.current().isWindows()
-}
-&lt;/code&gt;
-&lt;/pre&gt;
-
-&lt;p&gt;##获取系统环境变量&lt;br /&gt;
-在windows环境下可以通过  $System.env来获取 比如获取ANDROID_HOME 可以调用$System.env.ANDROID_HOME（注意在path下配置ANDROID_HOME变量）&lt;/p&gt;
-
-&lt;p&gt;在linux和mac上可以通过which指令来获取环境变量，比如我要获取adb的环境变量可以通过以下代码获取：&lt;/p&gt;
-
-&lt;pre&gt;
-&lt;code&gt;
-&quot;which adb&quot;.execute().inputStream.readLines()[0]
-&lt;/code&gt;
-&lt;/pre&gt;
-&lt;p&gt;mark：&lt;br /&gt;
-TODO此方法可以在命令行中调用gradlew命令的时候获取到adb的环境变量，但是如果在Android Studio上直接运行时获取不到的，暂时不知道为什么先mark以下&lt;/p&gt;
-
-&lt;p&gt;最近发现其实我们不必滴啊用which adb ，我门可以配置统一的ANDROID_HOME来解决，以前是不知道mac 怎么配置ANDROID_HOME，其实mac配置系统变量也很简单 只需要调用 export命令即可，我们可以修改~/.bash_profile 添加export ANROID_HOME=”“即可。&lt;/p&gt;</content><author><name>FSilence</name></author><summary type="html">有时我们需要自己定制一些gradle的执行task，可能会用到一些系统中的其它环境，这时需要我们针对不同的OS做一些适配。</summary></entry><entry><title type="html">用GithubPages搭建个人Blog</title><link href="http://localhost:4000/2017/03/29/github-pages-jekyll/" rel="alternate" type="text/html" title="用GithubPages搭建个人Blog" /><published>2017-03-29T00:00:00+00:00</published><updated>2017-03-29T00:00:00+00:00</updated><id>http://localhost:4000/2017/03/29/github-pages-jekyll</id><content type="html" xml:base="http://localhost:4000/2017/03/29/github-pages-jekyll/">&lt;p&gt;用GithubPages + jekyll搭建你的个人Blog, 专注于内容。&lt;/p&gt;
-
-&lt;pre&gt;
-内容大纲：
-1.配置githubpages  
-2.选择你的jekyll模板    
-3.开始写Blog  
-&lt;/pre&gt;
-&lt;p&gt;以前总是羡慕别人有自己的Blog，一直想有有个属于自己的Blog网站。之前断断续续写过一些，用过csdn 用过 eoe的blog（现在已经没有这个功能了）。 也尝试过wordpress等，买过云服务器。最后总是不了了之。前段时间偶然看到了githubpages, 眼前一亮
-，这么nb的功能以前竟然不知道。然后花了几天时间fork了别人的Blog 修改后搭建了自己的Blog。&lt;/p&gt;
-
-&lt;h2 id=&quot;配置githubs&quot;&gt;配置githubs&lt;/h2&gt;
-&lt;p&gt;官网上有很详细的介绍，基本就是你新建一个以你的github名字开始+github.io的仓库，具体的配置过程可以移步官网 &lt;a href=&quot;http://github.io&quot;&gt;github.io&lt;/a&gt; 我就不做重复的搬运了 &lt;br /&gt;
-之后可以在工程的Settings中做一些配置，比如指定你的个人域名，&lt;/p&gt;
-
-&lt;h2 id=&quot;配置jekyll&quot;&gt;配置jekyll&lt;/h2&gt;
-&lt;p&gt;关于jekyll 可以移步 &lt;a href=&quot;https://help.github.com/articles/using-jekyll-as-a-static-site-generator-with-github-pages/&quot;&gt;Using jekyll with GithubPages&lt;/a&gt;&lt;br /&gt;
-基本是说jekyll是一个静态html的生成框架。&lt;br /&gt;
-关于jekyll的配置模板网上有很多 你可以选择你喜欢的主题加以修改&lt;a href=&quot;http://jekyllthemes.org/&quot;&gt;jekyll themes&lt;/a&gt;&lt;br /&gt;
-如果你像我一样对前端不了解的话，别着急你可以fork别人的blog 然后修改其中的内容，告诉你个小技巧 你可以在github上搜索github,io 然后选择你喜欢的blog fork后修改其中的关键内容就行，我就是fork的 &lt;a href=&quot;https://github.com/mzlogin/mzlogin.github.io&quot;&gt;https://github.com/mzlogin/mzlogin.github.io&lt;/a&gt;&lt;br /&gt;
-一般你只需要修改_config.yml 和CNAME中的东西即可，是不是很容易啊。如果项目中设计到其它第三方的插件，你需要注册你个人的插件并替换相关内容，比如用到的评论模块,你需要换成你个人的。&lt;/p&gt;
-
-&lt;h2 id=&quot;开始blog&quot;&gt;开始Blog&lt;/h2&gt;
-&lt;p&gt;将项目push到你新建的github仓库中，之后你就可以开始写Blog了。&lt;/p&gt;
-
-&lt;p&gt;本文只是一个阐述，详细过程可以参照其他人的Blog &lt;a href=&quot;http://www.jianshu.com/p/3f355c7872d5&quot;&gt;http://www.jianshu.com/p/3f355c7872d5&lt;/a&gt;&lt;/p&gt;</content><author><name>FSilence</name></author><summary type="html">用GithubPages + jekyll搭建你的个人Blog, 专注于内容。</summary></entry></feed>
+&lt;p&gt;&lt;a href=&quot;http://www.open-open.com/lib/view/open1439793373083.html&quot;&gt;使用Spock框架进行单元测试&lt;/a&gt;&lt;/p&gt;</content><author><name>FSilence</name></author><summary type="html">Spock单元测试资料汇总</summary></entry></feed>

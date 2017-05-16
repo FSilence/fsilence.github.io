@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans" prefix="og: http://ogp.me/ns#" class="han-init">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <title>IPC之AIDL(3)系统为我们做了什么 &mdash; FSilence's Blog</title>
+    <link rel="stylesheet" href="/assets/vendor/primer-css/css/primer.css">
+    <link rel="stylesheet" href="/assets/vendor/primer-markdown/dist/user-content.min.css">
+    <link rel="stylesheet" href="/assets/vendor/octicons/octicons/octicons.css">
+    <link rel="stylesheet" href="/assets/css/components/collection.css">
+    <link rel="stylesheet" href="/assets/css/components/repo-card.css">
+    <link rel="stylesheet" href="/assets/css/sections/repo-list.css">
+    <link rel="stylesheet" href="/assets/css/sections/mini-repo-list.css">
+    <link rel="stylesheet" href="/assets/css/components/boxed-group.css">
+    <link rel="stylesheet" href="/assets/css/globals/common.css">
+    <link rel="stylesheet" href="/assets/vendor/share.js/dist/css/share.min.css">
+    <link rel="stylesheet" href="/assets/css/globals/responsive.css">
+    <link rel="stylesheet" href="/assets/css/posts/index.css">
+    <!-- Latest compiled and minified CSS -->
+    
+
+    
+    <link rel="canonical" href="http://localhost:4000/2017/05/12/IPC-AIDL-Android-3/">
+    <link rel="alternate" type="application/atom+xml" title="FSilence's Blog" href="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    
+    <meta property="og:title" content="IPC之AIDL(3)系统为我们做了什么">
+      
+    <meta name="keywords" content="android, ipc, aidl">
+    <meta name="og:keywords" content="android, ipc, aidl">
+      
+    <meta name="description" content="内容大纲：1.了解基本的aidl原理（不涉及底层）">
+    <meta name="og:description" content="内容大纲：1.了解基本的aidl原理（不涉及底层）">
+      
+    
+    
+        
+    
+    <meta property="og:url" content="http://localhost:4000/2017/05/12/IPC-AIDL-Android-3/">
+    <meta property="og:site_name" content="FSilence's Blog">
+    <meta property="og:type" content="article">
+    <meta property="og:locale" content="zh_CN" />
+    
+    <meta property="article:published_time" content="2017-05-12">
+    
+    <script src="/assets/vendor/jquery/dist/jquery.min.js"></script>
+    <script src="/assets/js/jquery-ui.js"></script>
+    <script type="text/javascript">
+    function toggleMenu() {
+        var nav = document.getElementsByClassName("site-header-nav")[0];
+        if (nav.style.display == "inline-flex") {
+          nav.style.display = "none";
+        } else {
+          nav.style.display = "inline-flex";
+        }
+    }
+
+	var _hmt = _hmt || [];
+	(function() {
+		var hm = document.createElement("script");
+		hm.src = "https://hm.baidu.com/hm.js?3a8f3e5734d78efb8fc1edf92dadd19e";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+	})();
+
+    </script>
+</head>
+<body class="" data-mz="">
+    <header class="site-header">
+        <div class="container">
+            <h1><a href="/" title="FSilence's Blog"><span class="octicon octicon-mark-github"></span> FSilence's Blog</a></h1>
+            <button class="collapsed mobile-visible" type="button" onclick="toggleMenu();">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <nav class="site-header-nav" role="navigation">
+                
+                <a href="/" class=" site-header-nav-item" target="" title="首页">首页</a>
+                
+                <a href="/categories/" class=" site-header-nav-item" target="" title="分类">分类</a>
+                
+                <a href="/wiki/" class=" site-header-nav-item" target="" title="维基">维基</a>
+                
+                <a href="/links/" class=" site-header-nav-item" target="" title="链接">链接</a>
+                
+                <a href="/about/" class=" site-header-nav-item" target="" title="关于">关于</a>
+                
+            </nav>
+        </div>
+    </header>
+    <!-- / header -->
+
+    <section class="collection-head small geopattern" data-pattern-id="IPC之AIDL(3)系统为我">
+<div class="container">
+  <div class="columns">
+    <div class="column three-fourths">
+      <div class="collection-title">
+        <h1 class="collection-header">IPC之AIDL(3)系统为我们做了什么</h1>
+        <div class="collection-info">
+          
+          <span class="meta-info">
+            <span class="octicon octicon-calendar"></span> 2017/05/12
+          </span>
+          
+          
+          <span class="meta-info">
+            <span class="octicon octicon-file-directory"></span>
+            <a href="/categories/#android" title="android">android</a>
+          </span>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+<!-- / .banner -->
+<section class="container content">
+<div class="columns">
+  <div class="column three-fourths" >
+    <article class="article-content markdown-body">
+    <p>内容大纲：</p>
+<pre>
+1.了解基本的aidl原理（不涉及底层）
+</pre>
+
+<p>前面几篇我们介绍了如何使用AIDL实现IPC 那么你会有疑问了 我们用的asInterface是什么， Stub又是什么，现在让我们一点一点来看。在我们编译的时候，系统会吧aidl生成对应的java类（这就是为什么支持aidl这种文件格式了），我们先来看一下系统生成的类(本文涉及到的系统源码都是基于android-23)：<br />
+<code></code></p>
+<pre>
+package com.wlh.animation.ipctest;
+// Declare any non-default types here with import statements
+
+public interface IBookManager extends android.os.IInterface {
+    /**
+     * Local-side IPC implementation stub class.
+     */
+    public static abstract class Stub extends android.os.Binder implements com.wlh.animation.ipctest.IBookManager {
+        private static final java.lang.String DESCRIPTOR = "com.wlh.animation.ipctest.IBookManager";
+
+        /**
+         * Construct the stub at attach it to the interface.
+         */
+        public Stub() {
+            this.attachInterface(this, DESCRIPTOR);
+        }
+
+        /**
+         * Cast an IBinder object into an com.wlh.animation.ipctest.IBookManager interface,
+         * generating a proxy if needed.
+         */
+        public static com.wlh.animation.ipctest.IBookManager asInterface(android.os.IBinder obj) {
+    		...
+        }
+
+        @Override
+        public android.os.IBinder asBinder() {
+            return this;
+        }
+
+        @Override
+        public boolean onTransact(int code, android.os.Parcel data, android.os.Parcel reply, int flags)
+                throws android.os.RemoteException {
+            switch (code) {
+                case INTERFACE_TRANSACTION: {
+                   ...
+                }
+                case TRANSACTION_getBookList: {
+                   ...
+                }
+                case TRANSACTION_addBook: {
+                  ...
+                }
+                case TRANSACTION_registerListener: {
+                   ...
+                }
+                case TRANSACTION_unRegisterListener: {
+                   ...
+                }
+            }
+            return super.onTransact(code, data, reply, flags);
+        }
+
+        private static class Proxy implements com.wlh.animation.ipctest.IBookManager {
+            private android.os.IBinder mRemote;
+
+            Proxy(android.os.IBinder remote) {
+                mRemote = remote;
+            }
+
+            @Override
+            public android.os.IBinder asBinder() {
+                return mRemote;
+            }
+
+            public java.lang.String getInterfaceDescriptor() {
+                return DESCRIPTOR;
+            }
+
+            @Override
+            public java.util.List<com.wlh.animation.ipctest.Book> getBookList() throws android.os.RemoteException {
+       			...
+            }
+
+            @Override
+            public void addBook(com.wlh.animation.ipctest.Book book) throws android.os.RemoteException {
+     			...
+            }
+
+            @Override
+            public void registerListener(com.wlh.animation.ipctest.IBookListener listener)
+                    throws android.os.RemoteException {
+               		...
+            }
+
+            @Override
+            public void unRegisterListener(com.wlh.animation.ipctest.IBookListener listener)
+                    throws android.os.RemoteException {
+          		...
+            }
+        }
+
+        static final int TRANSACTION_getBookList = (android.os.IBinder.FIRST_CALL_TRANSACTION + 0);
+        static final int TRANSACTION_addBook = (android.os.IBinder.FIRST_CALL_TRANSACTION + 1);
+        static final int TRANSACTION_registerListener = (android.os.IBinder.FIRST_CALL_TRANSACTION + 2);
+        static final int TRANSACTION_unRegisterListener = (android.os.IBinder.FIRST_CALL_TRANSACTION + 3);
+    }
+
+    public java.util.List<com.wlh.animation.ipctest.Book> getBookList() throws android.os.RemoteException;
+
+    public void addBook(com.wlh.animation.ipctest.Book book) throws android.os.RemoteException;
+
+    public void registerListener(com.wlh.animation.ipctest.IBookListener listener) throws android.os.RemoteException;
+
+    public void unRegisterListener(com.wlh.animation.ipctest.IBookListener listener) throws android.os.RemoteException;
+}
+&lt;/pre&gt;
+&lt;/code&gt;
+
+我们先忽略方法的具体实现，来看一下这个系统为我们生成的类中都有哪些东西：  
+1.整个文件是一个IBookManager(你aidl文件名字)的接口 继承IInterface  
+2.一个抽象类Stub继承Binder（前面我们说过  Binder有跨进程的能力）实现了这个IBookManager接口  
+3.一个代理类实现了IBookManager(注意没有继承Binder)  
+然后我们依次来解析一下这写类：  
+##IBookManager IInterface 
+首先是IBookManager,它是一个继承自IInterface的接口，我们先来看下IInterface接口中有哪些东西：  
+<pre>
+<code>
+public interface IInterface
+{
+    public IBinder asBinder();
+}
+</code>
+</pre>
+我们可以看到IInterface中只有一个方法 就是asBinder 返回一个IBinder,IBinder也是一个接口。
+
+##Stub Binder
+Stub是一个抽象类继承了Binder 实现了IBookManager接口
+
+###Binder
+Binder实现了IBinder，我们来看下IBinder中的内容.我们这里只介绍一些重要的变量和方法，其它的说明读者可自行查阅源码中的注释。  
+###getInterfaceDescriptor
+源码定义如下：  
+<pre>
+<code>
+  /**
+     * Get the canonical name of the interface supported by this binder.
+     */
+    public String getInterfaceDescriptor() throws RemoteException;
+</code>
+</pre>
+这个返回接口的名称，我们在Binder中可以看到它的具体实现：  
+<pre>
+<code>
+   public void attachInterface(IInterface owner, String descriptor) {
+        mOwner = owner;
+        mDescriptor = descriptor;
+    }
+
+      public String getInterfaceDescriptor() {
+        return mDescriptor;
+    }
+</code>
+</pre>
+我们可以看到系统通过attachInterface来给接口名称赋值，主要是为了作为跨进程通信时候接口的标识，我们可以在Binder的子类Stub也就是系统为我们生成的类中看到具体的接口名称：  
+<pre>
+<code>
+        private static final java.lang.String DESCRIPTOR = "com.wlh.animation.ipctest.IBookManager";
+
+        /**
+         * Construct the stub at attach it to the interface.
+         */
+        public Stub() {
+            this.attachInterface(this, DESCRIPTOR);
+        }
+</code>
+</pre>
+我们可以看到其实就是接口的全路径。  
+
+###pingBinder, isBinderAlive, 
+<pre>
+<code>
+  /**
+     * Check to see if the object still exists.
+     * 
+     * @return Returns false if the
+     * hosting process is gone, otherwise the result (always by default
+     * true) returned by the pingBinder() implementation on the other
+     * side.
+     */
+    public boolean pingBinder();
+</code>
+</pre>
+就是字面意思ping一下 来确认Binder是否可以链接到Binder，只有当宿主进程不存在的时候才返回false。  
+
+<pre>
+<code>
+   /**
+     * Check to see if the process that the binder is in is still alive.
+     *
+     * @return false if the process is not alive.  Note that if it returns
+     * true, the process may have died while the call is returning.
+     */
+    public boolean isBinderAlive();
+</code>
+</pre>
+返回Binder是否存活。如果进程不是存活状态，那么返回false。  
+
+
+###queryLocalInterface
+
+<pre>
+<code>
+ /**
+     * Attempt to retrieve a local implementation of an interface
+     * for this Binder object.  If null is returned, you will need
+     * to instantiate a proxy class to marshall calls through
+     * the transact() method.
+     */
+    public IInterface queryLocalInterface(String descriptor);
+</code>
+</pre>
+根据接口的描述返回一个本地接口，如果返回的是null的话（就是跨进程），需要你去实现代理（在使用aidl的时候系统为我们已经实现好了）  
+
+
+###transact
+<pre>
+<code>
+/**
+     * Perform a generic operation with the object.
+     * 
+     * @param code The action to perform.  This should
+     * be a number between {@link #FIRST_CALL_TRANSACTION} and
+     * {@link #LAST_CALL_TRANSACTION}.
+     * @param data Marshalled data to send to the target.  Must not be null.
+     * If you are not sending any data, you must create an empty Parcel
+     * that is given here.
+     * @param reply Marshalled data to be received from the target.  May be
+     * null if you are not interested in the return value.
+     * @param flags Additional operation flags.  Either 0 for a normal
+     * RPC, or {@link #FLAG_ONEWAY} for a one-way RPC.
+     */
+    public boolean transact(int code, Parcel data, Parcel reply, int flags)
+        throws RemoteException;
+</code>
+</pre>
+这个基本上是IBinder中最重要的一个函数了，它用来相应对象的操作，例如我们本例中的一个addBook操作，它的参数主要有如下几个：  
+1.code 一次操作的唯一标识，要介于常量FIRST_CALL_TRANSACTION（ 0x00000001）和 LAST_CALL_TRANSACTION（0x00ffffff）之间  
+
+2.data 需要传递的数据不能为空   
+
+3.reply 返回的数据  
+
+4.flats 附加的操作标识，通常返回0. 如果设置成FLAG_ONEWAY表示呼叫方不会等待被呼叫方放回结果（只在跨进程的时候生效）。  
+
+
+我们再来看下Stub中的具体实现：  
+
+###asInterface
+<pre>
+<code>
+     public static com.wlh.animation.ipctest.IBookManager asInterface(android.os.IBinder obj) {
+            if ((obj == null)) {
+                return null;
+            }
+            android.os.IInterface iin = obj.queryLocalInterface(DESCRIPTOR);
+            if (((iin != null) &amp;&amp; (iin instanceof com.wlh.animation.ipctest.IBookManager))) {
+                return ((com.wlh.animation.ipctest.IBookManager) iin);
+            }
+            return new com.wlh.animation.ipctest.IBookManager.Stub.Proxy(obj);
+        }
+</code>
+</pre>
+将IBinder转换成我们需要的接口，我们可以看到基本的逻辑是：如果从本地找到了接口就返回本地接口（没有跨进程），否则返回Stub的代理类，关于代理类我们稍后再说，这个逻辑规则基本贯穿了Stub中的所有方法：即先找本地，如果没有（跨进程）则返回代理。  
+
+###onTransact
+<pre>
+<code>
+ @Override
+        public boolean onTransact(int code, android.os.Parcel data, android.os.Parcel reply, int flags)
+                throws android.os.RemoteException {
+
+
+   switch (code) {
+                case INTERFACE_TRANSACTION: {
+                    reply.writeString(DESCRIPTOR);
+                    return true;
+                }
+                case TRANSACTION_addBook: {
+                   。。。
+                }
+}
+}
+</code>
+</pre>
+首先在Stub类中 系统为我们的每一个方法值都赋予了一个id
+<pre>
+    static final int TRANSACTION_getBookList = (android.os.IBinder.FIRST_CALL_TRANSACTION + 0);
+        static final int TRANSACTION_addBook = (android.os.IBinder.FIRST_CALL_TRANSACTION + 1);
+        static final int TRANSACTION_registerListener = (android.os.IBinder.FIRST_CALL_TRANSACTION + 2);
+        static final int TRANSACTION_unRegisterListener = (android.os.IBinder.FIRST_CALL_TRANSACTION + 3);
+</pre>
+可以看到是基于TRANSACTIOn_{$method name}来命名的参数是基于FIRST_CALL_TRANSACTION递增的。然后再onTransaction方法中系统会switch code判断当前调用的是哪个方法然后做相应的操作 我们来看下addBook的具体实现：  
+<pre>
+<code>
+  case TRANSACTION_addBook: {
+    data.enforceInterface(DESCRIPTOR);
+                    com.wlh.animation.ipctest.Book _arg0;
+                    if ((0 != data.readInt())) {
+                        _arg0 = com.wlh.animation.ipctest.Book.CREATOR.createFromParcel(data);
+                    } else {
+                        _arg0 = null;
+                    }
+                    this.addBook(_arg0);
+                    reply.writeNoException();
+                    if ((_arg0 != null)) {
+                        reply.writeInt(1);
+                        _arg0.writeToParcel(reply, android.os.Parcelable.PARCELABLE_WRITE_RETURN_VALUE);
+                    } else {
+                        reply.writeInt(0);
+                    }
+                    return true;
+	}
+</code>
+</pre>  
+我们不难看出，基本思路就是将对象和Parceable之间转换处理。  
+
+我们再来看下代理类Proxy:  
+Proxy是实现了接口IBookManager的代理类，其构造方法如下：  
+<pre>
+<code>
+  Proxy(android.os.IBinder remote) {
+                mRemote = remote;
+   }
+</code>
+</pre>
+
+构造函数是一个IBinder,之后代理中的相关调用都会转到这个Binder中去处理，我们还是来看一下addBookManager接口：  
+<pre>
+<code>
+     @Override
+            public void addBook(com.wlh.animation.ipctest.Book book) throws android.os.RemoteException {
+                android.os.Parcel _data = android.os.Parcel.obtain();
+                android.os.Parcel _reply = android.os.Parcel.obtain();
+                try {
+                    _data.writeInterfaceToken(DESCRIPTOR);
+                    if ((book != null)) {
+                        _data.writeInt(1);
+                        book.writeToParcel(_data, 0);
+                    } else {
+                        _data.writeInt(0);
+                    }
+                    mRemote.transact(Stub.TRANSACTION_addBook, _data, _reply, 0);
+                    _reply.readException();
+                    if ((0 != _reply.readInt())) {
+                        book.readFromParcel(_reply);
+                    }
+                } finally {
+                    _reply.recycle();
+                    _data.recycle();
+                }
+            }
+</code>
+</pre>
+
+可以看到和onTransact中最大的区别在于 它将具体的处理时间交给了跨进程的Binder处理。  
+
+以上就是在我们编写AIDL文件后 系统为我们生成文件的解析。
+
+
+
+
+</com.wlh.animation.ipctest.Book></com.wlh.animation.ipctest.Book></pre>
+
+    
+
+    </article>
+    <div class="share">
+      <div class="share-component"></div>
+    </div>
+    <div class="comment">
+      
+  
+      
+        
+        
+        
+      
+	  
+	
+
+<!--
+          <div id="disqus_thread"></div>
+          <script>
+            var disqus_config = function () {
+              this.page.url = 'http://localhost:4000/2017/05/12/IPC-AIDL-Android-3/';
+              this.page.identifier = '/2017/05/12/IPC-AIDL-Android-3/';
+              this.page.title = 'IPC之AIDL(3)系统为我们做了什么';
+            };
+            (function() { // DON'T EDIT BELOW THIS LINE
+              var d = document, s = d.createElement('script');
+
+              s.type = 'text/javascript';
+              s.async = true;
+              var shortname = 'FSilence';
+
+              s.src = '//' + shortname + '.disqus.com/embed.js';
+
+              s.setAttribute('data-timestamp', +new Date());
+              (d.head || d.body).appendChild(s);
+            })();
+          </script>
+          <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+	  -->
+
+    </div>
+  </div>
+  <div class="column one-fourth">
+    
+<h3>Search</h3>
+<div id="site_search">
+    <input type="text" id="search_box" placeholder="Search">
+    <button class="btn btn-default" id="site_search_do"><span class="octicon octicon-search"></span></button>
+</div>
+
+<ul id="search_results"></ul>
+
+<link rel="stylesheet" type="text/css" href="/assets/css/modules/sidebar-search.css">
+<script src="/assets/js/lunr.min.js"></script>
+<script src="/assets/js/search.js"></script>
+
+
+    
+<h3 class="mobile-hidden">Post Directory</h3>
+<div id="post-directory-module" class="mobile-hidden">
+  <section class="post-directory">
+  <!-- Links that trigger the jumping -->
+  <!-- Added by javascript below -->
+  <dl></dl>
+  </section>
+</div>
+
+<script src="/assets/js/jquery.toc.js"></script>
+
+  </div>
+</div>
+</section>
+<!-- /section.content -->
+
+    <footer class="container">
+        <div class="site-footer" role="contentinfo">
+            <div class="copyright left mobile-block">
+                    © 2015
+                    <span title="FSilence">FSilence</span>
+                    <a href="javascript:window.scrollTo(0,0)" class="right mobile-visible">TOP</a>
+            </div>
+
+            <ul class="site-footer-links right mobile-hidden">
+                <li>
+                    <a href="javascript:window.scrollTo(0,0)" >TOP</a>
+                </li>
+            </ul>
+            <a href="http://github.com/FSilence/fsilence.github.io" target="_blank" aria-label="view source code">
+                <span class="mega-octicon octicon-mark-github" title="GitHub"></span>
+            </a>
+            <ul class="site-footer-links mobile-hidden">
+                
+                <li>
+                    <a href="/" title="首页" target="">首页</a>
+                </li>
+                
+                <li>
+                    <a href="/categories/" title="分类" target="">分类</a>
+                </li>
+                
+                <li>
+                    <a href="/wiki/" title="维基" target="">维基</a>
+                </li>
+                
+                <li>
+                    <a href="/links/" title="链接" target="">链接</a>
+                </li>
+                
+                <li>
+                    <a href="/about/" title="关于" target="">关于</a>
+                </li>
+                
+<!-- 注释Rss
+                <li><a href=""><span class="octicon octicon-rss" style="color:orange;"></span></a></li>
+ -->           
+		</ul>
+
+        </div>
+    </footer>
+    <!-- / footer -->
+    <script src="/assets/vendor/share.js/dist/js/share.min.js"></script>
+    <script src="/assets/js/geopattern.js"></script>
+    <script src="/assets/js/prism.js"></script>
+    <link rel="stylesheet" href="/assets/css/globals/prism.css">
+    <script>
+      jQuery(document).ready(function($) {
+        // geopattern
+        $('.geopattern').each(function(){
+          $(this).geopattern($(this).data('pattern-id'));
+        });
+       // hljs.initHighlightingOnLoad();
+      });
+    </script>
+    
+    <div style="display:none">
+      <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-80669434-1', 'auto');
+        ga('send', 'pageview');
+
+      </script>
+    </div>
+    
+</body>
+</html>

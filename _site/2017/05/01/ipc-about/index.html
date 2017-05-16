@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <title>在线工具 &mdash; FSilence's Blog</title>
+    <title>IPC概述 &mdash; FSilence's Blog</title>
     <link rel="stylesheet" href="/assets/vendor/primer-css/css/primer.css">
     <link rel="stylesheet" href="/assets/vendor/primer-markdown/dist/user-content.min.css">
     <link rel="stylesheet" href="/assets/vendor/octicons/octicons/octicons.css">
@@ -21,28 +21,28 @@
     
 
     
-    <link rel="canonical" href="http://localhost:4000/wiki/tools/">
+    <link rel="canonical" href="http://localhost:4000/2017/05/01/ipc-about/">
     <link rel="alternate" type="application/atom+xml" title="FSilence's Blog" href="">
     <link rel="shortcut icon" href="/favicon.ico">
     
-    <meta property="og:title" content="在线工具">
+    <meta property="og:title" content="IPC概述">
       
-    <meta name="keywords" content="tools, 工具">
-    <meta name="og:keywords" content="tools, 工具">
+    <meta name="keywords" content="android, ipc">
+    <meta name="og:keywords" content="android, ipc">
       
-    <meta name="description" content="其它在线工具网站oschina 在线工具十六进制颜色转换器">
-    <meta name="og:description" content="其它在线工具网站oschina 在线工具十六进制颜色转换器">
+    <meta name="description" content="摘要：1.什么是IPC2.android实现IPC的几种方式##IPCIPC全称Inter-Process Communication 是指进程间通信。Android的一个app是运行在一个进程上的（除非你启动了另外一个进程），每一个进程都是运行在一个JVM上的，所以进程和进程之间的内存空间不共享，那么如何完成进程间的通信就非常重要了。##Android IPC的几种通信方式实现进程间的通信的思路大致就是将各个进程理解为2个不可直接交互的系统（比如 客户端 和 服务端必须通过网络来交互），要实现2个系统的数据交换无非2种方式：1.系统和系统之间建立消息系统，通过将需要对方知道的消息发送过去进行处理返回，Android提供了Binder来实现进程间的通信，Binder会将一个数据从一个进程clone到另外一个进程（实际上是二进制流的传送，实际上你在不同进程拿到的对象并不是同一个)，像Messenger AIDL 和 ContentProvider实现进程交互，底层都是使用的Binder机制。除了Binder机制外我们还可以像客户端和服务端交互那样，使用socket来完成通信。2.系统共享资源，例如共同存储维护一个文件系统， 数据库等等，需要特殊说明，虽然SharePreference是使用的文件读写xml来存储数据的，但是在多进程中操作SharePreference是有问题的，因为SharePreference为了提高性能添加了内存缓存，但是进程间的内存空间是不共享的，所以会造成数据丢失的情况。在后面的文章中，作者将陆续为大家介绍使用不同的方式来实现IPC。">
+    <meta name="og:description" content="摘要：1.什么是IPC2.android实现IPC的几种方式##IPCIPC全称Inter-Process Communication 是指进程间通信。Android的一个app是运行在一个进程上的（除非你启动了另外一个进程），每一个进程都是运行在一个JVM上的，所以进程和进程之间的内存空间不共享，那么如何完成进程间的通信就非常重要了。##Android IPC的几种通信方式实现进程间的通信的思路大致就是将各个进程理解为2个不可直接交互的系统（比如 客户端 和 服务端必须通过网络来交互），要实现2个系统的数据交换无非2种方式：1.系统和系统之间建立消息系统，通过将需要对方知道的消息发送过去进行处理返回，Android提供了Binder来实现进程间的通信，Binder会将一个数据从一个进程clone到另外一个进程（实际上是二进制流的传送，实际上你在不同进程拿到的对象并不是同一个)，像Messenger AIDL 和 ContentProvider实现进程交互，底层都是使用的Binder机制。除了Binder机制外我们还可以像客户端和服务端交互那样，使用socket来完成通信。2.系统共享资源，例如共同存储维护一个文件系统， 数据库等等，需要特殊说明，虽然SharePreference是使用的文件读写xml来存储数据的，但是在多进程中操作SharePreference是有问题的，因为SharePreference为了提高性能添加了内存缓存，但是进程间的内存空间是不共享的，所以会造成数据丢失的情况。在后面的文章中，作者将陆续为大家介绍使用不同的方式来实现IPC。">
       
     
     
         
     
-    <meta property="og:url" content="http://localhost:4000/wiki/tools/">
+    <meta property="og:url" content="http://localhost:4000/2017/05/01/ipc-about/">
     <meta property="og:site_name" content="FSilence's Blog">
     <meta property="og:type" content="article">
     <meta property="og:locale" content="zh_CN" />
     
-    <meta property="article:published_time" content="2017-05-16">
+    <meta property="article:published_time" content="2017-05-01">
     
     <script src="/assets/vendor/jquery/dist/jquery.min.js"></script>
     <script src="/assets/js/jquery-ui.js"></script>
@@ -92,12 +92,25 @@
     </header>
     <!-- / header -->
 
-    <section class="collection-head small geopattern" data-pattern-id="在线工具">
+    <section class="collection-head small geopattern" data-pattern-id="IPC概述">
 <div class="container">
   <div class="columns">
     <div class="column three-fourths">
       <div class="collection-title">
-        <h1 class="collection-header">在线工具</h1>
+        <h1 class="collection-header">IPC概述</h1>
+        <div class="collection-info">
+          
+          <span class="meta-info">
+            <span class="octicon octicon-calendar"></span> 2017/05/01
+          </span>
+          
+          
+          <span class="meta-info">
+            <span class="octicon octicon-file-directory"></span>
+            <a href="/categories/#android" title="android">android</a>
+          </span>
+          
+        </div>
       </div>
     </div>
   </div>
@@ -108,10 +121,22 @@
 <div class="columns">
   <div class="column three-fourths" >
     <article class="article-content markdown-body">
-    <h2 id="其它在线工具网站">其它在线工具网站</h2>
-<p><a href="http://tool.oschina.net/">oschina 在线工具</a><br />
-<a href="http://www.sioe.cn/yingyong/yanse-rgb-16/">十六进制颜色转换器</a></p>
+    <p>摘要：</p>
+<pre>
+1.什么是IPC
+2.android实现IPC的几种方式
+</pre>
 
+<p>##IPC
+IPC全称Inter-Process Communication 是指进程间通信。Android的一个app是运行在一个进程上的（除非你启动了另外一个进程），每一个进程都是运行在一个JVM上的，所以进程和进程之间的内存空间不共享，那么如何完成进程间的通信就非常重要了。</p>
+
+<p>##Android IPC的几种通信方式
+实现进程间的通信的思路大致就是将各个进程理解为2个不可直接交互的系统（比如 客户端 和 服务端必须通过网络来交互），要实现2个系统的数据交换无非2种方式：<br />
+1.系统和系统之间建立消息系统，通过将需要对方知道的消息发送过去进行处理返回，Android提供了Binder来实现进程间的通信，Binder会将一个数据从一个进程clone到另外一个进程（实际上是二进制流的传送，实际上你在不同进程拿到的对象并不是同一个)，像Messenger AIDL 和 ContentProvider实现进程交互，底层都是使用的Binder机制。除了Binder机制外我们还可以像客户端和服务端交互那样，使用socket来完成通信。</p>
+
+<p>2.系统共享资源，例如共同存储维护一个文件系统， 数据库等等，需要特殊说明，虽然SharePreference是使用的文件读写xml来存储数据的，但是在多进程中操作SharePreference是有问题的，因为SharePreference为了提高性能添加了内存缓存，但是进程间的内存空间是不共享的，所以会造成数据丢失的情况。</p>
+
+<p>在后面的文章中，作者将陆续为大家介绍使用不同的方式来实现IPC。</p>
 
     
 
@@ -134,9 +159,9 @@
           <div id="disqus_thread"></div>
           <script>
             var disqus_config = function () {
-              this.page.url = 'http://localhost:4000/wiki/tools/';
-              this.page.identifier = '/wiki/tools/';
-              this.page.title = '在线工具';
+              this.page.url = 'http://localhost:4000/2017/05/01/ipc-about/';
+              this.page.identifier = '/2017/05/01/ipc-about/';
+              this.page.title = 'IPC概述';
             };
             (function() { // DON'T EDIT BELOW THIS LINE
               var d = document, s = d.createElement('script');

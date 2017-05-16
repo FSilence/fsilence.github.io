@@ -1,5 +1,29 @@
 {
   
+  "2017-05-16-ipc-messenger": {
+    "title": "IPC之Messenger",
+    "url": " /2017/05/16/ipc-messenger/",
+    "category": "android"
+  },
+  
+  "2017-05-16-eventbus-qa": {
+    "title": "EventBus Q&amp;A",
+    "url": " /2017/05/16/eventbus-qa/",
+    "category": "android"
+  },
+  
+  "2017-05-12-ipc-aidl-android-3": {
+    "title": "IPC之AIDL(3)系统为我们做了什么",
+    "url": " /2017/05/12/IPC-AIDL-Android-3/",
+    "category": "android"
+  },
+  
+  "2017-05-12-ipc-aidl-android-2": {
+    "title": "IPC之AIDL(2)in out inout",
+    "url": " /2017/05/12/IPC-AIDL-Android-2/",
+    "category": "android"
+  },
+  
   "2017-05-12-ipc-aidl-android-1": {
     "title": "IPC之AIDL(1)实现AIDL",
     "url": " /2017/05/12/IPC-AIDL-Android-1/",
@@ -16,6 +40,12 @@
     "title": "用gradle构建java项目",
     "url": " /2017/05/03/gradle-server-project/",
     "category": "gradle"
+  },
+  
+  "2017-05-01-ipc-about": {
+    "title": "IPC概述",
+    "url": " /2017/05/01/ipc-about/",
+    "category": "android"
   },
   
   "2017-04-26-gradle-maven": {
@@ -172,6 +202,12 @@
     "category": "[&quot;gradle&quot;]"
   },
   
+  "2017-05-01-ipc-about": {
+    "title": "IPC概述",
+    "url": "/2017/05/01/ipc-about/",
+    "category": "[&quot;android&quot;]"
+  },
+  
   "2017-05-03-gradle-server-project": {
     "title": "用gradle构建java项目",
     "url": "/2017/05/03/gradle-server-project/",
@@ -188,6 +224,30 @@
     "title": "IPC之AIDL(1)实现AIDL",
     "url": "/2017/05/12/IPC-AIDL-Android-1/",
     "category": "[&quot;Android&quot;]"
+  },
+  
+  "2017-05-12-ipc-aidl-android-2": {
+    "title": "IPC之AIDL(2)in out inout",
+    "url": "/2017/05/12/IPC-AIDL-Android-2/",
+    "category": "[&quot;android&quot;]"
+  },
+  
+  "2017-05-12-ipc-aidl-android-3": {
+    "title": "IPC之AIDL(3)系统为我们做了什么",
+    "url": "/2017/05/12/IPC-AIDL-Android-3/",
+    "category": "[&quot;android&quot;]"
+  },
+  
+  "2017-05-16-eventbus-qa": {
+    "title": "EventBus Q&amp;A",
+    "url": "/2017/05/16/eventbus-qa/",
+    "category": "[&quot;android&quot;]"
+  },
+  
+  "2017-05-16-ipc-messenger": {
+    "title": "IPC之Messenger",
+    "url": "/2017/05/16/ipc-messenger/",
+    "category": "[&quot;android&quot;]"
   },
   
   "wiki-mac-bash": {

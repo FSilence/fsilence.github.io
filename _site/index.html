@@ -119,6 +119,92 @@
                 
                 <li class="repo-list-item">
                     <h3 class="repo-list-name">
+                      <a href="/2017/05/16/ipc-messenger/">IPC之Messenger</a>
+                    </h3>
+                    <p class="repo-list-description">
+                        内容大纲：
+
+1.学会使用Messenger进行进程间通信
+                    </p>
+                    <p class="repo-list-meta">
+                        <span class="meta-info">
+                          <span class="octicon octicon-calendar"></span> 2017/05/16
+                        </span>
+                        
+                        <span class="meta-info">
+                          <span class="octicon octicon-file-directory"></span>
+                          <a href="/categories/#android" title="android">android</a>
+                        </span>
+                        
+                    </p>
+                </li>
+                
+                <li class="repo-list-item">
+                    <h3 class="repo-list-name">
+                      <a href="/2017/05/16/eventbus-qa/">EventBus Q&amp;A</a>
+                    </h3>
+                    <p class="repo-list-description">
+                        阅读EventBus源码过程中总结的一些问题和答案
+                    </p>
+                    <p class="repo-list-meta">
+                        <span class="meta-info">
+                          <span class="octicon octicon-calendar"></span> 2017/05/16
+                        </span>
+                        
+                        <span class="meta-info">
+                          <span class="octicon octicon-file-directory"></span>
+                          <a href="/categories/#android" title="android">android</a>
+                        </span>
+                        
+                    </p>
+                </li>
+                
+                <li class="repo-list-item">
+                    <h3 class="repo-list-name">
+                      <a href="/2017/05/12/IPC-AIDL-Android-3/">IPC之AIDL(3)系统为我们做了什么</a>
+                    </h3>
+                    <p class="repo-list-description">
+                        内容大纲：
+
+1.了解基本的aidl原理（不涉及底层）
+                    </p>
+                    <p class="repo-list-meta">
+                        <span class="meta-info">
+                          <span class="octicon octicon-calendar"></span> 2017/05/12
+                        </span>
+                        
+                        <span class="meta-info">
+                          <span class="octicon octicon-file-directory"></span>
+                          <a href="/categories/#android" title="android">android</a>
+                        </span>
+                        
+                    </p>
+                </li>
+                
+                <li class="repo-list-item">
+                    <h3 class="repo-list-name">
+                      <a href="/2017/05/12/IPC-AIDL-Android-2/">IPC之AIDL(2)in out inout</a>
+                    </h3>
+                    <p class="repo-list-description">
+                        内容大纲：
+
+1.在AIDL的时候正确使用in out inout
+                    </p>
+                    <p class="repo-list-meta">
+                        <span class="meta-info">
+                          <span class="octicon octicon-calendar"></span> 2017/05/12
+                        </span>
+                        
+                        <span class="meta-info">
+                          <span class="octicon octicon-file-directory"></span>
+                          <a href="/categories/#android" title="android">android</a>
+                        </span>
+                        
+                    </p>
+                </li>
+                
+                <li class="repo-list-item">
+                    <h3 class="repo-list-name">
                       <a href="/2017/05/12/IPC-AIDL-Android-1/">IPC之AIDL(1)实现AIDL</a>
                     </h3>
                     <p class="repo-list-description">
@@ -184,99 +270,34 @@
                 
                 <li class="repo-list-item">
                     <h3 class="repo-list-name">
-                      <a href="/2017/04/26/gradle-maven/">Android Gradle上传Maven仓库</a>
+                      <a href="/2017/05/01/ipc-about/">IPC概述</a>
                     </h3>
                     <p class="repo-list-description">
-                        在Android的gradle配置上追加上传Maven的相关操作
+                        摘要：
+
+1.什么是IPC
+2.android实现IPC的几种方式
+
+
+##IPC
+IPC全称Inter-Process Communication 是指进程间通信。Android的一个app是运行在一个进程上的（除非你启动了另外一个进程），每一个进程都是运行在一个JVM上的，所以进程和进程之间的内存空间不共享，那么如何完成进程间的通信就非常重要了。
+
+##Android IPC的几种通信方式
+实现进程间的通信的思路大致就是将各个进程理解为2个不可直接交互的系统（比如 客户端 和 服务端必须通过网络来交互），要实现2个系统的数据交换无非2种方式：
+1.系统和系统之间建立消息系统，通过将需要对方知道的消息发送过去进行处理返回，Android提供了Binder来实现进程间的通信，Binder会将一个数据从一个进程clone到另外一个进程（实际上是二进制流的传送，实际上你在不同进程拿到的对象并不是同一个)，像Messenger AIDL 和 ContentProvider实现进程交互，底层都是使用的Binder机制。除了Binder机制外我们还可以像客户端和服务端交互那样，使用socket来完成通信。
+
+2.系统共享资源，例如共同存储维护一个文件系统， 数据库等等，需要特殊说明，虽然SharePreference是使用的文件读写xml来存储数据的，但是在多进程中操作SharePreference是有问题的，因为SharePreference为了提高性能添加了内存缓存，但是进程间的内存空间是不共享的，所以会造成数据丢失的情况。
+
+在后面的文章中，作者将陆续为大家介绍使用不同的方式来实现IPC。
                     </p>
                     <p class="repo-list-meta">
                         <span class="meta-info">
-                          <span class="octicon octicon-calendar"></span> 2017/04/26
+                          <span class="octicon octicon-calendar"></span> 2017/05/01
                         </span>
                         
                         <span class="meta-info">
                           <span class="octicon octicon-file-directory"></span>
-                          <a href="/categories/#gradle" title="gradle">gradle</a>
-                        </span>
-                        
-                    </p>
-                </li>
-                
-                <li class="repo-list-item">
-                    <h3 class="repo-list-name">
-                      <a href="/2017/04/21/spock-docs/">Spock资料汇总</a>
-                    </h3>
-                    <p class="repo-list-description">
-                        Spock单元测试资料汇总
-                    </p>
-                    <p class="repo-list-meta">
-                        <span class="meta-info">
-                          <span class="octicon octicon-calendar"></span> 2017/04/21
-                        </span>
-                        
-                        <span class="meta-info">
-                          <span class="octicon octicon-file-directory"></span>
-                          <a href="/categories/#%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95" title="单元测试">单元测试</a>
-                        </span>
-                        
-                    </p>
-                </li>
-                
-                <li class="repo-list-item">
-                    <h3 class="repo-list-name">
-                      <a href="/2017/04/13/git-recover-branch/">git分支恢复</a>
-                    </h3>
-                    <p class="repo-list-description">
-                        今天误删了git分支，还好可以恢复
-                    </p>
-                    <p class="repo-list-meta">
-                        <span class="meta-info">
-                          <span class="octicon octicon-calendar"></span> 2017/04/13
-                        </span>
-                        
-                        <span class="meta-info">
-                          <span class="octicon octicon-file-directory"></span>
-                          <a href="/categories/#git" title="git">git</a>
-                        </span>
-                        
-                    </p>
-                </li>
-                
-                <li class="repo-list-item">
-                    <h3 class="repo-list-name">
-                      <a href="/2017/04/11/gradle-debug/">gradle调试断点</a>
-                    </h3>
-                    <p class="repo-list-description">
-                        调试断点我们的gradle插件
-                    </p>
-                    <p class="repo-list-meta">
-                        <span class="meta-info">
-                          <span class="octicon octicon-calendar"></span> 2017/04/11
-                        </span>
-                        
-                        <span class="meta-info">
-                          <span class="octicon octicon-file-directory"></span>
-                          <a href="/categories/#gradle" title="gradle">gradle</a>
-                        </span>
-                        
-                    </p>
-                </li>
-                
-                <li class="repo-list-item">
-                    <h3 class="repo-list-name">
-                      <a href="/2017/04/11/dabin-book/">《乖，摸摸头》读后感</a>
-                    </h3>
-                    <p class="repo-list-description">
-                        之前听朋友推荐过大冰的书，最近在地铁上拜读了一下其中的一本《乖，摸摸头》，其实我很久没看过非专业的书籍了，看完后还是有很多感慨的，想要在这里发发牢骚。
-                    </p>
-                    <p class="repo-list-meta">
-                        <span class="meta-info">
-                          <span class="octicon octicon-calendar"></span> 2017/04/11
-                        </span>
-                        
-                        <span class="meta-info">
-                          <span class="octicon octicon-file-directory"></span>
-                          <a href="/categories/#Others" title="Others">Others</a>
+                          <a href="/categories/#android" title="android">android</a>
                         </span>
                         
                     </p>

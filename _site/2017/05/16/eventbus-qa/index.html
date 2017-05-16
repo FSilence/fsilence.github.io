@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans" prefix="og: http://ogp.me/ns#" class="han-init">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <title>EventBus Q&A &mdash; FSilence's Blog</title>
+    <link rel="stylesheet" href="/assets/vendor/primer-css/css/primer.css">
+    <link rel="stylesheet" href="/assets/vendor/primer-markdown/dist/user-content.min.css">
+    <link rel="stylesheet" href="/assets/vendor/octicons/octicons/octicons.css">
+    <link rel="stylesheet" href="/assets/css/components/collection.css">
+    <link rel="stylesheet" href="/assets/css/components/repo-card.css">
+    <link rel="stylesheet" href="/assets/css/sections/repo-list.css">
+    <link rel="stylesheet" href="/assets/css/sections/mini-repo-list.css">
+    <link rel="stylesheet" href="/assets/css/components/boxed-group.css">
+    <link rel="stylesheet" href="/assets/css/globals/common.css">
+    <link rel="stylesheet" href="/assets/vendor/share.js/dist/css/share.min.css">
+    <link rel="stylesheet" href="/assets/css/globals/responsive.css">
+    <link rel="stylesheet" href="/assets/css/posts/index.css">
+    <!-- Latest compiled and minified CSS -->
+    
+
+    
+    <link rel="canonical" href="http://localhost:4000/2017/05/16/eventbus-qa/">
+    <link rel="alternate" type="application/atom+xml" title="FSilence's Blog" href="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    
+    <meta property="og:title" content="EventBus Q&A">
+      
+    <meta name="keywords" content="android, eventbus">
+    <meta name="og:keywords" content="android, eventbus">
+      
+    <meta name="description" content="阅读EventBus源码过程中总结的一些问题和答案">
+    <meta name="og:description" content="阅读EventBus源码过程中总结的一些问题和答案">
+      
+    
+    
+        
+    
+    <meta property="og:url" content="http://localhost:4000/2017/05/16/eventbus-qa/">
+    <meta property="og:site_name" content="FSilence's Blog">
+    <meta property="og:type" content="article">
+    <meta property="og:locale" content="zh_CN" />
+    
+    <meta property="article:published_time" content="2017-05-16">
+    
+    <script src="/assets/vendor/jquery/dist/jquery.min.js"></script>
+    <script src="/assets/js/jquery-ui.js"></script>
+    <script type="text/javascript">
+    function toggleMenu() {
+        var nav = document.getElementsByClassName("site-header-nav")[0];
+        if (nav.style.display == "inline-flex") {
+          nav.style.display = "none";
+        } else {
+          nav.style.display = "inline-flex";
+        }
+    }
+
+	var _hmt = _hmt || [];
+	(function() {
+		var hm = document.createElement("script");
+		hm.src = "https://hm.baidu.com/hm.js?3a8f3e5734d78efb8fc1edf92dadd19e";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+	})();
+
+    </script>
+</head>
+<body class="" data-mz="">
+    <header class="site-header">
+        <div class="container">
+            <h1><a href="/" title="FSilence's Blog"><span class="octicon octicon-mark-github"></span> FSilence's Blog</a></h1>
+            <button class="collapsed mobile-visible" type="button" onclick="toggleMenu();">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <nav class="site-header-nav" role="navigation">
+                
+                <a href="/" class=" site-header-nav-item" target="" title="首页">首页</a>
+                
+                <a href="/categories/" class=" site-header-nav-item" target="" title="分类">分类</a>
+                
+                <a href="/wiki/" class=" site-header-nav-item" target="" title="维基">维基</a>
+                
+                <a href="/links/" class=" site-header-nav-item" target="" title="链接">链接</a>
+                
+                <a href="/about/" class=" site-header-nav-item" target="" title="关于">关于</a>
+                
+            </nav>
+        </div>
+    </header>
+    <!-- / header -->
+
+    <section class="collection-head small geopattern" data-pattern-id="EventBus Q&A">
+<div class="container">
+  <div class="columns">
+    <div class="column three-fourths">
+      <div class="collection-title">
+        <h1 class="collection-header">EventBus Q&A</h1>
+        <div class="collection-info">
+          
+          <span class="meta-info">
+            <span class="octicon octicon-calendar"></span> 2017/05/16
+          </span>
+          
+          
+          <span class="meta-info">
+            <span class="octicon octicon-file-directory"></span>
+            <a href="/categories/#android" title="android">android</a>
+          </span>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+<!-- / .banner -->
+<section class="container content">
+<div class="columns">
+  <div class="column three-fourths" >
+    <article class="article-content markdown-body">
+    <p>阅读EventBus源码过程中总结的一些问题和答案</p>
+
+<h3 id="eventbus-中如果一个subscriber中的父类也注册了相同的监听事件以哪个为准">EventBus 中如果一个subscriber中的父类也注册了相同的监听事件，以哪个为准</h3>
+<hr />
+<p>以子类中的事件为准，在SubscriberMethodFinder方法中，在添加一个subscribeMethod的时候  会调用FindState的checkAdd方法，其中有这么一段逻辑：</p>
+<pre>
+<code>
+   if (methodClassOld == null || methodClassOld.isAssignableFrom(methodClass)) {
+                // Only add if not already found in a sub class
+                return true;
+            } else {
+                // Revert the put, old class is further down the class hierarchy
+                subscriberClassByMethodKey.put(methodKey, methodClassOld);
+                return false;
+            }
+</code>
+</pre>
+
+<p>如果原先注册过的methodClass 是当前想要注册的methodClass的父类的话，返回true，（isAssignableFrom 判断类是否是另一个类的父类）
+在结束后</p>
+<pre>
+<code>
+ if (findState.checkAdd(method, eventType)) {
+ThreadMode threadMode = subscribeAnnotation.threadMode();
+findState.subscriberMethods.add(new SubscriberMethod(method, eventType, threadMode,
+                                    subscribeAnnotation.priority(), subscribeAnnotation.sticky()));
+                        }
+</code>
+</pre>
+<p>如果checkAdd返回了true的话 表示可以添加当前method到列表中</p>
+
+<p>###SubscribeMethodFinder中的FindStat有什么用
+FindStat用来记录一次查找的中间变量和结果，其中的superClass用来帮助查找器进行递归查找。</p>
+
+<h3 id="eventbus中的event-对象是如何管理的">EventBus中的event 对象是如何管理的</h3>
+<p>当用户通过post来发送一个消息的时候，EventBus会首先获取一个PostThreadStat对象（通过ThreadLocal存放的 每个线程都会有一份，来记录当前线程的一些发送状态），然后将消息放入到PostThreadStat中的event队列，然后会依次取队列中的消息，进行发送操作。<br />
+单次的发送操作： 
+如果eventInheritance为true(默认为true)，就先查找出所有的父类 和 接口，都记录为event，发送，如果为false 则只发送当前消息。如果没有找到对应的订阅者，则抛出一个NoSubscriberEvent的消息。如果有订阅者，则根据订阅者的类型来选择发送的方式。<br />
+EventBus中有3个变量来保存消息，1.subscriptionsByEventType 一个Map,key是eventType value是subscribtions，主要用来post消息的时候可以找到对应的subscribtion来换起方法。2.typesBySubscriber 一个Map,key是订阅者 value是订阅的事件列表，主要用来在unregister订阅者的时候方便去清空对应的数据。3.stickyEvents 主要是用来存放sticky消息的。</p>
+
+<h3 id="eventbus的register的过程">EventBus的register的过程</h3>
+<p>register一个订阅者的时候，会进行以下几步：<br />
+1.通过subscriberMethodFinder查找到所有注释的订阅方法<br />
+2.循环依次注册方法<br />
+3.每一次注册的时候，根据优先级加入到列表中（subscriptionsByEventType的value），优先级高的在前面<br />
+4.更新typesBySubscriber<br />
+5.如果注册的方法是sticky的，则检查当前的stickyEvents列表，触发sticky消息的相应</p>
+
+<h3 id="subscribermethodfinder的查找过程">SubscriberMethodFinder的查找过程</h3>
+<p>Finder中每次查找结果都有缓存（不会有泄露 因为缓存的应用都是Class Method这些）,可以通过EventBus的clearCache来清空。（我们可以考虑在onLowMemory的时候调用此方法）
+SubscirberMethodFinder中有一个FindStat类用来帮助记录一次查找的中间状态和结果 以及帮助递归查找（里面有一个superClass的参数），每次遍历类和父类找到注册方法。<br />
+FindStat中有一个checkAdd方法 来判断当前方法是否应该添加到subscribMethod中。在checkAdd方法中，会根据当前类是否注册过来判断是否可以添加。</p>
+
+<h3 id="eventbus的poststicky-和-post消息有什么区别">EventBus的postSticky 和 post消息有什么区别</h3>
+<p>post过程见上。<br />
+postSticky 先将消息放入到stickyEvents的map中 然后再调用post消息</p>
+
+<h3 id="eventbus的threadmode类型">EventBus的threadMode类型</h3>
+<p>POSTING:在发送事件的线程中通知订阅者<br />
+MAIN:如果当前是主线程直接通知订阅者，否则调用HandlePoster的enque方法在主线程中通知订阅者<br />
+BACKGROUD:如果当前不是主线程中则直接通知订阅者，否则启动一个后台线程来通知订阅者（不同的消息共用一个线程）<br />
+ASYN:启动不同的线程来通知订阅者</p>
+
+<p>HandlerPoster:帮助主线程中的调度，其中维护一个PendingPost的队列，在handleMessage中依次弹出消息并通知。</p>
+
+<p>BackgroundPoster:帮助实现BACKGROUND模式，BackgroundPoster本身是一个runable，通过enque一个event对象，如果当前有线程正在处理post消息则直接在此线程中处理，否则会通过eventBus调用
+builder中设置的线程池来执行线程（在run方法中循环取出消息队列中的消息来处理）</p>
+
+<p>AsyncPoster：帮助实现ASYN模式，本事是一个Runnable,enque一个event对象后会直接换起线程池来执行线程，在run中poll一个消息来处理</p>
+
+<h3 id="eventbus中的eventtypescache是干什么用的">EventBus中的eventTypesCache是干什么用的</h3>
+<p>在eventInheritance为true的时候 会通过发送的event对象 查找event对象的所有父类和接口，这个cache就是用来缓存这个的。<br />
+通过clearCaches来清空缓存</p>
+
+<h3 id="如何理解pendingpost">如何理解PendingPost</h3>
+<p>PendingPost是一次post的意图，其中定义了要发送的事件event 和 订阅方法 以及next 意图（用来和pendingPostQueue配合 实现队列）</p>
+
+<h3 id="eventbus中用到了哪些设计模式">EventBus中用到了哪些设计模式</h3>
+<p>创建者模式： Builder<br />
+订阅者模式： 整体就是订阅模式</p>
+
+<h3 id="subscribermethodfinder中的findstat是如何确定一个方法是否应该被记录的">*SubscriberMethodFinder中的FindStat是如何确定一个方法是否应该被记录的</h3>
+<p>（重点是FindStat中的2个临时变量 之后再做补充说明）</p>
+
+
+    
+
+    </article>
+    <div class="share">
+      <div class="share-component"></div>
+    </div>
+    <div class="comment">
+      
+  
+      
+        
+        
+        
+      
+	  
+	
+
+<!--
+          <div id="disqus_thread"></div>
+          <script>
+            var disqus_config = function () {
+              this.page.url = 'http://localhost:4000/2017/05/16/eventbus-qa/';
+              this.page.identifier = '/2017/05/16/eventbus-qa/';
+              this.page.title = 'EventBus Q&A';
+            };
+            (function() { // DON'T EDIT BELOW THIS LINE
+              var d = document, s = d.createElement('script');
+
+              s.type = 'text/javascript';
+              s.async = true;
+              var shortname = 'FSilence';
+
+              s.src = '//' + shortname + '.disqus.com/embed.js';
+
+              s.setAttribute('data-timestamp', +new Date());
+              (d.head || d.body).appendChild(s);
+            })();
+          </script>
+          <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+	  -->
+
+    </div>
+  </div>
+  <div class="column one-fourth">
+    
+<h3>Search</h3>
+<div id="site_search">
+    <input type="text" id="search_box" placeholder="Search">
+    <button class="btn btn-default" id="site_search_do"><span class="octicon octicon-search"></span></button>
+</div>
+
+<ul id="search_results"></ul>
+
+<link rel="stylesheet" type="text/css" href="/assets/css/modules/sidebar-search.css">
+<script src="/assets/js/lunr.min.js"></script>
+<script src="/assets/js/search.js"></script>
+
+
+    
+<h3 class="mobile-hidden">Post Directory</h3>
+<div id="post-directory-module" class="mobile-hidden">
+  <section class="post-directory">
+  <!-- Links that trigger the jumping -->
+  <!-- Added by javascript below -->
+  <dl></dl>
+  </section>
+</div>
+
+<script src="/assets/js/jquery.toc.js"></script>
+
+  </div>
+</div>
+</section>
+<!-- /section.content -->
+
+    <footer class="container">
+        <div class="site-footer" role="contentinfo">
+            <div class="copyright left mobile-block">
+                    © 2015
+                    <span title="FSilence">FSilence</span>
+                    <a href="javascript:window.scrollTo(0,0)" class="right mobile-visible">TOP</a>
+            </div>
+
+            <ul class="site-footer-links right mobile-hidden">
+                <li>
+                    <a href="javascript:window.scrollTo(0,0)" >TOP</a>
+                </li>
+            </ul>
+            <a href="http://github.com/FSilence/fsilence.github.io" target="_blank" aria-label="view source code">
+                <span class="mega-octicon octicon-mark-github" title="GitHub"></span>
+            </a>
+            <ul class="site-footer-links mobile-hidden">
+                
+                <li>
+                    <a href="/" title="首页" target="">首页</a>
+                </li>
+                
+                <li>
+                    <a href="/categories/" title="分类" target="">分类</a>
+                </li>
+                
+                <li>
+                    <a href="/wiki/" title="维基" target="">维基</a>
+                </li>
+                
+                <li>
+                    <a href="/links/" title="链接" target="">链接</a>
+                </li>
+                
+                <li>
+                    <a href="/about/" title="关于" target="">关于</a>
+                </li>
+                
+<!-- 注释Rss
+                <li><a href=""><span class="octicon octicon-rss" style="color:orange;"></span></a></li>
+ -->           
+		</ul>
+
+        </div>
+    </footer>
+    <!-- / footer -->
+    <script src="/assets/vendor/share.js/dist/js/share.min.js"></script>
+    <script src="/assets/js/geopattern.js"></script>
+    <script src="/assets/js/prism.js"></script>
+    <link rel="stylesheet" href="/assets/css/globals/prism.css">
+    <script>
+      jQuery(document).ready(function($) {
+        // geopattern
+        $('.geopattern').each(function(){
+          $(this).geopattern($(this).data('pattern-id'));
+        });
+       // hljs.initHighlightingOnLoad();
+      });
+    </script>
+    
+    <div style="display:none">
+      <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-80669434-1', 'auto');
+        ga('send', 'pageview');
+
+      </script>
+    </div>
+    
+</body>
+</html>
