@@ -1,5 +1,11 @@
 {
   
+  "2017-05-17-popupwindow-showasdropdown": {
+    "title": "window的showAsDropDown失效的问题",
+    "url": " /2017/05/17/popupwindow-showAsDropDown/",
+    "category": "android"
+  },
+  
   "2017-05-16-ipc-messenger": {
     "title": "IPC之Messenger",
     "url": " /2017/05/16/ipc-messenger/",
@@ -152,6 +158,8 @@
   
   
   
+  
+  
 
   
   "2017-03-29-firstblogtest": {
@@ -247,6 +255,12 @@
   "2017-05-16-ipc-messenger": {
     "title": "IPC之Messenger",
     "url": "/2017/05/16/ipc-messenger/",
+    "category": "[&quot;android&quot;]"
+  },
+  
+  "2017-05-17-popupwindow-showasdropdown": {
+    "title": "window的showAsDropDown失效的问题",
+    "url": "/2017/05/17/popupwindow-showAsDropDown/",
     "category": "[&quot;android&quot;]"
   },
   

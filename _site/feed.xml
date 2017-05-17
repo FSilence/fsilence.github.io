@@ -1,4 +1,17 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="http://jekyllrb.com" version="3.4.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2017-05-16T07:47:14+00:00</updated><id>http://localhost:4000/</id><title type="html">FSilence’s Blog</title><subtitle>FSilence的个人博客</subtitle><author><name>FSilence</name></author><entry><title type="html">IPC之Messenger</title><link href="http://localhost:4000/2017/05/16/ipc-messenger/" rel="alternate" type="text/html" title="IPC之Messenger" /><published>2017-05-16T00:00:00+00:00</published><updated>2017-05-16T00:00:00+00:00</updated><id>http://localhost:4000/2017/05/16/ipc-messenger</id><content type="html" xml:base="http://localhost:4000/2017/05/16/ipc-messenger/">&lt;p&gt;内容大纲：&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="http://jekyllrb.com" version="3.4.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2017-05-17T03:47:30+00:00</updated><id>http://localhost:4000/</id><title type="html">FSilence’s Blog</title><subtitle>FSilence的个人博客</subtitle><author><name>FSilence</name></author><entry><title type="html">window的showAsDropDown失效的问题</title><link href="http://localhost:4000/2017/05/17/popupwindow-showAsDropDown/" rel="alternate" type="text/html" title="window的showAsDropDown失效的问题" /><published>2017-05-17T00:00:00+00:00</published><updated>2017-05-17T00:00:00+00:00</updated><id>http://localhost:4000/2017/05/17/popupwindow-showAsDropDown</id><content type="html" xml:base="http://localhost:4000/2017/05/17/popupwindow-showAsDropDown/">&lt;p&gt;在使用Popupwindow的showAsDropDown的时候，有时候会在特定机型上无法正确显示（全屏显示了）。&lt;/p&gt;
+
+&lt;p&gt;目前的解决方案是如果需要全屏显示的popwindow，要计算出window的实际高度然后调用popupwindow的setHeight方法后再调用showAdDropDown即可。&lt;br /&gt;
+获取PopupWindow的实际高度:&lt;/p&gt;
+&lt;pre&gt;
+    public static void showPopwindow(Context context, PopupWindow popupWindow, View anchor) {
+        int[] locations = new int[2];
+        anchor.getLocationOnScreen(locations);
+        int screenHeight = context.getApplicationContext().getResources().getDisplayMetrics(); 
+	int height = screenHeight - anchor.getHeight() - locations[1];
+        popupWindow.setHeight(height);
+        popupWindow.showAsDropDown(anchor);
+    }
+&lt;/pre&gt;</content><author><name>FSilence</name></author><summary type="html">在使用Popupwindow的showAsDropDown的时候，有时候会在特定机型上无法正确显示（全屏显示了）。</summary></entry><entry><title type="html">IPC之Messenger</title><link href="http://localhost:4000/2017/05/16/ipc-messenger/" rel="alternate" type="text/html" title="IPC之Messenger" /><published>2017-05-16T00:00:00+00:00</published><updated>2017-05-16T00:00:00+00:00</updated><id>http://localhost:4000/2017/05/16/ipc-messenger</id><content type="html" xml:base="http://localhost:4000/2017/05/16/ipc-messenger/">&lt;p&gt;内容大纲：&lt;/p&gt;
 &lt;pre&gt;
 1.学会使用Messenger进行进程间通信
 &lt;/pre&gt;
@@ -892,16 +905,16 @@ File → Invalidate Caches / Restart 然后重启idea即可&lt;/p&gt;</content><
 2.android实现IPC的几种方式
 &lt;/pre&gt;
 
-&lt;p&gt;##IPC
-IPC全称Inter-Process Communication 是指进程间通信。Android的一个app是运行在一个进程上的（除非你启动了另外一个进程），每一个进程都是运行在一个JVM上的，所以进程和进程之间的内存空间不共享，那么如何完成进程间的通信就非常重要了。&lt;/p&gt;
+&lt;h2 id=&quot;ipc&quot;&gt;IPC&lt;/h2&gt;
+&lt;p&gt;IPC全称Inter-Process Communication 是指进程间通信。Android的一个app是运行在一个进程上的（除非你启动了另外一个进程），每一个进程都是运行在一个JVM上的，所以进程和进程之间的内存空间不共享，那么如何完成进程间的通信就非常重要了。&lt;/p&gt;
 
-&lt;p&gt;##Android IPC的几种通信方式
-实现进程间的通信的思路大致就是将各个进程理解为2个不可直接交互的系统（比如 客户端 和 服务端必须通过网络来交互），要实现2个系统的数据交换无非2种方式：&lt;br /&gt;
+&lt;h2 id=&quot;android-ipc的几种通信方式&quot;&gt;Android IPC的几种通信方式&lt;/h2&gt;
+&lt;p&gt;实现进程间的通信的思路大致就是将各个进程理解为2个不可直接交互的系统（比如 客户端 和 服务端必须通过网络来交互），要实现2个系统的数据交换无非2种方式：&lt;br /&gt;
 1.系统和系统之间建立消息系统，通过将需要对方知道的消息发送过去进行处理返回，Android提供了Binder来实现进程间的通信，Binder会将一个数据从一个进程clone到另外一个进程（实际上是二进制流的传送，实际上你在不同进程拿到的对象并不是同一个)，像Messenger AIDL 和 ContentProvider实现进程交互，底层都是使用的Binder机制。除了Binder机制外我们还可以像客户端和服务端交互那样，使用socket来完成通信。&lt;/p&gt;
 
 &lt;p&gt;2.系统共享资源，例如共同存储维护一个文件系统， 数据库等等，需要特殊说明，虽然SharePreference是使用的文件读写xml来存储数据的，但是在多进程中操作SharePreference是有问题的，因为SharePreference为了提高性能添加了内存缓存，但是进程间的内存空间是不共享的，所以会造成数据丢失的情况。&lt;/p&gt;
 
-&lt;p&gt;在后面的文章中，作者将陆续为大家介绍使用不同的方式来实现IPC。&lt;/p&gt;</content><author><name>FSilence</name></author><summary type="html">摘要： 1.什么是IPC 2.android实现IPC的几种方式 ##IPC IPC全称Inter-Process Communication 是指进程间通信。Android的一个app是运行在一个进程上的（除非你启动了另外一个进程），每一个进程都是运行在一个JVM上的，所以进程和进程之间的内存空间不共享，那么如何完成进程间的通信就非常重要了。 ##Android IPC的几种通信方式 实现进程间的通信的思路大致就是将各个进程理解为2个不可直接交互的系统（比如 客户端 和 服务端必须通过网络来交互），要实现2个系统的数据交换无非2种方式： 1.系统和系统之间建立消息系统，通过将需要对方知道的消息发送过去进行处理返回，Android提供了Binder来实现进程间的通信，Binder会将一个数据从一个进程clone到另外一个进程（实际上是二进制流的传送，实际上你在不同进程拿到的对象并不是同一个)，像Messenger AIDL 和 ContentProvider实现进程交互，底层都是使用的Binder机制。除了Binder机制外我们还可以像客户端和服务端交互那样，使用socket来完成通信。 2.系统共享资源，例如共同存储维护一个文件系统， 数据库等等，需要特殊说明，虽然SharePreference是使用的文件读写xml来存储数据的，但是在多进程中操作SharePreference是有问题的，因为SharePreference为了提高性能添加了内存缓存，但是进程间的内存空间是不共享的，所以会造成数据丢失的情况。 在后面的文章中，作者将陆续为大家介绍使用不同的方式来实现IPC。</summary></entry><entry><title type="html">Android Gradle上传Maven仓库</title><link href="http://localhost:4000/2017/04/26/gradle-maven/" rel="alternate" type="text/html" title="Android Gradle上传Maven仓库" /><published>2017-04-26T00:00:00+00:00</published><updated>2017-04-26T00:00:00+00:00</updated><id>http://localhost:4000/2017/04/26/gradle-maven</id><content type="html" xml:base="http://localhost:4000/2017/04/26/gradle-maven/">&lt;p&gt;在Android的gradle配置上追加上传Maven的相关操作&lt;/p&gt;
+&lt;p&gt;在后面的文章中，作者将陆续为大家介绍使用不同的方式来实现IPC。&lt;/p&gt;</content><author><name>FSilence</name></author><summary type="html">摘要： 1.什么是IPC 2.android实现IPC的几种方式 IPC IPC全称Inter-Process Communication 是指进程间通信。Android的一个app是运行在一个进程上的（除非你启动了另外一个进程），每一个进程都是运行在一个JVM上的，所以进程和进程之间的内存空间不共享，那么如何完成进程间的通信就非常重要了。 Android IPC的几种通信方式 实现进程间的通信的思路大致就是将各个进程理解为2个不可直接交互的系统（比如 客户端 和 服务端必须通过网络来交互），要实现2个系统的数据交换无非2种方式： 1.系统和系统之间建立消息系统，通过将需要对方知道的消息发送过去进行处理返回，Android提供了Binder来实现进程间的通信，Binder会将一个数据从一个进程clone到另外一个进程（实际上是二进制流的传送，实际上你在不同进程拿到的对象并不是同一个)，像Messenger AIDL 和 ContentProvider实现进程交互，底层都是使用的Binder机制。除了Binder机制外我们还可以像客户端和服务端交互那样，使用socket来完成通信。 2.系统共享资源，例如共同存储维护一个文件系统， 数据库等等，需要特殊说明，虽然SharePreference是使用的文件读写xml来存储数据的，但是在多进程中操作SharePreference是有问题的，因为SharePreference为了提高性能添加了内存缓存，但是进程间的内存空间是不共享的，所以会造成数据丢失的情况。 在后面的文章中，作者将陆续为大家介绍使用不同的方式来实现IPC。</summary></entry><entry><title type="html">Android Gradle上传Maven仓库</title><link href="http://localhost:4000/2017/04/26/gradle-maven/" rel="alternate" type="text/html" title="Android Gradle上传Maven仓库" /><published>2017-04-26T00:00:00+00:00</published><updated>2017-04-26T00:00:00+00:00</updated><id>http://localhost:4000/2017/04/26/gradle-maven</id><content type="html" xml:base="http://localhost:4000/2017/04/26/gradle-maven/">&lt;p&gt;在Android的gradle配置上追加上传Maven的相关操作&lt;/p&gt;
 
 &lt;h2 id=&quot;maven的gradle插件&quot;&gt;maven的gradle插件&lt;/h2&gt;
 &lt;p&gt;Android里内置了maven插件 只需要apply plugin: “maven” 即可使用maven插件&lt;/p&gt;
@@ -1063,6 +1076,4 @@ configurations.all {
 &lt;pre&gt;
 compile (&quot;com.fsilence:test:1.0.0-SNAPSHOT&quot;){changing = true}
 &lt;/pre&gt;
-&lt;p&gt;这样我们每次调用的时候都会更新到最新版本，如果改成正式版本后曲调后面的changing配置即可。&lt;/p&gt;</content><author><name>FSilence</name></author><summary type="html">在Android的gradle配置上追加上传Maven的相关操作</summary></entry><entry><title type="html">Spock资料汇总</title><link href="http://localhost:4000/2017/04/21/spock-docs/" rel="alternate" type="text/html" title="Spock资料汇总" /><published>2017-04-21T00:00:00+00:00</published><updated>2017-04-21T00:00:00+00:00</updated><id>http://localhost:4000/2017/04/21/spock-docs</id><content type="html" xml:base="http://localhost:4000/2017/04/21/spock-docs/">&lt;p&gt;Spock单元测试资料汇总&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;http://www.open-open.com/lib/view/open1439793373083.html&quot;&gt;使用Spock框架进行单元测试&lt;/a&gt;&lt;/p&gt;</content><author><name>FSilence</name></author><summary type="html">Spock单元测试资料汇总</summary></entry></feed>
+&lt;p&gt;这样我们每次调用的时候都会更新到最新版本，如果改成正式版本后曲调后面的changing配置即可。&lt;/p&gt;</content><author><name>FSilence</name></author><summary type="html">在Android的gradle配置上追加上传Maven的相关操作</summary></entry></feed>
