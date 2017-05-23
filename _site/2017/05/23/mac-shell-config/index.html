@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <title>在线工具 &mdash; FSilence's Blog</title>
+    <title>Mac Shell的配置 &mdash; FSilence's Blog</title>
     <link rel="stylesheet" href="/assets/vendor/primer-css/css/primer.css">
     <link rel="stylesheet" href="/assets/vendor/primer-markdown/dist/user-content.min.css">
     <link rel="stylesheet" href="/assets/vendor/octicons/octicons/octicons.css">
@@ -21,23 +21,23 @@
     
 
     
-    <link rel="canonical" href="http://localhost:4000/wiki/tools/">
+    <link rel="canonical" href="http://localhost:4000/2017/05/23/mac-shell-config/">
     <link rel="alternate" type="application/atom+xml" title="FSilence's Blog" href="">
     <link rel="shortcut icon" href="/favicon.ico">
     
-    <meta property="og:title" content="在线工具">
+    <meta property="og:title" content="Mac Shell的配置">
       
-    <meta name="keywords" content="tools, 工具">
-    <meta name="og:keywords" content="tools, 工具">
+    <meta name="keywords" content="mac, shell, config">
+    <meta name="og:keywords" content="mac, shell, config">
       
-    <meta name="description" content="其它在线工具网站oschina 在线工具十六进制颜色转换器">
-    <meta name="og:description" content="其它在线工具网站oschina 在线工具十六进制颜色转换器">
+    <meta name="description" content="要想方便的使用mac，shell的使用个人认为是必不可少的，在我们拿到mac的时候，我们应该先配置好我们的shell，这样可以极大的提高我们的效率。本文不会描述具体的配置过程，只是对相关配置资料的一个索引。">
+    <meta name="og:description" content="要想方便的使用mac，shell的使用个人认为是必不可少的，在我们拿到mac的时候，我们应该先配置好我们的shell，这样可以极大的提高我们的效率。本文不会描述具体的配置过程，只是对相关配置资料的一个索引。">
       
     
     
         
     
-    <meta property="og:url" content="http://localhost:4000/wiki/tools/">
+    <meta property="og:url" content="http://localhost:4000/2017/05/23/mac-shell-config/">
     <meta property="og:site_name" content="FSilence's Blog">
     <meta property="og:type" content="article">
     <meta property="og:locale" content="zh_CN" />
@@ -92,12 +92,25 @@
     </header>
     <!-- / header -->
 
-    <section class="collection-head small geopattern" data-pattern-id="在线工具">
+    <section class="collection-head small geopattern" data-pattern-id="Mac Shell的配置">
 <div class="container">
   <div class="columns">
     <div class="column three-fourths">
       <div class="collection-title">
-        <h1 class="collection-header">在线工具</h1>
+        <h1 class="collection-header">Mac Shell的配置</h1>
+        <div class="collection-info">
+          
+          <span class="meta-info">
+            <span class="octicon octicon-calendar"></span> 2017/05/23
+          </span>
+          
+          
+          <span class="meta-info">
+            <span class="octicon octicon-file-directory"></span>
+            <a href="/categories/#其它" title="其它">其它</a>
+          </span>
+          
+        </div>
       </div>
     </div>
   </div>
@@ -108,10 +121,42 @@
 <div class="columns">
   <div class="column three-fourths" >
     <article class="article-content markdown-body">
-    <h2 id="其它在线工具网站">其它在线工具网站</h2>
-<p><a href="http://tool.oschina.net/">oschina 在线工具</a><br />
-<a href="http://www.sioe.cn/yingyong/yanse-rgb-16/">十六进制颜色转换器</a></p>
+    <p>要想方便的使用mac，shell的使用个人认为是必不可少的，在我们拿到mac的时候，我们应该先配置好我们的shell，这样可以极大的提高我们的效率。本文不会描述具体的配置过程，只是对相关配置资料的一个索引。</p>
 
+<h2 id="zsh">zsh</h2>
+<p>为什么我要使用zsh 而不是bash，可以参照<a href="https://www.zhihu.com/question/21418449">为什么说 zsh 是 shell 中的极品？
+</a></p>
+
+<p>mac安装zsh: <br />
+zsh的配置能力非常强，如果你要自己完全配置zsh你会发现非常非常复杂，还好有人给我我们提供了不错的配置方案 <a href="https://github.com/robbyrussell/oh-my-zsh">on-my-zsh</a></p>
+
+<p>配置zsh:<br />
+zsh的配置在文件 ~/.zshrc中，我们可以在其中使用别名，配置插件等提高shell的使用效率。<br />
+zsh的具体配置可以参照<br />
+<a href="http://www.jianshu.com/p/24a0ded2e3ba">在osx中配置和使用zsh</a><br />
+<a href="http://blog.csdn.net/ii1245712564/article/details/45843657"> zsh安装和配置</a></p>
+
+<p>Terminal自动开启zsh:<br />
+安装好on-my-zsh后，我们可以在 ~/.bash_profile中 添加一行 zsh，这样每次启动terminal的时候就都是zsh</p>
+
+<h2 id="安装autojump">安装autojump</h2>
+<p>通过 brew 安装autojump:</p>
+<pre>
+brew install autojump
+</pre>
+
+<p>在 ~/.zshrc中加入以下内容</p>
+<pre>
+[[ -s ~/.autojump/etc/profile.d/autojump.sh ]] &amp;&amp; . ~/.autojump/etc/profile.d/autojump.sh
+</pre>
+
+<p>然后重新启动zsh，就可以通过j + 目录名跳转到任何你cd过的目录中，支持模糊匹配。</p>
+
+<h2 id="配置vi">配置vi</h2>
+<p>vi的插件管理 参考 <a href="http://blog.csdn.net/zhangpower1993/article/details/52184581">VBundle的介绍及安装</a><br />
+vi的插件统建 参考 <a href="http://blog.csdn.net/namecyf/article/details/7787479">vi配置及插件管理</a></p>
+<h2 id="其它">其它</h2>
+<p><a href="http://fsilence.com/wiki/mac-bash/">osx shell快捷键</a></p>
 
     
 
@@ -134,9 +179,9 @@
           <div id="disqus_thread"></div>
           <script>
             var disqus_config = function () {
-              this.page.url = 'http://localhost:4000/wiki/tools/';
-              this.page.identifier = '/wiki/tools/';
-              this.page.title = '在线工具';
+              this.page.url = 'http://localhost:4000/2017/05/23/mac-shell-config/';
+              this.page.identifier = '/2017/05/23/mac-shell-config/';
+              this.page.title = 'Mac Shell的配置';
             };
             (function() { // DON'T EDIT BELOW THIS LINE
               var d = document, s = d.createElement('script');

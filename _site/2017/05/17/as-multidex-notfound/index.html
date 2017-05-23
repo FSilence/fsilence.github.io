@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <title>在线工具 &mdash; FSilence's Blog</title>
+    <title>multidex找不到的问题 &mdash; FSilence's Blog</title>
     <link rel="stylesheet" href="/assets/vendor/primer-css/css/primer.css">
     <link rel="stylesheet" href="/assets/vendor/primer-markdown/dist/user-content.min.css">
     <link rel="stylesheet" href="/assets/vendor/octicons/octicons/octicons.css">
@@ -21,28 +21,28 @@
     
 
     
-    <link rel="canonical" href="http://localhost:4000/wiki/tools/">
+    <link rel="canonical" href="http://localhost:4000/2017/05/17/as-multidex-notfound/">
     <link rel="alternate" type="application/atom+xml" title="FSilence's Blog" href="">
     <link rel="shortcut icon" href="/favicon.ico">
     
-    <meta property="og:title" content="在线工具">
+    <meta property="og:title" content="multidex找不到的问题">
       
-    <meta name="keywords" content="tools, 工具">
-    <meta name="og:keywords" content="tools, 工具">
+    <meta name="keywords" content="android, android studio, 2.3, 2.3.1, multidex">
+    <meta name="og:keywords" content="android, android studio, 2.3, 2.3.1, multidex">
       
-    <meta name="description" content="其它在线工具网站oschina 在线工具十六进制颜色转换器">
-    <meta name="og:description" content="其它在线工具网站oschina 在线工具十六进制颜色转换器">
+    <meta name="description" content="最近将AndroidStudio升级到了2.3， 然后发现instan run不好使了，要求Gradle插件版本必须是2.3以上，所以讲gradle插件版本修改为2.3.1，然后发现点击运行会报错：程序包：multidex 找不到。">
+    <meta name="og:description" content="最近将AndroidStudio升级到了2.3， 然后发现instan run不好使了，要求Gradle插件版本必须是2.3以上，所以讲gradle插件版本修改为2.3.1，然后发现点击运行会报错：程序包：multidex 找不到。">
       
     
     
         
     
-    <meta property="og:url" content="http://localhost:4000/wiki/tools/">
+    <meta property="og:url" content="http://localhost:4000/2017/05/17/as-multidex-notfound/">
     <meta property="og:site_name" content="FSilence's Blog">
     <meta property="og:type" content="article">
     <meta property="og:locale" content="zh_CN" />
     
-    <meta property="article:published_time" content="2017-05-23">
+    <meta property="article:published_time" content="2017-05-17">
     
     <script src="/assets/vendor/jquery/dist/jquery.min.js"></script>
     <script src="/assets/js/jquery-ui.js"></script>
@@ -92,12 +92,25 @@
     </header>
     <!-- / header -->
 
-    <section class="collection-head small geopattern" data-pattern-id="在线工具">
+    <section class="collection-head small geopattern" data-pattern-id="multidex找不到的问题">
 <div class="container">
   <div class="columns">
     <div class="column three-fourths">
       <div class="collection-title">
-        <h1 class="collection-header">在线工具</h1>
+        <h1 class="collection-header">multidex找不到的问题</h1>
+        <div class="collection-info">
+          
+          <span class="meta-info">
+            <span class="octicon octicon-calendar"></span> 2017/05/17
+          </span>
+          
+          
+          <span class="meta-info">
+            <span class="octicon octicon-file-directory"></span>
+            <a href="/categories/#android" title="android">android</a>
+          </span>
+          
+        </div>
       </div>
     </div>
   </div>
@@ -108,10 +121,10 @@
 <div class="columns">
   <div class="column three-fourths" >
     <article class="article-content markdown-body">
-    <h2 id="其它在线工具网站">其它在线工具网站</h2>
-<p><a href="http://tool.oschina.net/">oschina 在线工具</a><br />
-<a href="http://www.sioe.cn/yingyong/yanse-rgb-16/">十六进制颜色转换器</a></p>
+    <p>最近将AndroidStudio升级到了2.3， 然后发现instan run不好使了，要求Gradle插件版本必须是2.3以上，所以讲gradle插件版本修改为2.3.1，然后发现点击运行会报错：程序包：multidex 找不到。</p>
 
+<p>在之前的版本中只要配置好multidex = true 插件会自动引用multidex的包，升级到2.3.1后不能自动引用 只能手动添加了, 在dependencies中添加：<br />
+ compile “com.android.support:multidex:1.0.1” 即可。</p>
 
     
 
@@ -134,9 +147,9 @@
           <div id="disqus_thread"></div>
           <script>
             var disqus_config = function () {
-              this.page.url = 'http://localhost:4000/wiki/tools/';
-              this.page.identifier = '/wiki/tools/';
-              this.page.title = '在线工具';
+              this.page.url = 'http://localhost:4000/2017/05/17/as-multidex-notfound/';
+              this.page.identifier = '/2017/05/17/as-multidex-notfound/';
+              this.page.title = 'multidex找不到的问题';
             };
             (function() { // DON'T EDIT BELOW THIS LINE
               var d = document, s = d.createElement('script');

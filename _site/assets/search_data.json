@@ -1,8 +1,20 @@
 {
   
+  "2017-05-23-mac-shell-config": {
+    "title": "Mac Shell的配置",
+    "url": " /2017/05/23/mac-shell-config/",
+    "category": "其它"
+  },
+  
   "2017-05-17-popupwindow-showasdropdown": {
     "title": "window的showAsDropDown失效的问题",
     "url": " /2017/05/17/popupwindow-showAsDropDown/",
+    "category": "android"
+  },
+  
+  "2017-05-17-as-multidex-notfound": {
+    "title": "multidex找不到的问题",
+    "url": " /2017/05/17/as-multidex-notfound/",
     "category": "android"
   },
   
@@ -258,10 +270,22 @@
     "category": "[&quot;android&quot;]"
   },
   
+  "2017-05-17-as-multidex-notfound": {
+    "title": "multidex找不到的问题",
+    "url": "/2017/05/17/as-multidex-notfound/",
+    "category": "[&quot;android&quot;]"
+  },
+  
   "2017-05-17-popupwindow-showasdropdown": {
     "title": "window的showAsDropDown失效的问题",
     "url": "/2017/05/17/popupwindow-showAsDropDown/",
     "category": "[&quot;android&quot;]"
+  },
+  
+  "2017-05-23-mac-shell-config": {
+    "title": "Mac Shell的配置",
+    "url": "/2017/05/23/mac-shell-config/",
+    "category": "[&quot;其它&quot;]"
   },
   
   "wiki-mac-bash": {
