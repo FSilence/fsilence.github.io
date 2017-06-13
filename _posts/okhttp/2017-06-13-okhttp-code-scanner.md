@@ -8,7 +8,7 @@ keywords: okhttp, module
 上一篇我们简单介绍了okHttp，了解了OkHttp的基本用法，并下载了okhttp的源码。本篇我们将一起来看看okhttp源码的目录结构，来大概了解下okHttp源码下的各个module的作用。  
 
 okHttp的构建工具使用的是maven，关于[maven](https://www.google.com.hk/#safe=strict&q=maven)可自行google,本文不对此做过多阐述。我们来重点看一下okHttp的项目目录。在这里以及之后的源码都是okHttp的最新版本 3.8.0。我们可以选择git工具checkout出 3.8.0的tag，本人使用的是idea自带的git管理工具，在右下角git分支出点击 选测checkout tag, 输入3.8.0的分支名字：parent-3.8.0 确认即可, 然后我们来看一下项目的目录结构截图:  
-[!](/images/okhttp/okhttp-modules.png)  
+![](/images/okhttp/okhttp-modules.png)  
 
 我们来看看各个module的功能作用，主要的借阅资料是module下的README.MD文件，读者也可自行查阅。  
 
