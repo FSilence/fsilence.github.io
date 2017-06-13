@@ -1,4 +1,176 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="http://jekyllrb.com" version="3.4.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2017-05-23T06:44:41+00:00</updated><id>http://localhost:4000/</id><title type="html">FSilence’s Blog</title><subtitle>FSilence的个人博客</subtitle><author><name>FSilence</name></author><entry><title type="html">Mac Shell的配置</title><link href="http://localhost:4000/2017/05/23/mac-shell-config/" rel="alternate" type="text/html" title="Mac Shell的配置" /><published>2017-05-23T00:00:00+00:00</published><updated>2017-05-23T00:00:00+00:00</updated><id>http://localhost:4000/2017/05/23/mac-shell-config</id><content type="html" xml:base="http://localhost:4000/2017/05/23/mac-shell-config/">&lt;p&gt;要想方便的使用mac，shell的使用个人认为是必不可少的，在我们拿到mac的时候，我们应该先配置好我们的shell，这样可以极大的提高我们的效率。本文不会描述具体的配置过程，只是对相关配置资料的一个索引。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="http://jekyllrb.com" version="3.4.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2017-06-13T09:32:46+00:00</updated><id>http://localhost:4000/</id><title type="html">FSilence’s Blog</title><subtitle>FSilence的个人博客</subtitle><author><name>FSilence</name></author><entry><title type="html">okHttp各个module介绍</title><link href="http://localhost:4000/2017/06/13/okhttp-code-scanner/" rel="alternate" type="text/html" title="okHttp各个module介绍" /><published>2017-06-13T00:00:00+00:00</published><updated>2017-06-13T00:00:00+00:00</updated><id>http://localhost:4000/2017/06/13/okhttp-code-scanner</id><content type="html" xml:base="http://localhost:4000/2017/06/13/okhttp-code-scanner/">&lt;p&gt;上一篇我们简单介绍了okHttp，了解了OkHttp的基本用法，并下载了okhttp的源码。本篇我们将一起来看看okhttp源码的目录结构，来大概了解下okHttp源码下的各个module的作用。&lt;/p&gt;
+
+&lt;p&gt;okHttp的构建工具使用的是maven，关于&lt;a href=&quot;https://www.google.com.hk/#safe=strict&amp;amp;q=maven&quot;&gt;maven&lt;/a&gt;可自行google,本文不对此做过多阐述。我们来重点看一下okHttp的项目目录。在这里以及之后的源码都是okHttp的最新版本 3.8.0。我们可以选择git工具checkout出 3.8.0的tag，本人使用的是idea自带的git管理工具，在右下角git分支出点击 选测checkout tag, 输入3.8.0的分支名字：parent-3.8.0 确认即可, 然后我们来看一下项目的目录结构截图:&lt;br /&gt;
+&lt;a href=&quot;/images/okhttp/okhttp-modules.png&quot;&gt;!&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;我们来看看各个module的功能作用，主要的借阅资料是module下的README.MD文件，读者也可自行查阅。&lt;/p&gt;
+
+&lt;h2 id=&quot;benchmarks&quot;&gt;benchmarks&lt;/h2&gt;
+&lt;p&gt;README.MD中的说明:&lt;/p&gt;
+&lt;pre&gt;
+This module allows you to test the performance of HTTP clients.
+Running
+  1. If you made modifications to `Benchmark` run `mvn compile`.
+  2. Run `mvn exec:exec` to launch a new JVM, which will execute the benchmark.
+&lt;/pre&gt;
+
+&lt;p&gt;用google caliper来测试HTTP客户端性能的，具体的使用我们先不加关注。&lt;/p&gt;
+
+&lt;h2 id=&quot;mockwebserver&quot;&gt;mockwebserver&lt;/h2&gt;
+&lt;p&gt;README.MD中的说明，我们这里只截取了介绍部分，具体的使用说明不做说明。&lt;/p&gt;
+&lt;pre&gt;
+A scriptable web server for testing HTTP clients    
+**Motivation**  
+This library makes it easy to test that your app Does The Right Thing when it
+makes HTTP and HTTPS calls. It lets you specify which responses to return and
+then verify that requests were made as expected.  
+Because it exercises your full HTTP stack, you can be confident that you're
+testing everything. You can even copy &amp;amp; paste HTTP responses from your real web
+server to create representative test cases. Or test that your code survives in
+awkward-to-reproduce situations like 500 errors or slow-loading responses.  
+**Example**   
+Use MockWebServer the same way that you use mocking frameworks like
+[Mockito](https://github.com/mockito/mockito):
+1. Script the mocks.
+2. Run application code.
+3. Verify that the expected requests were made.
+&lt;/pre&gt;
+&lt;p&gt;此处省略了具体的demo部分，大致是说MockWebServer是用来在单元测试中来模拟网络请求用的，我们可以模拟一个网络返回来验证我们的网络调用。&lt;/p&gt;
+
+&lt;h2 id=&quot;okcurl&quot;&gt;okcurl&lt;/h2&gt;
+&lt;p&gt;来看README文件:&lt;/p&gt;
+&lt;pre&gt;
+_A curl for the next-generation web._  
+OkCurl is an OkHttp-backed curl clone which allows you to test OkHttp's HTTP engine (including
+HTTP/2) against web servers.
+&lt;/pre&gt;
+&lt;p&gt;用来离线测试okhttp引擎的。&lt;/p&gt;
+
+&lt;h2 id=&quot;okhttp&quot;&gt;okhttp&lt;/h2&gt;
+&lt;p&gt;我们将要研究的项目主体。&lt;/p&gt;
+
+&lt;h2 id=&quot;okhttp-android-support-okhttp-urlconnection-okhttp-apache&quot;&gt;okhttp-android-support okhttp-urlconnection okhttp-apache&lt;/h2&gt;
+&lt;p&gt;对其它http引擎的适配。&lt;/p&gt;
+
+&lt;h2 id=&quot;okhttp-hpacktests&quot;&gt;okhttp-hpacktests&lt;/h2&gt;
+&lt;pre&gt;
+These tests use the [hpack-test-case][1] project to validate OkHttp's HPACK
+implementation.  The HPACK test cases are in a separate git submodule, so to
+initialize them, you must run:
+
+    git submodule init
+    git submodule update
+
+TODO
+----
+
+ * Add maven goal to avoid manual call to git submodule init.
+ * Make hpack-test-case update itself from git, and run new tests.
+ * Add maven goal to generate stories and a pull request to hpack-test-case
+   to have others validate our output.
+
+[1]: https://github.com/http2jp/hpack-test-case 
+&lt;/pre&gt;
+&lt;p&gt;这个是用来测试hpack的。HPACK是http 2.0的头部压缩算法。&lt;/p&gt;
+
+&lt;h2 id=&quot;okhttp-loggin-interceptor&quot;&gt;okhttp-loggin-interceptor&lt;/h2&gt;
+&lt;pre&gt;
+An [OkHttp interceptor][1] which logs HTTP request and response data.
+&lt;/pre&gt;
+&lt;p&gt;日志输出的拦截器，关于interceptor之后再分析OkHttp的代码中我们会看到它的具体含义和使用。&lt;/p&gt;
+
+&lt;h2 id=&quot;okhttp-testing-support&quot;&gt;okhttp-testing-support&lt;/h2&gt;
+&lt;p&gt;对okhttp测试的一些基础能力支持。&lt;/p&gt;
+
+&lt;h2 id=&quot;okhttp-tests&quot;&gt;okhttp-tests&lt;/h2&gt;
+&lt;p&gt;okhttp自己的测试&lt;/p&gt;
+
+&lt;h2 id=&quot;samples&quot;&gt;samples&lt;/h2&gt;
+&lt;p&gt;demo&lt;/p&gt;
+
+&lt;h2 id=&quot;website&quot;&gt;website&lt;/h2&gt;
+&lt;p&gt;okhttp的介绍说明的静态网页。&lt;/p&gt;
+
+&lt;p&gt;我们已大致了解了okhttp下的各个module，在后面的文章中我们将开始逐步进入okhttp的具体代码，来一步一步学习okhttp。&lt;/p&gt;</content><author><name>FSilence</name></author><summary type="html">上一篇我们简单介绍了okHttp，了解了OkHttp的基本用法，并下载了okhttp的源码。本篇我们将一起来看看okhttp源码的目录结构，来大概了解下okHttp源码下的各个module的作用。</summary></entry><entry><title type="html">okhttp-简介</title><link href="http://localhost:4000/2017/06/09/okhttp-introduce/" rel="alternate" type="text/html" title="okhttp-简介" /><published>2017-06-09T00:00:00+00:00</published><updated>2017-06-09T00:00:00+00:00</updated><id>http://localhost:4000/2017/06/09/okhttp-introduce</id><content type="html" xml:base="http://localhost:4000/2017/06/09/okhttp-introduce/">&lt;p&gt;An HTTP &amp;amp; HTTP/2 client for Android and Java applications&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/square/okhttp&quot;&gt;okhttp github&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;okhttp简介&quot;&gt;okhttp简介&lt;/h2&gt;
+&lt;p&gt;okhttp是&lt;a href=&quot;https://zh.wikipedia.org/wiki/Square%E5%85%AC%E5%8F%B8&quot;&gt;square公司&lt;/a&gt;以Apache License, Version 2.0开源的一个网络框架。&lt;br /&gt;
+在现在的网络应用中，我们一般都是用HTTP来做数据交换的，一个高效的HTTP可以让你应用加载更快并节省带宽。&lt;br /&gt;
+OkHttp有以下的优势:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;支持Http2(支持相同host的请求共享socket通道)&lt;/li&gt;
+  &lt;li&gt;如果Http2不能使用，会有连接池来降低请求等待时间&lt;/li&gt;
+  &lt;li&gt;通过gzip压缩减少sizes&lt;/li&gt;
+  &lt;li&gt;responese缓存, 减少重复请求&lt;/li&gt;
+  &lt;li&gt;OKHttp默认支持失败重连，如果你有多个IP地址，在服务失败后OKHttp将尝试切换请求的IP&lt;/li&gt;
+  &lt;li&gt;OKhttp默认支持TLS的新版特性(SNI, ALPN),如果握手失败将自动降级到TLS 1.0.OkHttp引用了OkIo的项目&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;OkHttp引用了OkIo的项目,&lt;a href=&quot;https://github.com/square/okio&quot;&gt;OkIo&lt;/a&gt;是对javaIO的扩展和简化。  &lt;br /&gt;
+OkHttp支持同步和异步的请求，最低支持Android 2.3  java 1.7的版本。&lt;br /&gt;
+我们可以把okhttp看成是Appach Http的替代品。&lt;/p&gt;
+&lt;h2 id=&quot;okhttp基本使用&quot;&gt;okhttp基本使用&lt;/h2&gt;
+&lt;h3 id=&quot;okhttp引用&quot;&gt;okhttp引用&lt;/h3&gt;
+&lt;p&gt;直接下载jar包（需要引入okIo的jar包）&lt;/p&gt;
+
+&lt;p&gt;MAVEN:&lt;/p&gt;
+
+&lt;div class=&quot;language-xml highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;dependency&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;groupId&amp;gt;&lt;/span&gt;com.squareup.okhttp3&lt;span class=&quot;nt&quot;&gt;&amp;lt;/groupId&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;artifactId&amp;gt;&lt;/span&gt;okhttp&lt;span class=&quot;nt&quot;&gt;&amp;lt;/artifactId&amp;gt;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;lt;version&amp;gt;&lt;/span&gt;3.8.0&lt;span class=&quot;nt&quot;&gt;&amp;lt;/version&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;&amp;lt;/dependency&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;GRADLE:&lt;/p&gt;
+&lt;div class=&quot;language-gradle highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;compile&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'com.squareup.okhttp3:okhttp:3.8.0'&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;基本使用&quot;&gt;基本使用&lt;/h3&gt;
+&lt;p&gt;GET A URL:&lt;/p&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;kHttpClient&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;client&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;OkHttpClient&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt; 
+&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;run&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;throws&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;IOException&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;Request&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;request&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Request&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;Builder&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;
+      &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;try&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Response&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;response&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;client&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;newCall&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;execute&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;())&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;body&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;POST TO A SERVER:&lt;/p&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;MediaType&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;JSON&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;MediaType&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;parse&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;application/json; charset=utf-8&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;OkHttpClient&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;client&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;OkHttpClient&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;post&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;json&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;throws&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;IOException&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;RequestBody&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;body&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;RequestBody&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;create&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;JSON&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;json&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;Request&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;request&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Request&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;Builder&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;
+      &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;post&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;body&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;try&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Response&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;response&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;client&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;newCall&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;execute&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;())&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;body&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;();&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;源码下载&quot;&gt;源码下载&lt;/h2&gt;
+&lt;p&gt;github : &lt;a href=&quot;https://github.com/square/okhttp&quot;&gt;okhttp github&lt;/a&gt; &lt;br /&gt;
+IDE: idea &lt;br /&gt;
+我们用git clone项目到本地即可, 项目是maven项目我使用的是idea编译器，我们用idea导入项目，然后同步maven即可。&lt;/p&gt;
+
+&lt;p&gt;下一篇我们来介绍okhttp项目下的各个module。&lt;/p&gt;</content><author><name>FSilence</name></author><summary type="html">An HTTP &amp;amp; HTTP/2 client for Android and Java applications</summary></entry><entry><title type="html">Mac Shell的配置</title><link href="http://localhost:4000/2017/05/23/mac-shell-config/" rel="alternate" type="text/html" title="Mac Shell的配置" /><published>2017-05-23T00:00:00+00:00</published><updated>2017-05-23T00:00:00+00:00</updated><id>http://localhost:4000/2017/05/23/mac-shell-config</id><content type="html" xml:base="http://localhost:4000/2017/05/23/mac-shell-config/">&lt;p&gt;要想方便的使用mac，shell的使用个人认为是必不可少的，在我们拿到mac的时候，我们应该先配置好我们的shell，这样可以极大的提高我们的效率。本文不会描述具体的配置过程，只是对相关配置资料的一个索引。&lt;/p&gt;
 
 &lt;h2 id=&quot;zsh&quot;&gt;zsh&lt;/h2&gt;
 &lt;p&gt;为什么我要使用zsh 而不是bash，可以参照&lt;a href=&quot;https://www.zhihu.com/question/21418449&quot;&gt;为什么说 zsh 是 shell 中的极品？
@@ -873,68 +1045,4 @@ public class AIDLService extends Service{
 &lt;/code&gt;
 &lt;/pre&gt;
 我们以Bind的方式启动Service然后再onServiceConnected中的使用IBookManager.Stub.asInterface来转换成我们定义的接口即可实现和服务端的交互。 
-&lt;/Book&gt;&lt;/IBookListener&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/Book&gt;&lt;/code&gt;&lt;/pre&gt;</content><author><name>FSilence</name></author><summary type="html">内容大纲 1.使用AIDL实现IPC 本文是基于Android studio来说明的。我们先明确2个基本概念客户端和服务端。在本例中客户端是指发起处理请求的进程（app的主进程）， 服务端（service端）指一个另外一个提供服务的进程（主要是指service）。</summary></entry><entry><title type="html">ReactNative调研报告</title><link href="http://localhost:4000/2017/05/11/react-native-report/" rel="alternate" type="text/html" title="ReactNative调研报告" /><published>2017-05-11T00:00:00+00:00</published><updated>2017-05-11T00:00:00+00:00</updated><id>http://localhost:4000/2017/05/11/react-native-report</id><content type="html" xml:base="http://localhost:4000/2017/05/11/react-native-report/">&lt;p&gt;2015年9月15日Facebook发布了ReactNative for Android，引发了学习使用ReactNative开发跨平台引用的热潮。目前React Native发布到了0.44的版本。最近项目中考虑是否要接入ReactNative, 所以对ReactNative进行了一些调研性的工作。&lt;/p&gt;
-
-&lt;h2 id=&quot;reactnative简介&quot;&gt;ReactNative简介&lt;/h2&gt;
-&lt;p&gt;在reactnative中文网上有以下简介:&lt;/p&gt;
-&lt;pre&gt;
-React Native使你能够在Javascript和React的基础上获得完全一致的开发体验，构建世界一流的原生APP。  
-React Native着力于提高多平台开发的开发效率 —— 仅需学习一次，编写任何平台。(Learn once, write anywhere)  
-Facebook已经在多项产品中使用了React Native，并且将持续地投入建设React Native。
-&lt;/pre&gt;
-&lt;p&gt;React Native是使用javascript和react来实现跨平台开发的, React Native提倡组件化开发: 即提供一个个封装好的组件，组件相互嵌套形成新的组件.你可以完全将App使用ReactNative编写，也可以使用原生和react native混合和的方式。由于目前React Native才发布到0.44版本，还没有发布正式的1.0, 其变动相对比较频繁，在react native升级后经常导致项目不能运行，你必须去做额外的工作来保证项目正常的运行。不过最近React Native的发布已经慢慢趋于稳定了，现在基本是1-2个月发一次版本更新，更新内容也没有之前变化那么大了。&lt;/p&gt;
-
-&lt;p&gt;众所周知Android的碎片化和厂商的定制化是影响app稳定的很重要的原因之一,尤其是在国内，各个手机厂商都对Android系统进行了深度定制。这样的问题在ReactNative上也有很明显的体现，ReactNative在兼容Android各个系统版本和厂商版本的时候会暴露出不少的问题，目前React Native只支持Android 4.1以上，IOS 7.0以上的版本.附上最新的Android版本分布，&lt;a href=&quot;https://zhuanlan.zhihu.com/p/25737474&quot;&gt;Android3月份分版本分布&lt;/a&gt;可以看到Android 4.0的应用占比基本在%1左右，所以影响不大。&lt;/p&gt;
-
-&lt;p&gt;在2017年3月爆发了一股苹果商店禁止热更新的事件，很多人都担心苹果是否会封掉Reactnative，其实苹果想要禁止的是热更新的功能。在苹果的拒绝邮件上也只是说明拒绝热更新的能力。从目前来看，这2个月苹果ReactNative依然可以过审。在各个论坛上也并未发现此次禁止热更新对ReactNative有较为明显的影响。&lt;/p&gt;
-
-&lt;h2 id=&quot;reactnative-vs-原生-vs-hybrid&quot;&gt;ReactNative VS 原生 VS Hybrid&lt;/h2&gt;
-&lt;h3 id=&quot;实现&quot;&gt;实现&lt;/h3&gt;
-&lt;p&gt;(hybrid和 phoneGap APICloud AppCan等思想相同)
-hybrid是一款h5的跨终端的解决方案，思想是 编写一次，就可以跨平台。
-本质上hybrid还是web界面，只不过针对各个平台提供了一些调用native方法的api，通过js 和 native交互进行通信。&lt;br /&gt;
-用web渲染界面是比较耗时的，为了解决界面的渲染耗时，react-native将界面用原生实现，而js部分只负责描述界面并将描述后的界面通过js和native的交互机制通知给终端，让终端根据js传递过来的界面描述信息来选择本地的控件进行界面的拼装。react-native的思想是 学习一次，可以跨平台开发（仍需要各个终端的人配合）。&lt;/p&gt;
-
-&lt;h3 id=&quot;性能&quot;&gt;性能&lt;/h3&gt;
-&lt;p&gt;原生 &amp;gt; ReactNative &amp;gt; Hybrid&lt;br /&gt;
-具体的性能对比参数可以查看&lt;a href=&quot;http://blog.csdn.net/yczz/article/details/50468181&quot;&gt;H5、React Native、Native应用对比分析&lt;/a&gt;&lt;/p&gt;
-&lt;h3 id=&quot;开发维护&quot;&gt;开发&amp;amp;维护&lt;/h3&gt;
-&lt;p&gt;以下成本和更新能力模块参考了&lt;a href=&quot;http://blog.csdn.net/yczz/article/details/50468181&quot;&gt;H5、React Native、Native应用对比分析&lt;/a&gt;&lt;/p&gt;
-&lt;h3 id=&quot;维护成本&quot;&gt;维护成本&lt;/h3&gt;
-&lt;p&gt;Hybrid &amp;lt; ReactNative &amp;lt; 原生&lt;br /&gt;
-Hybrid是H5的夸平台解决方案，ReactNative可以达到百分之90左右的代码共用，但仍需要终端支持。&lt;/p&gt;
-
-&lt;p&gt;H5/Hybird： Web代码 ＋ iOS/Android平台支持&lt;/p&gt;
-
-&lt;p&gt;React Native：可以一个开发团队 ＋ iOS/Android工程师；业务组件颗粒度小，不用把握全局即可修改业务代码。&lt;/p&gt;
-
-&lt;p&gt;Native：iOS/Android开发周期长，两个开发团队。&lt;/p&gt;
-
-&lt;p&gt;总结：React Native 统一了开发人员技术栈，代码维护相对容易。&lt;/p&gt;
-&lt;h4 id=&quot;更新能力&quot;&gt;更新能力&lt;/h4&gt;
-&lt;p&gt;H5/Hybird： 随时更新，适合做营销页面，目前携程一些BU全部都是H5页面；但是重要的部分还是Native。&lt;/p&gt;
-
-&lt;p&gt;React Native：React Native部分可以热更新，bug及时修复。&lt;/p&gt;
-
-&lt;p&gt;Native：随版本更新，尤其iOS审核严格，需要测试过关，否则影响用户。&lt;/p&gt;
-
-&lt;h2 id=&quot;react-canvas&quot;&gt;React-Canvas&lt;/h2&gt;
-&lt;p&gt;为了解决webapp渲染dom的效率问题，Flipboard推出了一款react-canvas，它的思想是用做游戏的方式来做app。界面渲染针对到canvas上，通过重新定义绘制过程来减少web界面渲染时候的开销问题。&lt;br /&gt;
-react-canvas 也是使用的css-layout和react-native一致，也集成了react，只是最终界面是通过canvas展示的。
-react-canvas因为是针对webapp的，所以它的灵活性要比react-native强，渲染的卡顿问题比较接近原生,由于react-canvas还是一个webapp所以有一些原生的界面效果不太好处理。react-canvas如果要和native交互需要单独提供本地的基础库和js和native的通信机制。
-其实react-native可以理解成重写了一个简版的web浏览器，它只支持一些特殊的定制化界面，用native实现界面渲染来达到原生的体验效果。&lt;/p&gt;
-
-&lt;h2 id=&quot;案例&quot;&gt;案例&lt;/h2&gt;
-&lt;p&gt;目前国内使用ReactNative的还不是很多（有些小的应用是完全用React Native来实现的）, 比较出名的是 携程的火车票模块， QQ空间，销售易的包中也发现了React Native的痕迹。要想看到更多的国内案例可以通过react native中文网收集的案例上查看: &lt;a href=&quot;http://reactnative.cn/cases.html&quot;&gt;ReactNative案例&lt;/a&gt;。&lt;/p&gt;</content><author><name>FSilence</name></author><summary type="html">2015年9月15日Facebook发布了ReactNative for Android，引发了学习使用ReactNative开发跨平台引用的热潮。目前React Native发布到了0.44的版本。最近项目中考虑是否要接入ReactNative, 所以对ReactNative进行了一些调研性的工作。</summary></entry><entry><title type="html">用gradle构建java项目</title><link href="http://localhost:4000/2017/05/03/gradle-server-project/" rel="alternate" type="text/html" title="用gradle构建java项目" /><published>2017-05-03T00:00:00+00:00</published><updated>2017-05-03T00:00:00+00:00</updated><id>http://localhost:4000/2017/05/03/gradle-server-project</id><content type="html" xml:base="http://localhost:4000/2017/05/03/gradle-server-project/">&lt;p&gt;一般像后台的项目都是用maven构建的，我们来看一下使用gradle来构建java项目，本文不涉及到具体的gradle配置&lt;/p&gt;
-
-&lt;p&gt;IDE: idea&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;首先安装gradle 并配置环境变量&lt;/li&gt;
-  &lt;li&gt;在项目目录下执行 gradle wrapper 生成wrapper文件（之后再idea中配置使用wrapper构建，使用wrapper的好处在于使用项目配置的gradle版本 不会因为版本冲突引发问题)可以通过–verison 来制定特定的版本&lt;/li&gt;
-  &lt;li&gt;在idea 设置中搜索gradle 选择使用gradle wrapper 并勾选use-auto-import然后即可&lt;/li&gt;
-  &lt;li&gt;根据需求自己定义setting.gradle 和 build.gradle中的内容&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;在新建完项目执行单元测试的时候你可能会遇到Error:gradle-resources-test:di_test: java.lang.NoClassDefFoundError: org/apache/tools/ant/util/ReaderInputStream 的错误这是你可以执行以下操作：&lt;br /&gt;
-File → Invalidate Caches / Restart 然后重启idea即可&lt;/p&gt;</content><author><name>FSilence</name></author><summary type="html">一般像后台的项目都是用maven构建的，我们来看一下使用gradle来构建java项目，本文不涉及到具体的gradle配置</summary></entry></feed>
+&lt;/Book&gt;&lt;/IBookListener&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/Book&gt;&lt;/code&gt;&lt;/pre&gt;</content><author><name>FSilence</name></author><summary type="html">内容大纲 1.使用AIDL实现IPC 本文是基于Android studio来说明的。我们先明确2个基本概念客户端和服务端。在本例中客户端是指发起处理请求的进程（app的主进程）， 服务端（service端）指一个另外一个提供服务的进程（主要是指service）。</summary></entry></feed>

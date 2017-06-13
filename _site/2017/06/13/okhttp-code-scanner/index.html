@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <title>在线工具 &mdash; FSilence's Blog</title>
+    <title>okHttp各个module介绍 &mdash; FSilence's Blog</title>
     <link rel="stylesheet" href="/assets/vendor/primer-css/css/primer.css">
     <link rel="stylesheet" href="/assets/vendor/primer-markdown/dist/user-content.min.css">
     <link rel="stylesheet" href="/assets/vendor/octicons/octicons/octicons.css">
@@ -21,23 +21,23 @@
     
 
     
-    <link rel="canonical" href="http://localhost:4000/wiki/tools/">
+    <link rel="canonical" href="http://localhost:4000/2017/06/13/okhttp-code-scanner/">
     <link rel="alternate" type="application/atom+xml" title="FSilence's Blog" href="">
     <link rel="shortcut icon" href="/favicon.ico">
     
-    <meta property="og:title" content="在线工具">
+    <meta property="og:title" content="okHttp各个module介绍">
       
-    <meta name="keywords" content="tools, 工具">
-    <meta name="og:keywords" content="tools, 工具">
+    <meta name="keywords" content="okhttp, module">
+    <meta name="og:keywords" content="okhttp, module">
       
-    <meta name="description" content="其它在线工具网站oschina 在线工具十六进制颜色转换器">
-    <meta name="og:description" content="其它在线工具网站oschina 在线工具十六进制颜色转换器">
+    <meta name="description" content="上一篇我们简单介绍了okHttp，了解了OkHttp的基本用法，并下载了okhttp的源码。本篇我们将一起来看看okhttp源码的目录结构，来大概了解下okHttp源码下的各个module的作用。">
+    <meta name="og:description" content="上一篇我们简单介绍了okHttp，了解了OkHttp的基本用法，并下载了okhttp的源码。本篇我们将一起来看看okhttp源码的目录结构，来大概了解下okHttp源码下的各个module的作用。">
       
     
     
         
     
-    <meta property="og:url" content="http://localhost:4000/wiki/tools/">
+    <meta property="og:url" content="http://localhost:4000/2017/06/13/okhttp-code-scanner/">
     <meta property="og:site_name" content="FSilence's Blog">
     <meta property="og:type" content="article">
     <meta property="og:locale" content="zh_CN" />
@@ -92,12 +92,25 @@
     </header>
     <!-- / header -->
 
-    <section class="collection-head small geopattern" data-pattern-id="在线工具">
+    <section class="collection-head small geopattern" data-pattern-id="okHttp各个module介">
 <div class="container">
   <div class="columns">
     <div class="column three-fourths">
       <div class="collection-title">
-        <h1 class="collection-header">在线工具</h1>
+        <h1 class="collection-header">okHttp各个module介绍</h1>
+        <div class="collection-info">
+          
+          <span class="meta-info">
+            <span class="octicon octicon-calendar"></span> 2017/06/13
+          </span>
+          
+          
+          <span class="meta-info">
+            <span class="octicon octicon-file-directory"></span>
+            <a href="/categories/#java" title="java">java</a>
+          </span>
+          
+        </div>
       </div>
     </div>
   </div>
@@ -108,10 +121,100 @@
 <div class="columns">
   <div class="column three-fourths" >
     <article class="article-content markdown-body">
-    <h2 id="其它在线工具网站">其它在线工具网站</h2>
-<p><a href="http://tool.oschina.net/">oschina 在线工具</a><br />
-<a href="http://www.sioe.cn/yingyong/yanse-rgb-16/">十六进制颜色转换器</a></p>
+    <p>上一篇我们简单介绍了okHttp，了解了OkHttp的基本用法，并下载了okhttp的源码。本篇我们将一起来看看okhttp源码的目录结构，来大概了解下okHttp源码下的各个module的作用。</p>
 
+<p>okHttp的构建工具使用的是maven，关于<a href="https://www.google.com.hk/#safe=strict&amp;q=maven">maven</a>可自行google,本文不对此做过多阐述。我们来重点看一下okHttp的项目目录。在这里以及之后的源码都是okHttp的最新版本 3.8.0。我们可以选择git工具checkout出 3.8.0的tag，本人使用的是idea自带的git管理工具，在右下角git分支出点击 选测checkout tag, 输入3.8.0的分支名字：parent-3.8.0 确认即可, 然后我们来看一下项目的目录结构截图:<br />
+<a href="/images/okhttp/okhttp-modules.png">!</a></p>
+
+<p>我们来看看各个module的功能作用，主要的借阅资料是module下的README.MD文件，读者也可自行查阅。</p>
+
+<h2 id="benchmarks">benchmarks</h2>
+<p>README.MD中的说明:</p>
+<pre>
+This module allows you to test the performance of HTTP clients.
+Running
+  1. If you made modifications to `Benchmark` run `mvn compile`.
+  2. Run `mvn exec:exec` to launch a new JVM, which will execute the benchmark.
+</pre>
+
+<p>用google caliper来测试HTTP客户端性能的，具体的使用我们先不加关注。</p>
+
+<h2 id="mockwebserver">mockwebserver</h2>
+<p>README.MD中的说明，我们这里只截取了介绍部分，具体的使用说明不做说明。</p>
+<pre>
+A scriptable web server for testing HTTP clients    
+**Motivation**  
+This library makes it easy to test that your app Does The Right Thing when it
+makes HTTP and HTTPS calls. It lets you specify which responses to return and
+then verify that requests were made as expected.  
+Because it exercises your full HTTP stack, you can be confident that you're
+testing everything. You can even copy &amp; paste HTTP responses from your real web
+server to create representative test cases. Or test that your code survives in
+awkward-to-reproduce situations like 500 errors or slow-loading responses.  
+**Example**   
+Use MockWebServer the same way that you use mocking frameworks like
+[Mockito](https://github.com/mockito/mockito):
+1. Script the mocks.
+2. Run application code.
+3. Verify that the expected requests were made.
+</pre>
+<p>此处省略了具体的demo部分，大致是说MockWebServer是用来在单元测试中来模拟网络请求用的，我们可以模拟一个网络返回来验证我们的网络调用。</p>
+
+<h2 id="okcurl">okcurl</h2>
+<p>来看README文件:</p>
+<pre>
+_A curl for the next-generation web._  
+OkCurl is an OkHttp-backed curl clone which allows you to test OkHttp's HTTP engine (including
+HTTP/2) against web servers.
+</pre>
+<p>用来离线测试okhttp引擎的。</p>
+
+<h2 id="okhttp">okhttp</h2>
+<p>我们将要研究的项目主体。</p>
+
+<h2 id="okhttp-android-support-okhttp-urlconnection-okhttp-apache">okhttp-android-support okhttp-urlconnection okhttp-apache</h2>
+<p>对其它http引擎的适配。</p>
+
+<h2 id="okhttp-hpacktests">okhttp-hpacktests</h2>
+<pre>
+These tests use the [hpack-test-case][1] project to validate OkHttp's HPACK
+implementation.  The HPACK test cases are in a separate git submodule, so to
+initialize them, you must run:
+
+    git submodule init
+    git submodule update
+
+TODO
+----
+
+ * Add maven goal to avoid manual call to git submodule init.
+ * Make hpack-test-case update itself from git, and run new tests.
+ * Add maven goal to generate stories and a pull request to hpack-test-case
+   to have others validate our output.
+
+[1]: https://github.com/http2jp/hpack-test-case 
+</pre>
+<p>这个是用来测试hpack的。HPACK是http 2.0的头部压缩算法。</p>
+
+<h2 id="okhttp-loggin-interceptor">okhttp-loggin-interceptor</h2>
+<pre>
+An [OkHttp interceptor][1] which logs HTTP request and response data.
+</pre>
+<p>日志输出的拦截器，关于interceptor之后再分析OkHttp的代码中我们会看到它的具体含义和使用。</p>
+
+<h2 id="okhttp-testing-support">okhttp-testing-support</h2>
+<p>对okhttp测试的一些基础能力支持。</p>
+
+<h2 id="okhttp-tests">okhttp-tests</h2>
+<p>okhttp自己的测试</p>
+
+<h2 id="samples">samples</h2>
+<p>demo</p>
+
+<h2 id="website">website</h2>
+<p>okhttp的介绍说明的静态网页。</p>
+
+<p>我们已大致了解了okhttp下的各个module，在后面的文章中我们将开始逐步进入okhttp的具体代码，来一步一步学习okhttp。</p>
 
     
 
@@ -134,9 +237,9 @@
           <div id="disqus_thread"></div>
           <script>
             var disqus_config = function () {
-              this.page.url = 'http://localhost:4000/wiki/tools/';
-              this.page.identifier = '/wiki/tools/';
-              this.page.title = '在线工具';
+              this.page.url = 'http://localhost:4000/2017/06/13/okhttp-code-scanner/';
+              this.page.identifier = '/2017/06/13/okhttp-code-scanner/';
+              this.page.title = 'okHttp各个module介绍';
             };
             (function() { // DON'T EDIT BELOW THIS LINE
               var d = document, s = d.createElement('script');
