@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <title>okHttp各个module介绍 &mdash; FSilence's Blog</title>
+    <title>UML类图 &mdash; FSilence's Blog</title>
     <link rel="stylesheet" href="/assets/vendor/primer-css/css/primer.css">
     <link rel="stylesheet" href="/assets/vendor/primer-markdown/dist/user-content.min.css">
     <link rel="stylesheet" href="/assets/vendor/octicons/octicons/octicons.css">
@@ -21,28 +21,28 @@
     
 
     
-    <link rel="canonical" href="http://localhost:4000/2017/06/13/okhttp-code-scanner/">
+    <link rel="canonical" href="http://localhost:4000/wiki/uml/">
     <link rel="alternate" type="application/atom+xml" title="FSilence's Blog" href="">
     <link rel="shortcut icon" href="/favicon.ico">
     
-    <meta property="og:title" content="okHttp各个module介绍">
+    <meta property="og:title" content="UML类图">
       
-    <meta name="keywords" content="okhttp, module">
-    <meta name="og:keywords" content="okhttp, module">
+    <meta name="keywords" content="uml, java">
+    <meta name="og:keywords" content="uml, java">
       
-    <meta name="description" content="上一篇我们简单介绍了okHttp，了解了OkHttp的基本用法，并下载了okhttp的源码。本篇我们将一起来看看okhttp源码的目录结构，来大概了解下okHttp源码下的各个module的作用。">
-    <meta name="og:description" content="上一篇我们简单介绍了okHttp，了解了OkHttp的基本用法，并下载了okhttp的源码。本篇我们将一起来看看okhttp源码的目录结构，来大概了解下okHttp源码下的各个module的作用。">
+    <meta name="description" content="继承">
+    <meta name="og:description" content="继承">
       
     
     
         
     
-    <meta property="og:url" content="http://localhost:4000/2017/06/13/okhttp-code-scanner/">
+    <meta property="og:url" content="http://localhost:4000/wiki/uml/">
     <meta property="og:site_name" content="FSilence's Blog">
     <meta property="og:type" content="article">
     <meta property="og:locale" content="zh_CN" />
     
-    <meta property="article:published_time" content="2017-06-13">
+    <meta property="article:published_time" content="2017-06-14">
     
     <script src="/assets/vendor/jquery/dist/jquery.min.js"></script>
     <script src="/assets/js/jquery-ui.js"></script>
@@ -92,25 +92,12 @@
     </header>
     <!-- / header -->
 
-    <section class="collection-head small geopattern" data-pattern-id="okHttp各个module介">
+    <section class="collection-head small geopattern" data-pattern-id="UML类图">
 <div class="container">
   <div class="columns">
     <div class="column three-fourths">
       <div class="collection-title">
-        <h1 class="collection-header">okHttp各个module介绍</h1>
-        <div class="collection-info">
-          
-          <span class="meta-info">
-            <span class="octicon octicon-calendar"></span> 2017/06/13
-          </span>
-          
-          
-          <span class="meta-info">
-            <span class="octicon octicon-file-directory"></span>
-            <a href="/categories/#java" title="java">java</a>
-          </span>
-          
-        </div>
+        <h1 class="collection-header">UML类图</h1>
       </div>
     </div>
   </div>
@@ -121,100 +108,79 @@
 <div class="columns">
   <div class="column three-fourths" >
     <article class="article-content markdown-body">
-    <p>上一篇我们简单介绍了okHttp，了解了OkHttp的基本用法，并下载了okhttp的源码。本篇我们将一起来看看okhttp源码的目录结构，来大概了解下okHttp源码下的各个module的作用。</p>
+    <h2 id="继承">继承</h2>
 
-<p>okHttp的构建工具使用的是maven，关于<a href="https://www.google.com.hk/#safe=strict&amp;q=maven">maven</a>可自行google,本文不对此做过多阐述。我们来重点看一下okHttp的项目目录。在这里以及之后的源码都是okHttp的最新版本 3.8.0。我们可以选择git工具checkout出 3.8.0的tag，本人使用的是idea自带的git管理工具，在右下角git分支出点击 选测checkout tag, 输入3.8.0的分支名字：parent-3.8.0 确认即可, 然后我们来看一下项目的目录结构截图:<br />
-<img src="/images/okhttp/okhttp-modules.png" alt="" /></p>
+<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="kd">class</span> <span class="nc">A</span> <span class="o">{}</span>
 
-<p>我们来看看各个module的功能作用，主要的借阅资料是module下的README.MD文件，读者也可自行查阅。</p>
+<span class="kd">class</span> <span class="nc">B</span> <span class="kd">extends</span> <span class="n">A</span> <span class="o">{}</span>
+</code></pre>
+</div>
+<p><img src="/images/wiki/uml/extends.png" alt="" /></p>
 
-<h2 id="benchmarks">benchmarks</h2>
-<p>README.MD中的说明:</p>
-<pre>
-This module allows you to test the performance of HTTP clients.
-Running
-  1. If you made modifications to `Benchmark` run `mvn compile`.
-  2. Run `mvn exec:exec` to launch a new JVM, which will execute the benchmark.
-</pre>
+<h2 id="实现">实现</h2>
 
-<p>用google caliper来测试HTTP客户端性能的，具体的使用我们先不加关注。</p>
+<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="kd">interface</span> <span class="nc">A</span> <span class="o">{}</span>
 
-<h2 id="mockwebserver">mockwebserver</h2>
-<p>README.MD中的说明，我们这里只截取了介绍部分，具体的使用说明不做说明。</p>
-<pre>
-A scriptable web server for testing HTTP clients    
-**Motivation**  
-This library makes it easy to test that your app Does The Right Thing when it
-makes HTTP and HTTPS calls. It lets you specify which responses to return and
-then verify that requests were made as expected.  
-Because it exercises your full HTTP stack, you can be confident that you're
-testing everything. You can even copy &amp; paste HTTP responses from your real web
-server to create representative test cases. Or test that your code survives in
-awkward-to-reproduce situations like 500 errors or slow-loading responses.  
-**Example**   
-Use MockWebServer the same way that you use mocking frameworks like
-[Mockito](https://github.com/mockito/mockito):
-1. Script the mocks.
-2. Run application code.
-3. Verify that the expected requests were made.
-</pre>
-<p>此处省略了具体的demo部分，大致是说MockWebServer是用来在单元测试中来模拟网络请求用的，我们可以模拟一个网络返回来验证我们的网络调用。</p>
+<span class="kd">class</span> <span class="nc">B</span> <span class="kd">implements</span> <span class="n">A</span><span class="o">{}</span>
+</code></pre>
+</div>
 
-<h2 id="okcurl">okcurl</h2>
-<p>来看README文件:</p>
-<pre>
-_A curl for the next-generation web._  
-OkCurl is an OkHttp-backed curl clone which allows you to test OkHttp's HTTP engine (including
-HTTP/2) against web servers.
-</pre>
-<p>用来离线测试okhttp引擎的。</p>
+<p><img src="/images/wiki/uml/implement.png" alt="" /></p>
 
-<h2 id="okhttp">okhttp</h2>
-<p>我们将要研究的项目主体。</p>
+<h2 id="关联">关联</h2>
 
-<h2 id="okhttp-android-support-okhttp-urlconnection-okhttp-apache">okhttp-android-support okhttp-urlconnection okhttp-apache</h2>
-<p>对其它http引擎的适配。</p>
+<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="kd">class</span> <span class="nc">A</span> <span class="o">{</span>
+  <span class="n">List</span><span class="o">&lt;</span><span class="n">B</span><span class="o">&gt;</span> <span class="n">bList</span><span class="o">;</span>
+<span class="o">}</span>
 
-<h2 id="okhttp-hpacktests">okhttp-hpacktests</h2>
-<pre>
-These tests use the [hpack-test-case][1] project to validate OkHttp's HPACK
-implementation.  The HPACK test cases are in a separate git submodule, so to
-initialize them, you must run:
+<span class="kd">class</span> <span class="nc">B</span> <span class="o">{</span>
+<span class="o">}</span>
+</code></pre>
+</div>
+<p>一对多 多对多 多对一
+<img src="/images/wiki/uml/related.png" alt="" /></p>
 
-    git submodule init
-    git submodule update
+<h2 id="聚合关系">聚合关系</h2>
+<p>关联关系的一种，表示整体部分，例如 汽车中包含引擎 轮胎</p>
 
-TODO
-----
+<div class="language-java highlighter-rouge"><pre class="highlight"><code>   <span class="kd">class</span> <span class="err">引擎</span> 
+   <span class="err">{</span> 
+   <span class="err">};</span> 
+   <span class="nc">class</span> <span class="err">轮胎</span> 
+   <span class="o">{</span> 
+   <span class="o">};</span> 
+   <span class="kd">class</span> <span class="err">汽车</span> 
+   <span class="err">{</span> 
+   <span class="nc">protected</span><span class="o">:</span> 
+   <span class="err">引擎</span> <span class="n">engine</span><span class="o">;</span> 
+   <span class="err">轮胎</span> <span class="n">tyre</span><span class="o">[</span><span class="mi">4</span><span class="o">];</span> 
+   <span class="o">};</span> 
+</code></pre>
+</div>
+<p><img src="/images/wiki/uml/aggregation.png" alt="" /></p>
 
- * Add maven goal to avoid manual call to git submodule init.
- * Make hpack-test-case update itself from git, and run new tests.
- * Add maven goal to generate stories and a pull request to hpack-test-case
-   to have others validate our output.
+<h2 id="合成关系">合成关系</h2>
+<p>关联关系的一种，比聚合关系强，部分和整体具有相同的生命周期</p>
 
-[1]: https://github.com/http2jp/hpack-test-case 
-</pre>
-<p>这个是用来测试hpack的。HPACK是http 2.0的头部压缩算法。</p>
+<div class="language-java highlighter-rouge"><pre class="highlight"><code>   <span class="kd">class</span> <span class="err">肢</span> 
+   <span class="err">{</span> 
+   <span class="err">};</span> 
+   <span class="nc">class</span> <span class="err">人</span> 
+   <span class="o">{</span> 
+   <span class="kd">protected</span><span class="o">:</span> 
+   <span class="err">肢</span> <span class="n">limb</span><span class="o">[</span><span class="mi">4</span><span class="o">];</span> 
+   <span class="o">};</span> 
+</code></pre>
+</div>
+<p><img src="/images/wiki/uml/composition.png" alt="" /></p>
 
-<h2 id="okhttp-loggin-interceptor">okhttp-loggin-interceptor</h2>
-<pre>
-An [OkHttp interceptor][1] which logs HTTP request and response data.
-</pre>
-<p>日志输出的拦截器，关于interceptor之后再分析OkHttp的代码中我们会看到它的具体含义和使用。</p>
+<h2 id="依赖关系">依赖关系</h2>
 
-<h2 id="okhttp-testing-support">okhttp-testing-support</h2>
-<p>对okhttp测试的一些基础能力支持。</p>
+<p>1、依赖关系也是类与类之间的联结<br />
+   2、依赖总是单向的。<br />
+   3、依赖关系在 Java 或 C++ 语言中体现为局部变量、方法的参数或者对静态方法的调用。</p>
 
-<h2 id="okhttp-tests">okhttp-tests</h2>
-<p>okhttp自己的测试</p>
-
-<h2 id="samples">samples</h2>
-<p>demo</p>
-
-<h2 id="website">website</h2>
-<p>okhttp的介绍说明的静态网页。</p>
-
-<p>我们已大致了解了okhttp下的各个module，在后面的文章中我们将开始逐步进入okhttp的具体代码，来一步一步学习okhttp。</p>
+<p><img src="/images/wiki/uml/dependency.png" alt="" /></p>
 
     
 
@@ -237,9 +203,9 @@ An [OkHttp interceptor][1] which logs HTTP request and response data.
           <div id="disqus_thread"></div>
           <script>
             var disqus_config = function () {
-              this.page.url = 'http://localhost:4000/2017/06/13/okhttp-code-scanner/';
-              this.page.identifier = '/2017/06/13/okhttp-code-scanner/';
-              this.page.title = 'okHttp各个module介绍';
+              this.page.url = 'http://localhost:4000/wiki/uml/';
+              this.page.identifier = '/wiki/uml/';
+              this.page.title = 'UML类图';
             };
             (function() { // DON'T EDIT BELOW THIS LINE
               var d = document, s = d.createElement('script');

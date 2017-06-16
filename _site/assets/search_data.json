@@ -328,6 +328,12 @@
     "title": "在线工具",
     "url": "/wiki/tools/",
     "category": "[&quot;tools&quot;]"
+  },
+  
+  "wiki-uml": {
+    "title": "UML类图",
+    "url": "/wiki/uml/",
+    "category": "[&quot;java&quot;]"
   }
   
 }
