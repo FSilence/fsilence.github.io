@@ -6,6 +6,18 @@
     "category": "java"
   },
   
+  "2017-06-13-okhttp-client-simple": {
+    "title": "OkHttp源码初探",
+    "url": " /2017/06/13/okhttp-client-simple/",
+    "category": "java"
+  },
+  
+  "2017-06-13-okhttp-call": {
+    "title": "okHttp之请求Call",
+    "url": " /2017/06/13/okhttp-call/",
+    "category": "java"
+  },
+  
   "2017-06-09-okhttp-introduce": {
     "title": "okhttp-简介",
     "url": " /2017/06/09/okhttp-introduce/",
@@ -303,6 +315,18 @@
   "2017-06-09-okhttp-introduce": {
     "title": "okhttp-简介",
     "url": "/2017/06/09/okhttp-introduce/",
+    "category": "[&quot;java&quot;]"
+  },
+  
+  "2017-06-13-okhttp-call": {
+    "title": "okHttp之请求Call",
+    "url": "/2017/06/13/okhttp-call/",
+    "category": "[&quot;java&quot;]"
+  },
+  
+  "2017-06-13-okhttp-client-simple": {
+    "title": "OkHttp源码初探",
+    "url": "/2017/06/13/okhttp-client-simple/",
     "category": "[&quot;java&quot;]"
   },
   

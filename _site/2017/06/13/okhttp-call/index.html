@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <title>UML类图 &mdash; FSilence's Blog</title>
+    <title>okHttp之请求Call &mdash; FSilence's Blog</title>
     <link rel="stylesheet" href="/assets/vendor/primer-css/css/primer.css">
     <link rel="stylesheet" href="/assets/vendor/primer-markdown/dist/user-content.min.css">
     <link rel="stylesheet" href="/assets/vendor/octicons/octicons/octicons.css">
@@ -21,28 +21,28 @@
     
 
     
-    <link rel="canonical" href="http://localhost:4000/wiki/uml/">
+    <link rel="canonical" href="http://localhost:4000/2017/06/13/okhttp-call/">
     <link rel="alternate" type="application/atom+xml" title="FSilence's Blog" href="">
     <link rel="shortcut icon" href="/favicon.ico">
     
-    <meta property="og:title" content="UML类图">
+    <meta property="og:title" content="okHttp之请求Call">
       
-    <meta name="keywords" content="uml, java">
-    <meta name="og:keywords" content="uml, java">
+    <meta name="keywords" content="java, okhttp, call">
+    <meta name="og:keywords" content="java, okhttp, call">
       
-    <meta name="description" content="继承">
-    <meta name="og:description" content="继承">
+    <meta name="description" content="前一篇我们简单介绍了OkHttp中的几个常见的概念，我们知道OkHttpClient是请求的门户（外观模式），通过OkHttpClient创建了一个Call对象，然后通过Call对象来实现网络的请求，本篇我们来看一下Call做同步和异步时候都做了些什么。">
+    <meta name="og:description" content="前一篇我们简单介绍了OkHttp中的几个常见的概念，我们知道OkHttpClient是请求的门户（外观模式），通过OkHttpClient创建了一个Call对象，然后通过Call对象来实现网络的请求，本篇我们来看一下Call做同步和异步时候都做了些什么。">
       
     
     
         
     
-    <meta property="og:url" content="http://localhost:4000/wiki/uml/">
+    <meta property="og:url" content="http://localhost:4000/2017/06/13/okhttp-call/">
     <meta property="og:site_name" content="FSilence's Blog">
     <meta property="og:type" content="article">
     <meta property="og:locale" content="zh_CN" />
     
-    <meta property="article:published_time" content="2017-06-16">
+    <meta property="article:published_time" content="2017-06-13">
     
     <script src="/assets/vendor/jquery/dist/jquery.min.js"></script>
     <script src="/assets/js/jquery-ui.js"></script>
@@ -92,12 +92,25 @@
     </header>
     <!-- / header -->
 
-    <section class="collection-head small geopattern" data-pattern-id="UML类图">
+    <section class="collection-head small geopattern" data-pattern-id="okHttp之请求Call">
 <div class="container">
   <div class="columns">
     <div class="column three-fourths">
       <div class="collection-title">
-        <h1 class="collection-header">UML类图</h1>
+        <h1 class="collection-header">okHttp之请求Call</h1>
+        <div class="collection-info">
+          
+          <span class="meta-info">
+            <span class="octicon octicon-calendar"></span> 2017/06/13
+          </span>
+          
+          
+          <span class="meta-info">
+            <span class="octicon octicon-file-directory"></span>
+            <a href="/categories/#java" title="java">java</a>
+          </span>
+          
+        </div>
       </div>
     </div>
   </div>
@@ -108,79 +121,50 @@
 <div class="columns">
   <div class="column three-fourths" >
     <article class="article-content markdown-body">
-    <h2 id="继承">继承</h2>
+    <p>前一篇我们简单介绍了OkHttp中的几个常见的概念，我们知道OkHttpClient是请求的门户（外观模式），通过OkHttpClient创建了一个Call对象，然后通过Call对象来实现网络的请求，本篇我们来看一下Call做同步和异步时候都做了些什么。</p>
 
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="kd">class</span> <span class="nc">A</span> <span class="o">{}</span>
+<p>首先，我们先来看一下Call Dispatcher OkHttpClient 等的类关系图:<br />
+<img src="/images/okhttp/call-class.png" alt="" /></p>
 
-<span class="kd">class</span> <span class="nc">B</span> <span class="kd">extends</span> <span class="n">A</span> <span class="o">{}</span>
+<p>我们可以看到OkHttpClient实现了Call.Factory方法负责生产Call对象，查看OkHttpClient中的newCall方法可以发现，创建的是一个RealCall对象，RealCall对象持有OkHttpClient来方便使用OkHttpCLient中的配置项等。 在RealCall中有一个内部类AsyncCall是对RealCall的一次封装，在做异步请求的时候会用到这个对象。</p>
+
+<h2 id="同步请求">同步请求</h2>
+<p>现在我们来看一下同步请求的调用过程， 我们先来看一下调用的序列图:<br />
+<img src="/images/okhttp/sync-call-seq.png" alt="" /><br />
+同步请求的调用过程可以总结为:<br />
+1.调用Dispatcher的execute方法<br />
+2.调用getResponseWithInterceptorChain方法获取结果Respone(具体的过程，我们之后再来做研究)<br />
+3.调用Dispatcher的finish方法，通知请求结束</p>
+
+<h2 id="异步请求">异步请求</h2>
+<p>异步请求和同步调用表现基本一致，不过在异步中，RealCall中是通过封装了一个AsyncCall（一个Runnable）然后再交给Dispatcher的，然后再AsyncCall的execute方法中，依然是通过getResponseWithInterceptorChain来获取结果，然后再调用Dispatcher的finish方法来通知Dispatcher任务结束。我们来看下异步请求的序列图:<br />
+<img src="/images/okhttp/async-call-seq.png" alt="" /></p>
+
+<h2 id="getresponsewithinterceptorchain">getResponseWithInterceptorChain</h2>
+<p>之前我们介绍了，不管是同步还是异步获取Response都是通过RealCall中的getResponseWithInterceptorChain方法。我们来看下方法的实现;</p>
+
+<div class="language-java highlighter-rouge"><pre class="highlight"><code>  <span class="n">Response</span> <span class="nf">getResponseWithInterceptorChain</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="o">{</span>
+    <span class="c1">// Build a full stack of interceptors.</span>
+    <span class="n">List</span><span class="o">&lt;</span><span class="n">Interceptor</span><span class="o">&gt;</span> <span class="n">interceptors</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+    <span class="n">interceptors</span><span class="o">.</span><span class="na">addAll</span><span class="o">(</span><span class="n">client</span><span class="o">.</span><span class="na">interceptors</span><span class="o">());</span>
+    <span class="n">interceptors</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">retryAndFollowUpInterceptor</span><span class="o">);</span>
+    <span class="n">interceptors</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="n">BridgeInterceptor</span><span class="o">(</span><span class="n">client</span><span class="o">.</span><span class="na">cookieJar</span><span class="o">()));</span>
+    <span class="n">interceptors</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="n">CacheInterceptor</span><span class="o">(</span><span class="n">client</span><span class="o">.</span><span class="na">internalCache</span><span class="o">()));</span>
+    <span class="n">interceptors</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="n">ConnectInterceptor</span><span class="o">(</span><span class="n">client</span><span class="o">));</span>
+    <span class="k">if</span> <span class="o">(!</span><span class="n">forWebSocket</span><span class="o">)</span> <span class="o">{</span>
+      <span class="n">interceptors</span><span class="o">.</span><span class="na">addAll</span><span class="o">(</span><span class="n">client</span><span class="o">.</span><span class="na">networkInterceptors</span><span class="o">());</span>
+    <span class="o">}</span>
+    <span class="n">interceptors</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="k">new</span> <span class="n">CallServerInterceptor</span><span class="o">(</span><span class="n">forWebSocket</span><span class="o">));</span>
+
+    <span class="n">Interceptor</span><span class="o">.</span><span class="na">Chain</span> <span class="n">chain</span> <span class="o">=</span> <span class="k">new</span> <span class="n">RealInterceptorChain</span><span class="o">(</span>
+        <span class="n">interceptors</span><span class="o">,</span> <span class="kc">null</span><span class="o">,</span> <span class="kc">null</span><span class="o">,</span> <span class="kc">null</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">originalRequest</span><span class="o">);</span>
+    <span class="k">return</span> <span class="n">chain</span><span class="o">.</span><span class="na">proceed</span><span class="o">(</span><span class="n">originalRequest</span><span class="o">);</span>
+  <span class="o">}</span>
+
 </code></pre>
 </div>
-<p><img src="/images/wiki/uml/extends.png" alt="" /></p>
+<p>可以看到 首先由一个interceptors的列表，然后调用Interceptor.Chain的proceed方法，可以理解会依次触发Interceptor并最终返回Response, 至于各个Interceptor的作用，我们在下一篇中再来做详细的讨论。</p>
 
-<h2 id="实现">实现</h2>
-
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="kd">interface</span> <span class="nc">A</span> <span class="o">{}</span>
-
-<span class="kd">class</span> <span class="nc">B</span> <span class="kd">implements</span> <span class="n">A</span><span class="o">{}</span>
-</code></pre>
-</div>
-
-<p><img src="/images/wiki/uml/implement.png" alt="" /></p>
-
-<h2 id="关联">关联</h2>
-
-<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="kd">class</span> <span class="nc">A</span> <span class="o">{</span>
-  <span class="n">List</span><span class="o">&lt;</span><span class="n">B</span><span class="o">&gt;</span> <span class="n">bList</span><span class="o">;</span>
-<span class="o">}</span>
-
-<span class="kd">class</span> <span class="nc">B</span> <span class="o">{</span>
-<span class="o">}</span>
-</code></pre>
-</div>
-<p>一对多 多对多 多对一
-<img src="/images/wiki/uml/related.png" alt="" /></p>
-
-<h2 id="聚合关系">聚合关系</h2>
-<p>关联关系的一种，表示整体部分，例如 汽车中包含引擎 轮胎</p>
-
-<div class="language-java highlighter-rouge"><pre class="highlight"><code>   <span class="kd">class</span> <span class="err">引擎</span> 
-   <span class="err">{</span> 
-   <span class="err">};</span> 
-   <span class="nc">class</span> <span class="err">轮胎</span> 
-   <span class="o">{</span> 
-   <span class="o">};</span> 
-   <span class="kd">class</span> <span class="err">汽车</span> 
-   <span class="err">{</span> 
-   <span class="nc">protected</span><span class="o">:</span> 
-   <span class="err">引擎</span> <span class="n">engine</span><span class="o">;</span> 
-   <span class="err">轮胎</span> <span class="n">tyre</span><span class="o">[</span><span class="mi">4</span><span class="o">];</span> 
-   <span class="o">};</span> 
-</code></pre>
-</div>
-<p><img src="/images/wiki/uml/aggregation.png" alt="" /></p>
-
-<h2 id="合成关系">合成关系</h2>
-<p>关联关系的一种，比聚合关系强，部分和整体具有相同的生命周期</p>
-
-<div class="language-java highlighter-rouge"><pre class="highlight"><code>   <span class="kd">class</span> <span class="err">肢</span> 
-   <span class="err">{</span> 
-   <span class="err">};</span> 
-   <span class="nc">class</span> <span class="err">人</span> 
-   <span class="o">{</span> 
-   <span class="kd">protected</span><span class="o">:</span> 
-   <span class="err">肢</span> <span class="n">limb</span><span class="o">[</span><span class="mi">4</span><span class="o">];</span> 
-   <span class="o">};</span> 
-</code></pre>
-</div>
-<p><img src="/images/wiki/uml/composition.png" alt="" /></p>
-
-<h2 id="依赖关系">依赖关系</h2>
-
-<p>1、依赖关系也是类与类之间的联结<br />
-   2、依赖总是单向的。<br />
-   3、依赖关系在 Java 或 C++ 语言中体现为局部变量、方法的参数或者对静态方法的调用。</p>
-
-<p><img src="/images/wiki/uml/dependency.png" alt="" /></p>
 
     
 
@@ -203,9 +187,9 @@
           <div id="disqus_thread"></div>
           <script>
             var disqus_config = function () {
-              this.page.url = 'http://localhost:4000/wiki/uml/';
-              this.page.identifier = '/wiki/uml/';
-              this.page.title = 'UML类图';
+              this.page.url = 'http://localhost:4000/2017/06/13/okhttp-call/';
+              this.page.identifier = '/2017/06/13/okhttp-call/';
+              this.page.title = 'okHttp之请求Call';
             };
             (function() { // DON'T EDIT BELOW THIS LINE
               var d = document, s = d.createElement('script');

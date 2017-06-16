@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans" prefix="og: http://ogp.me/ns#" class="han-init">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <title>OkHttp源码初探 &mdash; FSilence's Blog</title>
+    <link rel="stylesheet" href="/assets/vendor/primer-css/css/primer.css">
+    <link rel="stylesheet" href="/assets/vendor/primer-markdown/dist/user-content.min.css">
+    <link rel="stylesheet" href="/assets/vendor/octicons/octicons/octicons.css">
+    <link rel="stylesheet" href="/assets/css/components/collection.css">
+    <link rel="stylesheet" href="/assets/css/components/repo-card.css">
+    <link rel="stylesheet" href="/assets/css/sections/repo-list.css">
+    <link rel="stylesheet" href="/assets/css/sections/mini-repo-list.css">
+    <link rel="stylesheet" href="/assets/css/components/boxed-group.css">
+    <link rel="stylesheet" href="/assets/css/globals/common.css">
+    <link rel="stylesheet" href="/assets/vendor/share.js/dist/css/share.min.css">
+    <link rel="stylesheet" href="/assets/css/globals/responsive.css">
+    <link rel="stylesheet" href="/assets/css/posts/index.css">
+    <!-- Latest compiled and minified CSS -->
+    
+
+    
+    <link rel="canonical" href="http://localhost:4000/2017/06/13/okhttp-client-simple/">
+    <link rel="alternate" type="application/atom+xml" title="FSilence's Blog" href="">
+    <link rel="shortcut icon" href="/favicon.ico">
+    
+    <meta property="og:title" content="OkHttp源码初探">
+      
+    <meta name="keywords" content="java, okhttp, okhttpclient, call, realcall, asynccall">
+    <meta name="og:keywords" content="java, okhttp, okhttpclient, call, realcall, asynccall">
+      
+    <meta name="description" content="在之前的文章我中我们介绍了OkHttp的基本使用方法并简单说明了源码下各个module的功能作用，从这篇开始我们将要开始分析okHttp的源码。">
+    <meta name="og:description" content="在之前的文章我中我们介绍了OkHttp的基本使用方法并简单说明了源码下各个module的功能作用，从这篇开始我们将要开始分析okHttp的源码。">
+      
+    
+    
+        
+    
+    <meta property="og:url" content="http://localhost:4000/2017/06/13/okhttp-client-simple/">
+    <meta property="og:site_name" content="FSilence's Blog">
+    <meta property="og:type" content="article">
+    <meta property="og:locale" content="zh_CN" />
+    
+    <meta property="article:published_time" content="2017-06-13">
+    
+    <script src="/assets/vendor/jquery/dist/jquery.min.js"></script>
+    <script src="/assets/js/jquery-ui.js"></script>
+    <script type="text/javascript">
+    function toggleMenu() {
+        var nav = document.getElementsByClassName("site-header-nav")[0];
+        if (nav.style.display == "inline-flex") {
+          nav.style.display = "none";
+        } else {
+          nav.style.display = "inline-flex";
+        }
+    }
+
+	var _hmt = _hmt || [];
+	(function() {
+		var hm = document.createElement("script");
+		hm.src = "https://hm.baidu.com/hm.js?3a8f3e5734d78efb8fc1edf92dadd19e";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+	})();
+
+    </script>
+</head>
+<body class="" data-mz="">
+    <header class="site-header">
+        <div class="container">
+            <h1><a href="/" title="FSilence's Blog"><span class="octicon octicon-mark-github"></span> FSilence's Blog</a></h1>
+            <button class="collapsed mobile-visible" type="button" onclick="toggleMenu();">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <nav class="site-header-nav" role="navigation">
+                
+                <a href="/" class=" site-header-nav-item" target="" title="首页">首页</a>
+                
+                <a href="/categories/" class=" site-header-nav-item" target="" title="分类">分类</a>
+                
+                <a href="/wiki/" class=" site-header-nav-item" target="" title="维基">维基</a>
+                
+                <a href="/links/" class=" site-header-nav-item" target="" title="链接">链接</a>
+                
+                <a href="/about/" class=" site-header-nav-item" target="" title="关于">关于</a>
+                
+            </nav>
+        </div>
+    </header>
+    <!-- / header -->
+
+    <section class="collection-head small geopattern" data-pattern-id="OkHttp源码初探">
+<div class="container">
+  <div class="columns">
+    <div class="column three-fourths">
+      <div class="collection-title">
+        <h1 class="collection-header">OkHttp源码初探</h1>
+        <div class="collection-info">
+          
+          <span class="meta-info">
+            <span class="octicon octicon-calendar"></span> 2017/06/13
+          </span>
+          
+          
+          <span class="meta-info">
+            <span class="octicon octicon-file-directory"></span>
+            <a href="/categories/#java" title="java">java</a>
+          </span>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+<!-- / .banner -->
+<section class="container content">
+<div class="columns">
+  <div class="column three-fourths" >
+    <article class="article-content markdown-body">
+    <p>在之前的文章我中我们介绍了OkHttp的基本使用方法并简单说明了源码下各个module的功能作用，从这篇开始我们将要开始分析okHttp的源码。</p>
+
+<p>首先，我们先来回忆一下OkHttp的使用过程: 
+1.创建一个OkHttpClient对象<br />
+2.创建一个Request对象<br />
+3.调用OkHttpClient的newCall方法创建request的Call实例<br />
+4.调用Call的execute 或 enqeue方法分别启动同步异步请求获取Response</p>
+
+<p>上述我们涉及到几个概念OkHttpClient, Request, Call, Response 我们将分别来分析一下这些内容。</p>
+
+<h2 id="request">Request</h2>
+<p>一个Request是一次请求的抽象，我们先简单看下里面的参数:</p>
+
+<div class="language-java highlighter-rouge"><pre class="highlight"><code>  <span class="kd">final</span> <span class="n">HttpUrl</span> <span class="n">url</span><span class="o">;</span>
+  <span class="kd">final</span> <span class="n">String</span> <span class="n">method</span><span class="o">;</span>
+  <span class="kd">final</span> <span class="n">Headers</span> <span class="n">headers</span><span class="o">;</span>
+  <span class="kd">final</span> <span class="nd">@Nullable</span> <span class="n">RequestBody</span> <span class="n">body</span><span class="o">;</span>
+  <span class="kd">final</span> <span class="n">Object</span> <span class="n">tag</span><span class="o">;</span>
+</code></pre>
+</div>
+<p>可以看到一个Request 基本包含一个请求的url 请求的方法， Headers 和 请求的body，还有一个tag。<br />
+关于Request的具体内容，我们会在后面的系列文章中来进行分析。</p>
+
+<h2 id="okhttpclient">OkHttpClient</h2>
+<p>我们可以看到OkHttpClient基本上是和okHttp打交道的门户，我们先来看一下OkHttpClient的定义:</p>
+
+<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">OkHttpClient</span> <span class="kd">implements</span> <span class="n">Cloneable</span><span class="o">,</span> <span class="n">Call</span><span class="o">.</span><span class="na">Factory</span><span class="o">,</span> <span class="n">WebSocket</span><span class="o">.</span><span class="na">Factory</span>
+</code></pre>
+</div>
+<p>可以看到OkHttpClient实现了接口Call.Factory 和 WebSocket,Factory顾名思义，OkHttpClient将负责创建Call 和 WebSocket的实例，在这里我们先对WebSocket不做考虑，我们讲桌布分析Http的请求。</p>
+
+<p>OkHttpClient使用了创建者模式，使用一个Builder对象来控制构建一个OkHttpClient所需的各项配置，我们来看一下Builder中的参数:</p>
+
+<div class="language-java highlighter-rouge"><pre class="highlight"><code>  <span class="kd">final</span> <span class="n">Dispatcher</span> <span class="n">dispatcher</span><span class="o">;</span>
+  <span class="kd">final</span> <span class="nd">@Nullable</span> <span class="n">Proxy</span> <span class="n">proxy</span><span class="o">;</span>
+  <span class="kd">final</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Protocol</span><span class="o">&gt;</span> <span class="n">protocols</span><span class="o">;</span>
+  <span class="kd">final</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">ConnectionSpec</span><span class="o">&gt;</span> <span class="n">connectionSpecs</span><span class="o">;</span>
+  <span class="kd">final</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Interceptor</span><span class="o">&gt;</span> <span class="n">interceptors</span><span class="o">;</span>
+  <span class="kd">final</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Interceptor</span><span class="o">&gt;</span> <span class="n">networkInterceptors</span><span class="o">;</span>
+  <span class="kd">final</span> <span class="n">EventListener</span><span class="o">.</span><span class="na">Factory</span> <span class="n">eventListenerFactory</span><span class="o">;</span>
+  <span class="kd">final</span> <span class="n">ProxySelector</span> <span class="n">proxySelector</span><span class="o">;</span>
+  <span class="kd">final</span> <span class="n">CookieJar</span> <span class="n">cookieJar</span><span class="o">;</span>
+  <span class="kd">final</span> <span class="nd">@Nullable</span> <span class="n">Cache</span> <span class="n">cache</span><span class="o">;</span>
+  <span class="kd">final</span> <span class="nd">@Nullable</span> <span class="n">InternalCache</span> <span class="n">internalCache</span><span class="o">;</span>
+  <span class="kd">final</span> <span class="n">SocketFactory</span> <span class="n">socketFactory</span><span class="o">;</span>
+  <span class="kd">final</span> <span class="nd">@Nullable</span> <span class="n">SSLSocketFactory</span> <span class="n">sslSocketFactory</span><span class="o">;</span>
+  <span class="kd">final</span> <span class="nd">@Nullable</span> <span class="n">CertificateChainCleaner</span> <span class="n">certificateChainCleaner</span><span class="o">;</span>
+  <span class="kd">final</span> <span class="n">HostnameVerifier</span> <span class="n">hostnameVerifier</span><span class="o">;</span>
+  <span class="kd">final</span> <span class="n">CertificatePinner</span> <span class="n">certificatePinner</span><span class="o">;</span>
+  <span class="kd">final</span> <span class="n">Authenticator</span> <span class="n">proxyAuthenticator</span><span class="o">;</span>
+  <span class="kd">final</span> <span class="n">Authenticator</span> <span class="n">authenticator</span><span class="o">;</span>
+  <span class="kd">final</span> <span class="n">ConnectionPool</span> <span class="n">connectionPool</span><span class="o">;</span>
+  <span class="kd">final</span> <span class="n">Dns</span> <span class="n">dns</span><span class="o">;</span>
+  <span class="kd">final</span> <span class="kt">boolean</span> <span class="n">followSslRedirects</span><span class="o">;</span>
+  <span class="kd">final</span> <span class="kt">boolean</span> <span class="n">followRedirects</span><span class="o">;</span>
+  <span class="kd">final</span> <span class="kt">boolean</span> <span class="n">retryOnConnectionFailure</span><span class="o">;</span>
+  <span class="kd">final</span> <span class="kt">int</span> <span class="n">connectTimeout</span><span class="o">;</span>
+  <span class="kd">final</span> <span class="kt">int</span> <span class="n">readTimeout</span><span class="o">;</span>
+  <span class="kd">final</span> <span class="kt">int</span> <span class="n">writeTimeout</span><span class="o">;</span>
+  <span class="kd">final</span> <span class="kt">int</span> <span class="n">pingInterval</span><span class="o">;</span>
+</code></pre>
+</div>
+<p>除了一些Http的配置外，我们可以看到3个特殊的概念配置，分别是EventListener.Factory Dispatcher 和 Interceptor<br />
+我们先来看一下EventListener 至于Dispatcher 和 interceptor我们会在系列文章的后续部分看到详细的分析，其中Dispatcher是来管理分发请求任务的，Interceptor是拦截器。</p>
+
+<div class="language-java highlighter-rouge"><pre class="highlight"><code><span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">EventListener</span> <span class="o">{</span>
+  <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">EventListener</span> <span class="n">NONE</span> <span class="o">=</span> <span class="k">new</span> <span class="n">EventListener</span><span class="o">()</span> <span class="o">{</span>
+  <span class="o">};</span>
+
+  <span class="kd">static</span> <span class="n">EventListener</span><span class="o">.</span><span class="na">Factory</span> <span class="nf">factory</span><span class="o">(</span><span class="kd">final</span> <span class="n">EventListener</span> <span class="n">listener</span><span class="o">)</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="n">EventListener</span><span class="o">.</span><span class="na">Factory</span><span class="o">()</span> <span class="o">{</span>
+      <span class="kd">public</span> <span class="n">EventListener</span> <span class="nf">create</span><span class="o">(</span><span class="n">Call</span> <span class="n">call</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">listener</span><span class="o">;</span>
+      <span class="o">}</span>
+    <span class="o">};</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">fetchStart</span><span class="o">(</span><span class="n">Call</span> <span class="n">call</span><span class="o">)</span> <span class="o">{</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">dnsStart</span><span class="o">(</span><span class="n">Call</span> <span class="n">call</span><span class="o">,</span> <span class="n">String</span> <span class="n">domainName</span><span class="o">)</span> <span class="o">{</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">dnsEnd</span><span class="o">(</span><span class="n">Call</span> <span class="n">call</span><span class="o">,</span> <span class="n">String</span> <span class="n">domainName</span><span class="o">,</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">InetAddress</span><span class="o">&gt;</span> <span class="n">inetAddressList</span><span class="o">,</span>
+      <span class="n">Throwable</span> <span class="n">throwable</span><span class="o">)</span> <span class="o">{</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">connectStart</span><span class="o">(</span><span class="n">Call</span> <span class="n">call</span><span class="o">,</span> <span class="n">InetAddress</span> <span class="n">address</span><span class="o">,</span> <span class="kt">int</span> <span class="n">port</span><span class="o">)</span> <span class="o">{</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">secureConnectStart</span><span class="o">(</span><span class="n">Call</span> <span class="n">call</span><span class="o">)</span> <span class="o">{</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">secureConnectEnd</span><span class="o">(</span><span class="n">Call</span> <span class="n">call</span><span class="o">,</span> <span class="n">Handshake</span> <span class="n">handshake</span><span class="o">,</span>
+      <span class="n">Throwable</span> <span class="n">throwable</span><span class="o">)</span> <span class="o">{</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">connectEnd</span><span class="o">(</span><span class="n">Call</span> <span class="n">call</span><span class="o">,</span>  <span class="n">InetAddress</span> <span class="n">address</span><span class="o">,</span> <span class="kt">int</span> <span class="n">port</span><span class="o">,</span> <span class="n">String</span> <span class="n">protocol</span><span class="o">,</span>
+      <span class="n">Throwable</span> <span class="n">throwable</span><span class="o">)</span> <span class="o">{</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">requestHeadersStart</span><span class="o">(</span><span class="n">Call</span> <span class="n">call</span><span class="o">)</span> <span class="o">{</span>
+  <span class="o">}</span>
+
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">requestHeadersEnd</span><span class="o">(</span><span class="n">Call</span> <span class="n">call</span><span class="o">,</span> <span class="n">Throwable</span> <span class="n">throwable</span><span class="o">)</span> <span class="o">{</span>
+  <span class="o">}</span>
+
+  <span class="o">...</span>
+
+  <span class="kd">public</span> <span class="kd">interface</span> <span class="nc">Factory</span> <span class="o">{</span>
+    <span class="n">EventListener</span> <span class="nf">create</span><span class="o">(</span><span class="n">Call</span> <span class="n">call</span><span class="o">);</span>
+</code></pre>
+</div>
+<p>我们可以看到EventListener是对请求过程中各个步骤的事件监听.</p>
+
+<h2 id="call">Call</h2>
+<p>一次具体的请求, OkHttpClient通过newCall创建了call对象，通过call对象的execute 或 enqeue来发起请求</p>
+
+<h2 id="response">Response</h2>
+<p>网络返回的结果，我们将在后续文章中进行详细的解析。</p>
+
+<p>现在我们已经了解了在okHttp启动中的几个概念 其中有入口 OkHttpClient, 请求的实例Request 请求的抽象Call 拦截器Interceptor 分发管理Call的Dispatcher http的返回响应 Response, 我们还阅读了OkHttpClient的源码, 在下一篇中我们将要详细分析Call的体系结构。</p>
+
+
+    
+
+    </article>
+    <div class="share">
+      <div class="share-component"></div>
+    </div>
+    <div class="comment">
+      
+  
+      
+        
+        
+        
+      
+	  
+	
+
+<!--
+          <div id="disqus_thread"></div>
+          <script>
+            var disqus_config = function () {
+              this.page.url = 'http://localhost:4000/2017/06/13/okhttp-client-simple/';
+              this.page.identifier = '/2017/06/13/okhttp-client-simple/';
+              this.page.title = 'OkHttp源码初探';
+            };
+            (function() { // DON'T EDIT BELOW THIS LINE
+              var d = document, s = d.createElement('script');
+
+              s.type = 'text/javascript';
+              s.async = true;
+              var shortname = 'FSilence';
+
+              s.src = '//' + shortname + '.disqus.com/embed.js';
+
+              s.setAttribute('data-timestamp', +new Date());
+              (d.head || d.body).appendChild(s);
+            })();
+          </script>
+          <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+	  -->
+
+    </div>
+  </div>
+  <div class="column one-fourth">
+    
+<h3>Search</h3>
+<div id="site_search">
+    <input type="text" id="search_box" placeholder="Search">
+    <button class="btn btn-default" id="site_search_do"><span class="octicon octicon-search"></span></button>
+</div>
+
+<ul id="search_results"></ul>
+
+<link rel="stylesheet" type="text/css" href="/assets/css/modules/sidebar-search.css">
+<script src="/assets/js/lunr.min.js"></script>
+<script src="/assets/js/search.js"></script>
+
+
+    
+<h3 class="mobile-hidden">Post Directory</h3>
+<div id="post-directory-module" class="mobile-hidden">
+  <section class="post-directory">
+  <!-- Links that trigger the jumping -->
+  <!-- Added by javascript below -->
+  <dl></dl>
+  </section>
+</div>
+
+<script src="/assets/js/jquery.toc.js"></script>
+
+  </div>
+</div>
+</section>
+<!-- /section.content -->
+
+    <footer class="container">
+        <div class="site-footer" role="contentinfo">
+            <div class="copyright left mobile-block">
+                    © 2015
+                    <span title="FSilence">FSilence</span>
+                    <a href="javascript:window.scrollTo(0,0)" class="right mobile-visible">TOP</a>
+            </div>
+
+            <ul class="site-footer-links right mobile-hidden">
+                <li>
+                    <a href="javascript:window.scrollTo(0,0)" >TOP</a>
+                </li>
+            </ul>
+            <a href="http://github.com/FSilence/fsilence.github.io" target="_blank" aria-label="view source code">
+                <span class="mega-octicon octicon-mark-github" title="GitHub"></span>
+            </a>
+            <ul class="site-footer-links mobile-hidden">
+                
+                <li>
+                    <a href="/" title="首页" target="">首页</a>
+                </li>
+                
+                <li>
+                    <a href="/categories/" title="分类" target="">分类</a>
+                </li>
+                
+                <li>
+                    <a href="/wiki/" title="维基" target="">维基</a>
+                </li>
+                
+                <li>
+                    <a href="/links/" title="链接" target="">链接</a>
+                </li>
+                
+                <li>
+                    <a href="/about/" title="关于" target="">关于</a>
+                </li>
+                
+<!-- 注释Rss
+                <li><a href=""><span class="octicon octicon-rss" style="color:orange;"></span></a></li>
+ -->           
+		</ul>
+
+        </div>
+    </footer>
+    <!-- / footer -->
+    <script src="/assets/vendor/share.js/dist/js/share.min.js"></script>
+    <script src="/assets/js/geopattern.js"></script>
+    <script src="/assets/js/prism.js"></script>
+    <link rel="stylesheet" href="/assets/css/globals/prism.css">
+    <script>
+      jQuery(document).ready(function($) {
+        // geopattern
+        $('.geopattern').each(function(){
+          $(this).geopattern($(this).data('pattern-id'));
+        });
+       // hljs.initHighlightingOnLoad();
+      });
+    </script>
+    
+    <div style="display:none">
+      <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-80669434-1', 'auto');
+        ga('send', 'pageview');
+
+      </script>
+    </div>
+    
+</body>
+</html>

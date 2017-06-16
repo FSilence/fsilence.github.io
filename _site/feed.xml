@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="http://jekyllrb.com" version="3.4.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2017-06-14T09:08:33+00:00</updated><id>http://localhost:4000/</id><title type="html">FSilence’s Blog</title><subtitle>FSilence的个人博客</subtitle><author><name>FSilence</name></author><entry><title type="html">okHttp各个module介绍</title><link href="http://localhost:4000/2017/06/13/okhttp-code-scanner/" rel="alternate" type="text/html" title="okHttp各个module介绍" /><published>2017-06-13T00:00:00+00:00</published><updated>2017-06-13T00:00:00+00:00</updated><id>http://localhost:4000/2017/06/13/okhttp-code-scanner</id><content type="html" xml:base="http://localhost:4000/2017/06/13/okhttp-code-scanner/">&lt;p&gt;上一篇我们简单介绍了okHttp，了解了OkHttp的基本用法，并下载了okhttp的源码。本篇我们将一起来看看okhttp源码的目录结构，来大概了解下okHttp源码下的各个module的作用。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="http://jekyllrb.com" version="3.4.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2017-06-16T09:03:38+00:00</updated><id>http://localhost:4000/</id><title type="html">FSilence’s Blog</title><subtitle>FSilence的个人博客</subtitle><author><name>FSilence</name></author><entry><title type="html">okHttp各个module介绍</title><link href="http://localhost:4000/2017/06/13/okhttp-code-scanner/" rel="alternate" type="text/html" title="okHttp各个module介绍" /><published>2017-06-13T00:00:00+00:00</published><updated>2017-06-13T00:00:00+00:00</updated><id>http://localhost:4000/2017/06/13/okhttp-code-scanner</id><content type="html" xml:base="http://localhost:4000/2017/06/13/okhttp-code-scanner/">&lt;p&gt;上一篇我们简单介绍了okHttp，了解了OkHttp的基本用法，并下载了okhttp的源码。本篇我们将一起来看看okhttp源码的目录结构，来大概了解下okHttp源码下的各个module的作用。&lt;/p&gt;
 
 &lt;p&gt;okHttp的构建工具使用的是maven，关于&lt;a href=&quot;https://www.google.com.hk/#safe=strict&amp;amp;q=maven&quot;&gt;maven&lt;/a&gt;可自行google,本文不对此做过多阐述。我们来重点看一下okHttp的项目目录。在这里以及之后的源码都是okHttp的最新版本 3.8.0。我们可以选择git工具checkout出 3.8.0的tag，本人使用的是idea自带的git管理工具，在右下角git分支出点击 选测checkout tag, 输入3.8.0的分支名字：parent-3.8.0 确认即可, 然后我们来看一下项目的目录结构截图:&lt;br /&gt;
 &lt;img src=&quot;/images/okhttp/okhttp-modules.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
@@ -91,7 +91,170 @@ An [OkHttp interceptor][1] which logs HTTP request and response data.
 &lt;h2 id=&quot;website&quot;&gt;website&lt;/h2&gt;
 &lt;p&gt;okhttp的介绍说明的静态网页。&lt;/p&gt;
 
-&lt;p&gt;我们已大致了解了okhttp下的各个module，在后面的文章中我们将开始逐步进入okhttp的具体代码，来一步一步学习okhttp。&lt;/p&gt;</content><author><name>FSilence</name></author><summary type="html">上一篇我们简单介绍了okHttp，了解了OkHttp的基本用法，并下载了okhttp的源码。本篇我们将一起来看看okhttp源码的目录结构，来大概了解下okHttp源码下的各个module的作用。</summary></entry><entry><title type="html">okhttp-简介</title><link href="http://localhost:4000/2017/06/09/okhttp-introduce/" rel="alternate" type="text/html" title="okhttp-简介" /><published>2017-06-09T00:00:00+00:00</published><updated>2017-06-09T00:00:00+00:00</updated><id>http://localhost:4000/2017/06/09/okhttp-introduce</id><content type="html" xml:base="http://localhost:4000/2017/06/09/okhttp-introduce/">&lt;p&gt;An HTTP &amp;amp; HTTP/2 client for Android and Java applications&lt;/p&gt;
+&lt;p&gt;我们已大致了解了okhttp下的各个module，在后面的文章中我们将开始逐步进入okhttp的具体代码，来一步一步学习okhttp。&lt;/p&gt;</content><author><name>FSilence</name></author><summary type="html">上一篇我们简单介绍了okHttp，了解了OkHttp的基本用法，并下载了okhttp的源码。本篇我们将一起来看看okhttp源码的目录结构，来大概了解下okHttp源码下的各个module的作用。</summary></entry><entry><title type="html">OkHttp源码初探</title><link href="http://localhost:4000/2017/06/13/okhttp-client-simple/" rel="alternate" type="text/html" title="OkHttp源码初探" /><published>2017-06-13T00:00:00+00:00</published><updated>2017-06-13T00:00:00+00:00</updated><id>http://localhost:4000/2017/06/13/okhttp-client-simple</id><content type="html" xml:base="http://localhost:4000/2017/06/13/okhttp-client-simple/">&lt;p&gt;在之前的文章我中我们介绍了OkHttp的基本使用方法并简单说明了源码下各个module的功能作用，从这篇开始我们将要开始分析okHttp的源码。&lt;/p&gt;
+
+&lt;p&gt;首先，我们先来回忆一下OkHttp的使用过程: 
+1.创建一个OkHttpClient对象&lt;br /&gt;
+2.创建一个Request对象&lt;br /&gt;
+3.调用OkHttpClient的newCall方法创建request的Call实例&lt;br /&gt;
+4.调用Call的execute 或 enqeue方法分别启动同步异步请求获取Response&lt;/p&gt;
+
+&lt;p&gt;上述我们涉及到几个概念OkHttpClient, Request, Call, Response 我们将分别来分析一下这些内容。&lt;/p&gt;
+
+&lt;h2 id=&quot;request&quot;&gt;Request&lt;/h2&gt;
+&lt;p&gt;一个Request是一次请求的抽象，我们先简单看下里面的参数:&lt;/p&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;HttpUrl&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;method&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Headers&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;headers&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;nd&quot;&gt;@Nullable&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;RequestBody&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;body&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Object&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tag&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;可以看到一个Request 基本包含一个请求的url 请求的方法， Headers 和 请求的body，还有一个tag。&lt;br /&gt;
+关于Request的具体内容，我们会在后面的系列文章中来进行分析。&lt;/p&gt;
+
+&lt;h2 id=&quot;okhttpclient&quot;&gt;OkHttpClient&lt;/h2&gt;
+&lt;p&gt;我们可以看到OkHttpClient基本上是和okHttp打交道的门户，我们先来看一下OkHttpClient的定义:&lt;/p&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;OkHttpClient&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;implements&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Cloneable&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Call&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;Factory&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;WebSocket&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;Factory&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;可以看到OkHttpClient实现了接口Call.Factory 和 WebSocket,Factory顾名思义，OkHttpClient将负责创建Call 和 WebSocket的实例，在这里我们先对WebSocket不做考虑，我们讲桌布分析Http的请求。&lt;/p&gt;
+
+&lt;p&gt;OkHttpClient使用了创建者模式，使用一个Builder对象来控制构建一个OkHttpClient所需的各项配置，我们来看一下Builder中的参数:&lt;/p&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Dispatcher&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dispatcher&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;nd&quot;&gt;@Nullable&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Proxy&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;proxy&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Protocol&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;protocols&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ConnectionSpec&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;connectionSpecs&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Interceptor&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;interceptors&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Interceptor&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;networkInterceptors&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;EventListener&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;Factory&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;eventListenerFactory&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ProxySelector&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;proxySelector&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CookieJar&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cookieJar&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;nd&quot;&gt;@Nullable&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Cache&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cache&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;nd&quot;&gt;@Nullable&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;InternalCache&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;internalCache&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;SocketFactory&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;socketFactory&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;nd&quot;&gt;@Nullable&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;SSLSocketFactory&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sslSocketFactory&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;nd&quot;&gt;@Nullable&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CertificateChainCleaner&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;certificateChainCleaner&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;HostnameVerifier&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;hostnameVerifier&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CertificatePinner&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;certificatePinner&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Authenticator&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;proxyAuthenticator&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Authenticator&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;authenticator&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ConnectionPool&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;connectionPool&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Dns&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dns&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;boolean&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;followSslRedirects&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;boolean&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;followRedirects&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;boolean&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;retryOnConnectionFailure&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;connectTimeout&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;readTimeout&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;writeTimeout&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pingInterval&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;除了一些Http的配置外，我们可以看到3个特殊的概念配置，分别是EventListener.Factory Dispatcher 和 Interceptor&lt;br /&gt;
+我们先来看一下EventListener 至于Dispatcher 和 interceptor我们会在系列文章的后续部分看到详细的分析，其中Dispatcher是来管理分发请求任务的，Interceptor是拦截器。&lt;/p&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;abstract&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;EventListener&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;EventListener&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;NONE&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;EventListener&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;};&lt;/span&gt;
+
+  &lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;EventListener&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;Factory&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;factory&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;EventListener&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;listener&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;EventListener&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;Factory&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;EventListener&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;create&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Call&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;call&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;listener&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;;&lt;/span&gt;
+      &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;};&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+  &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;fetchStart&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Call&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;call&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+  &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;dnsStart&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Call&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;call&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;domainName&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+  &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;dnsEnd&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Call&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;call&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;domainName&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;InetAddress&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;inetAddressList&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;Throwable&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;throwable&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+  &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;connectStart&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Call&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;call&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;InetAddress&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;address&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;port&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+  &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;secureConnectStart&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Call&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;call&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+  &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;secureConnectEnd&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Call&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;call&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Handshake&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;handshake&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;Throwable&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;throwable&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+  &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;connectEnd&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Call&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;call&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;InetAddress&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;address&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;port&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;protocol&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;Throwable&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;throwable&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+  &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;requestHeadersStart&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Call&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;call&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+  &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;void&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;requestHeadersEnd&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Call&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;call&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Throwable&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;throwable&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+  &lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
+
+  &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;interface&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Factory&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;EventListener&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;create&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Call&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;call&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;我们可以看到EventListener是对请求过程中各个步骤的事件监听.&lt;/p&gt;
+
+&lt;h2 id=&quot;call&quot;&gt;Call&lt;/h2&gt;
+&lt;p&gt;一次具体的请求, OkHttpClient通过newCall创建了call对象，通过call对象的execute 或 enqeue来发起请求&lt;/p&gt;
+
+&lt;h2 id=&quot;response&quot;&gt;Response&lt;/h2&gt;
+&lt;p&gt;网络返回的结果，我们将在后续文章中进行详细的解析。&lt;/p&gt;
+
+&lt;p&gt;现在我们已经了解了在okHttp启动中的几个概念 其中有入口 OkHttpClient, 请求的实例Request 请求的抽象Call 拦截器Interceptor 分发管理Call的Dispatcher http的返回响应 Response, 我们还阅读了OkHttpClient的源码, 在下一篇中我们将要详细分析Call的体系结构。&lt;/p&gt;</content><author><name>FSilence</name></author><summary type="html">在之前的文章我中我们介绍了OkHttp的基本使用方法并简单说明了源码下各个module的功能作用，从这篇开始我们将要开始分析okHttp的源码。</summary></entry><entry><title type="html">okHttp之请求Call</title><link href="http://localhost:4000/2017/06/13/okhttp-call/" rel="alternate" type="text/html" title="okHttp之请求Call" /><published>2017-06-13T00:00:00+00:00</published><updated>2017-06-13T00:00:00+00:00</updated><id>http://localhost:4000/2017/06/13/okhttp-call</id><content type="html" xml:base="http://localhost:4000/2017/06/13/okhttp-call/">&lt;p&gt;前一篇我们简单介绍了OkHttp中的几个常见的概念，我们知道OkHttpClient是请求的门户（外观模式），通过OkHttpClient创建了一个Call对象，然后通过Call对象来实现网络的请求，本篇我们来看一下Call做同步和异步时候都做了些什么。&lt;/p&gt;
+
+&lt;p&gt;首先，我们先来看一下Call Dispatcher OkHttpClient 等的类关系图:&lt;br /&gt;
+&lt;img src=&quot;/images/okhttp/call-class.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;我们可以看到OkHttpClient实现了Call.Factory方法负责生产Call对象，查看OkHttpClient中的newCall方法可以发现，创建的是一个RealCall对象，RealCall对象持有OkHttpClient来方便使用OkHttpCLient中的配置项等。 在RealCall中有一个内部类AsyncCall是对RealCall的一次封装，在做异步请求的时候会用到这个对象。&lt;/p&gt;
+
+&lt;h2 id=&quot;同步请求&quot;&gt;同步请求&lt;/h2&gt;
+&lt;p&gt;现在我们来看一下同步请求的调用过程， 我们先来看一下调用的序列图:&lt;br /&gt;
+&lt;img src=&quot;/images/okhttp/sync-call-seq.png&quot; alt=&quot;&quot; /&gt;&lt;br /&gt;
+同步请求的调用过程可以总结为:&lt;br /&gt;
+1.调用Dispatcher的execute方法&lt;br /&gt;
+2.调用getResponseWithInterceptorChain方法获取结果Respone(具体的过程，我们之后再来做研究)&lt;br /&gt;
+3.调用Dispatcher的finish方法，通知请求结束&lt;/p&gt;
+
+&lt;h2 id=&quot;异步请求&quot;&gt;异步请求&lt;/h2&gt;
+&lt;p&gt;异步请求和同步调用表现基本一致，不过在异步中，RealCall中是通过封装了一个AsyncCall（一个Runnable）然后再交给Dispatcher的，然后再AsyncCall的execute方法中，依然是通过getResponseWithInterceptorChain来获取结果，然后再调用Dispatcher的finish方法来通知Dispatcher任务结束。我们来看下异步请求的序列图:&lt;br /&gt;
+&lt;img src=&quot;/images/okhttp/async-call-seq.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;getresponsewithinterceptorchain&quot;&gt;getResponseWithInterceptorChain&lt;/h2&gt;
+&lt;p&gt;之前我们介绍了，不管是同步还是异步获取Response都是通过RealCall中的getResponseWithInterceptorChain方法。我们来看下方法的实现;&lt;/p&gt;
+
+&lt;div class=&quot;language-java highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;  &lt;span class=&quot;n&quot;&gt;Response&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;getResponseWithInterceptorChain&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;throws&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;IOException&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// Build a full stack of interceptors.&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;List&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Interceptor&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;interceptors&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ArrayList&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;gt;();&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;interceptors&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;addAll&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;client&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;interceptors&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;interceptors&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;retryAndFollowUpInterceptor&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;interceptors&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;BridgeInterceptor&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;client&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;cookieJar&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()));&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;interceptors&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CacheInterceptor&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;client&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;internalCache&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()));&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;interceptors&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ConnectInterceptor&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;client&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;));&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(!&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;forWebSocket&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;interceptors&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;addAll&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;client&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;networkInterceptors&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;());&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;interceptors&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;add&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CallServerInterceptor&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;forWebSocket&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;));&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;Interceptor&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;Chain&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;chain&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;RealInterceptorChain&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;interceptors&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;null&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;originalRequest&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;chain&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;proceed&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;originalRequest&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;可以看到 首先由一个interceptors的列表，然后调用Interceptor.Chain的proceed方法，可以理解会依次触发Interceptor并最终返回Response, 至于各个Interceptor的作用，我们在下一篇中再来做详细的讨论。&lt;/p&gt;</content><author><name>FSilence</name></author><summary type="html">前一篇我们简单介绍了OkHttp中的几个常见的概念，我们知道OkHttpClient是请求的门户（外观模式），通过OkHttpClient创建了一个Call对象，然后通过Call对象来实现网络的请求，本篇我们来看一下Call做同步和异步时候都做了些什么。</summary></entry><entry><title type="html">okhttp-简介</title><link href="http://localhost:4000/2017/06/09/okhttp-introduce/" rel="alternate" type="text/html" title="okhttp-简介" /><published>2017-06-09T00:00:00+00:00</published><updated>2017-06-09T00:00:00+00:00</updated><id>http://localhost:4000/2017/06/09/okhttp-introduce</id><content type="html" xml:base="http://localhost:4000/2017/06/09/okhttp-introduce/">&lt;p&gt;An HTTP &amp;amp; HTTP/2 client for Android and Java applications&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&quot;https://github.com/square/okhttp&quot;&gt;okhttp github&lt;/a&gt;&lt;/p&gt;
 
@@ -825,224 +988,4 @@ Proxy是实现了接口IBookManager的代理类，其构造方法如下：
 
 
 
-&lt;/com.wlh.animation.ipctest.Book&gt;&lt;/com.wlh.animation.ipctest.Book&gt;&lt;/pre&gt;</content><author><name>FSilence</name></author><summary type="html">内容大纲： 1.了解基本的aidl原理（不涉及底层）</summary></entry><entry><title type="html">IPC之AIDL(2)in out inout</title><link href="http://localhost:4000/2017/05/12/IPC-AIDL-Android-2/" rel="alternate" type="text/html" title="IPC之AIDL(2)in out inout" /><published>2017-05-12T00:00:00+00:00</published><updated>2017-05-12T00:00:00+00:00</updated><id>http://localhost:4000/2017/05/12/IPC-AIDL-Android-2</id><content type="html" xml:base="http://localhost:4000/2017/05/12/IPC-AIDL-Android-2/">&lt;p&gt;内容大纲：&lt;/p&gt;
-&lt;pre&gt;
-1.在AIDL的时候正确使用in out inout
-&lt;/pre&gt;
-
-&lt;p&gt;上一篇我们用AIDL简单实现了一个IPC，其中我们谈到在定义aidl接口中的除基本类型和AIDL接口外的参数要调价修饰符in out 或 inout中的一种，本文将帮助大家理解in out inout，并让读者可以正确的使用in out inout。&lt;br /&gt;
-在介绍in out inout的区别之前我们先明确两个基本概念：起点 和 终点，起点指调用方，终点指响应方，比如我在客户端调用aidl接口那么客户端就是起点 服务端就是重点，在一次调用中服务端如果要调用一个aidl接口回调给客户端，那么服务端就是起点，客户端就是重点。&lt;br /&gt;
-然后我们来定义in out inout:&lt;br /&gt;
-in ： 将对象从起点传递给终点，在终点部分中对对象的修改不会反映到起点，即只输入&lt;br /&gt;
-out : 对象中的值不会传递给终点，但是在终点部分对对象的修改会反映到起点，即只输出&lt;br /&gt;
-intout : 将对象从起点传递给终点，在终点部分的修改会反应到起点，即输入输出都有影响&lt;/p&gt;
-
-&lt;p&gt;我们再用一个具体的例子来看一下这个区分：
-我们来看下客户端的代码：&lt;br /&gt;
-&lt;code&gt;&lt;/code&gt;&lt;/p&gt;
-&lt;pre&gt;
-        mServiceConnection = new ServiceConnection() {
-            @Override
-            public void onServiceConnected(ComponentName name, IBinder service) {
-                mBookManager = IBookManager.Stub.asInterface(service);
-                try {
-                    mBookManager.registerListener(new IBookListener.Stub() {
-                        @Override
-                        public void onBookAdd(Book book) throws RemoteException {
-                            Log.i(&quot;wlh &quot; , &quot;addBook callback : &quot; + book.name);
-                        }
-                    });
-                    Book book = new Book();
-                    book.name = &quot;TestBook&quot;;
-                    mBookManager.addBook(book);
-                    Log.i(&quot;wlh&quot;,  book.name);
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                }
-                unbindService(mServiceConnection);
-            }
-
-            @Override
-            public void onServiceDisconnected(ComponentName name) {
-
-            }
-        };
-&lt;/pre&gt;
-&lt;p&gt;&amp;lt;/code&amp;gt;&lt;/p&gt;
-
-&lt;p&gt;我们输出了callback 调用addBook 和调用后book对象的名称。我们再来看下服务端的代码：&lt;br /&gt;
-&lt;code&gt;&lt;/code&gt;&lt;/p&gt;
-&lt;pre&gt;
-    private IBinder mBinder = new IBookManager.Stub() {
-        @Override
-        public List&lt;Book&gt; getBookList() throws RemoteException {
-            Log.i(&quot;wlh&quot;, &quot;getBookList&quot;);
-            return null;
-        }
-
-        @Override
-        public void addBook(Book book) throws RemoteException {
-            Log.i(&quot;wlh&quot;, &quot;addBook : &quot; + book.name);
-            int N = mCallbacks.beginBroadcast();
-            book.name += &quot; : server&quot;;
-            for (int i = 0; i &amp;lt; N; i++ ) {
-                mCallbacks.getBroadcastItem(i).onBookAdd(book);
-            }
-            mCallbacks.finishBroadcast();
-
-        }
-
-        @Override
-        public void registerListener(IBookListener listener) throws RemoteException {
-            mCallbacks.register(listener);
-        }
-
-        @Override
-        public void unRegisterListener(IBookListener listener) throws RemoteException {
-            mCallbacks.unregister(listener);
-        }
-    };
-&amp;lt;/pre&amp;gt;
-&amp;lt;/code&amp;gt;
-
-观察addBook方法 我们在客户端传过来的book中修改了name字段 追加了一个：server，然后我们输出了客户端传递过来的book名称。现在我们来看在book的修饰符分别为in out 和inout时候的系统输出。（我们假设BookListener中的参数都是in,其实BookListener中的in out inout修饰就是起点 和 终点的转换，这个时候起点是调用方服务端 终点是响应方客户端，具体的读者可自行分析）  
-
-in:   
- 我们可以先猜测一下输出，in表示数据会传递到终点，那么服务端会输出TestBook，然后由于对对象的修改不会反映到起点，所以对象不会反映到客户端，客户端依然输出的是TestBook，而callback中的回调是TestBook : server,我们来看下实际效果：  
-
-![](/images/aidl2-1.png)  
-
-out:  
-out不会将数据传递到终点在这里也就是服务端，那么服务端会输出null， 然后由于对象修改会反应到起点也就是客户端，所以客户端会输出 null : server,我们来看下实际效果：  
-![](/images/aidl2-2.png)  
-
-inout:
-inout即会把数据传递到终点，起点也会响应终点的变化，那么服务端会输出 TestBook
-然后客户端输出 TestBook : server, 我们来看下实际效果：  
-![](/images/aidl2-3.png)  
-
-&lt;/Book&gt;&lt;/pre&gt;</content><author><name>FSilence</name></author><summary type="html">内容大纲： 1.在AIDL的时候正确使用in out inout</summary></entry><entry><title type="html">IPC之AIDL(1)实现AIDL</title><link href="http://localhost:4000/2017/05/12/IPC-AIDL-Android-1/" rel="alternate" type="text/html" title="IPC之AIDL(1)实现AIDL" /><published>2017-05-12T00:00:00+00:00</published><updated>2017-05-12T00:00:00+00:00</updated><id>http://localhost:4000/2017/05/12/IPC-AIDL-Android-1</id><content type="html" xml:base="http://localhost:4000/2017/05/12/IPC-AIDL-Android-1/">&lt;p&gt;内容大纲&lt;/p&gt;
-&lt;pre&gt;
-1.使用AIDL实现IPC
-&lt;/pre&gt;
-
-&lt;p&gt;本文是基于Android studio来说明的。我们先明确2个基本概念客户端和服务端。在本例中客户端是指发起处理请求的进程（app的主进程）， 服务端（service端）指一个另外一个提供服务的进程（主要是指service）。&lt;/p&gt;
-
-&lt;p&gt;##AIDL文件
-AIDL 全程 Android Interface Definition Language，即接口定义语言。Android通过aidl文件将服务的接口公开，来实现跨进程的调用。 &lt;br /&gt;
-在Android studio中创建aidl文件，你只需要右键-&amp;gt;新建 -&amp;gt;aidl即可，其目录结构基本如下：&lt;br /&gt;
-&lt;img src=&quot;/images/ipc-aidle1-1.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;我们来明确一些AIDL的规则：&lt;br /&gt;
-1.aidl文件中的参数只能从以下类型选择： 基本数据类型， parcelable的类， Aidl接口&lt;br /&gt;
-2.即使在同一个包下，aidl文件也必须指明import&lt;br /&gt;
-3.parcelable的类作为方法参数时要指明in out inout&lt;br /&gt;
-4.接口中使用到的Parcelable类 必须建立同名的aidl文件，包名必须与实际的java类文件相同&lt;/p&gt;
-
-&lt;p&gt;我们来看一个具体的例子：&lt;br /&gt;
-IBookManager.aidl：&lt;/p&gt;
-&lt;pre&gt;
-&lt;code&gt;
-package com.wlh.animation.ipctest;
-import com.wlh.animation.ipctest.Book;
-import com.wlh.animation.ipctest.IBookListener;
-
-interface IBookManager {
-
-    List&lt;Book&gt; getBookList();
-    void addBook(in Book book);
-
-    void registerListener(IBookListener listener);
-
-    void unRegisterListener(IBookListener listener);
-}
-&amp;lt;/code&amp;gt;
-&amp;lt;/pre&amp;gt;
-
-Book.aidl:
-&lt;pre&gt;
-&lt;code&gt;
-package com.wlh.animation.ipctest;
-parcelable Book;
-&lt;/code&gt;
-&lt;/pre&gt;
-在例子中我们定义了一个IBookManager的接口来实现进程通信，它又4个方法 getBookList()(不带参数)， add Book(in Book book)带Parcelable参数必须指明in out inout中的一个，registerListener 和 unRegisterListener，也是Aidl的接口。
-写完aidl文件后我们 make一下可以看到系统为我们生成的类：  
-![](/images/ipc-aidle1-2.png)  
-关于系统为我们做了什么 我们在下一篇中再进行详细的介绍，现在我们来看一下服务端的代码实现：  
-&lt;pre&gt;
-&lt;code&gt;
-public class AIDLService extends Service{
-    RemoteCallbackList&lt;IBookListener&gt; mCallbacks = new RemoteCallbackList&amp;lt;&amp;gt;();
-    private IBinder mBinder = new IBookManager.Stub() {
-        @Override
-        public List&lt;Book&gt; getBookList() throws RemoteException {
-            Log.i(&quot;wlh&quot;, &quot;getBookList&quot;);
-            return null;
-        }
-
-        @Override
-        public void addBook(Book book) throws RemoteException {
-            Log.i(&quot;wlh&quot;, &quot;addBook : &quot; + book.name);
-            int N = mCallbacks.beginBroadcast();
-            book.name += &quot; : server&quot;;
-            for (int i = 0; i &amp;lt; N; i++ ) {
-                mCallbacks.getBroadcastItem(i).onBookAdd(book);
-            }
-            mCallbacks.finishBroadcast();
-
-        }
-
-        @Override
-        public void registerListener(IBookListener listener) throws RemoteException {
-            mCallbacks.register(listener);
-        }
-
-        @Override
-        public void unRegisterListener(IBookListener listener) throws RemoteException {
-            mCallbacks.unregister(listener);
-        }
-    };
-
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return mBinder;
-    }
-}
-&amp;lt;/code&amp;gt;
-&amp;lt;/pre&amp;gt;
-我们只要实现IBookManager.Stub 然后再onBind方法中返回即可，我们再来看下客户端是如何实现的：  
-&lt;pre&gt;
-&lt;code&gt;
-        mServiceConnection = new ServiceConnection() {
-            @Override
-            public void onServiceConnected(ComponentName name, IBinder service) {
-                mBookManager = IBookManager.Stub.asInterface(service);
-                try {
-                    mBookManager.registerListener(new IBookListener.Stub() {
-                        @Override
-                        public void onBookAdd(Book book) throws RemoteException {
-                            Log.i(&quot;wlh &quot; , &quot;addBook callback : &quot; + book.name);
-                        }
-                    });
-                    Book book = new Book();
-                    book.name = &quot;TestBook&quot;;
-                    mBookManager.addBook(book);
-                    Log.i(&quot;wlh&quot;,  book.name);
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                }
-                unbindService(mServiceConnection);
-            }
-
-            @Override
-            public void onServiceDisconnected(ComponentName name) {
-
-            }
-        };
-      
-&lt;/code&gt;
-&lt;/pre&gt;
-我们以Bind的方式启动Service然后再onServiceConnected中的使用IBookManager.Stub.asInterface来转换成我们定义的接口即可实现和服务端的交互。 
-&lt;/Book&gt;&lt;/IBookListener&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/Book&gt;&lt;/code&gt;&lt;/pre&gt;</content><author><name>FSilence</name></author><summary type="html">内容大纲 1.使用AIDL实现IPC 本文是基于Android studio来说明的。我们先明确2个基本概念客户端和服务端。在本例中客户端是指发起处理请求的进程（app的主进程）， 服务端（service端）指一个另外一个提供服务的进程（主要是指service）。</summary></entry></feed>
+&lt;/com.wlh.animation.ipctest.Book&gt;&lt;/com.wlh.animation.ipctest.Book&gt;&lt;/pre&gt;</content><author><name>FSilence</name></author><summary type="html">内容大纲： 1.了解基本的aidl原理（不涉及底层）</summary></entry></feed>
