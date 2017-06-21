@@ -2,7 +2,7 @@
 #   Main Configs   #
 # ---------------- #
 baseurl:
-url: http://fsilence.com
+url: https://fsilence.github.io
 date_format: "ordinal"
 title: FSilence's Blog
 subtitle: "多看！多读！多思！多写！不再沉默"
