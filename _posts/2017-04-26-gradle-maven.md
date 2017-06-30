@@ -106,6 +106,18 @@ task generateSourcesJar(type: Jar) {
     classifier 'sources'
 }
 </pre>
+然后我们需要配置artificats。指明上传的内容:  
+
+```gradle
+artifacts {
+    archives(file("$buildDir/outputs/aar/$project.name-release.aar")) {
+        name 'aar'
+    }
+    archives(generateSourcesJar) {
+        name 'aar-src'
+    }
+}
+```
 然后我们再次修改上面的配置，也就是我们最终的配置：  
 <pre>
 
