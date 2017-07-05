@@ -179,3 +179,26 @@ configurations.all {
 compile ("com.fsilence:test:1.0.0-SNAPSHOT"){changing = true}
 </pre>
 这样我们每次调用的时候都会更新到最新版本，如果改成正式版本后曲调后面的changing配置即可。  
+
+## 解决多artifact上传后pom中不包含dependencies的问题  
+感觉是插件自身的bug，当你设置多个artifact版本后，生成的pom文件中将不包含dependencies的信息，我们可以自己手动在xml文件中添加相关信息 
+
+```gradle
+      def appendDependenciesAction = {
+                    def dependenciesNode = asNode().appendNode('dependencies')
+
+                    //Iterate over the compile dependencies (we don't want the test ones), adding a <dependency> node for each
+                    configurations.compile.allDependencies.each {
+                        if (it.group == null || it.name == null) return
+                        def dependencyNode = dependenciesNode.appendNode('dependency')
+                        dependencyNode.appendNode('groupId', it.group)
+                        dependencyNode.appendNode('artifactId', it.name)
+                        dependencyNode.appendNode('version', it.version)
+                    }
+
+                }
+                pom('aar').withXml(appendDependenciesAction)
+                pom('aar-src').withXml(appendDependenciesAction)
+```
+
+
