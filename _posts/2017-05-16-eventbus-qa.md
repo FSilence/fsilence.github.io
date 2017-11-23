@@ -43,7 +43,12 @@ FindStat用来记录一次查找的中间变量和结果，其中的superClass�
 当用户通过post来发送一个消息的时候，EventBus会首先获取一个PostThreadStat对象（通过ThreadLocal存放的 每个线程都会有一份，来记录当前线程的一些发送状态），然后将消息放入到PostThreadStat中的event队列，然后会依次取队列中的消息，进行发送操作。  
 单次的发送操作： 
 如果eventInheritance为true(默认为true)，就先查找出所有的父类 和 接口，都记录为event，发送，如果为false 则只发送当前消息。如果没有找到对应的订阅者，则抛出一个NoSubscriberEvent的消息。如果有订阅者，则根据订阅者的类型来选择发送的方式。  
-EventBus中有3个变量来保存消息，1.subscriptionsByEventType 一个Map,key是eventType value是subscribtions，主要用来post消息的时候可以找到对应的subscribtion来换起方法。2.typesBySubscriber 一个Map,key是订阅者 value是订阅的事件列表，主要用来在unregister订阅者的时候方便去清空对应的数据。3.stickyEvents 主要是用来存放sticky消息的。
+EventBus中有3个变量来保存消息，  
+1.subscriptionsByEventType 一个Map,key是eventType value是subscribtions，主要用来post消息的时候可以找到对应的subscribtion来换起方法。
+
+2.typesBySubscriber 一个Map,key是订阅者 value是订阅的事件列表，主要用来在unregister订阅者的时候方便去清空对应的数据。
+
+3.stickyEvents 主要是用来存放sticky消息的。
 
 ### EventBus的register的过程
 register一个订阅者的时候，会进行以下几步：  
