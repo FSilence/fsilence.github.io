@@ -89,6 +89,10 @@ comments_provider: disqus
 # !!!Important!!! Please modify usernames below to yours
 disqus_username: FSilence
 
+gitalk:
+        owner:FSilence
+        clientID:test
+        clientSecret:test
 # ---------------- #
 #    Analytics     #
 # ---------------- #
