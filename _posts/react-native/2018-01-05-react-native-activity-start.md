@@ -311,6 +311,6 @@ setRootViewTag 只是记录了一个标志。
 
 到此为止我们基本了解了ReactActivity的启动过程，用时序图来表示的话，如下图所示（部分嵌套调用的方法省略）：  
 
-![](/image/react-native/start-seque.jpg)
+![](/images/react-native/start-seque.jpg)
 
 
