@@ -7,10 +7,10 @@ keywords: react-native, android, ReactNative, js, native, 通信机制，通信
 
 ---
 本文中我们将开始介绍Native和JS之间的通信，我们会分别以以下的主线进行介绍：  
-1.初始化，启动过程
-2.Native到JS的调用路径
-3.JS到Native的调用路径
-4.Native到JS的Callback回调路径  
+1.初始化，启动过程  
+2.Native到JS的调用路径  
+3.JS到Native的调用路径  
+4.Native到JS的Callback回调路径    
 
 期间我们会看到各个部分的执行线程，存储的数据结构，Native的方法是如何映射到JS中的等信息...   
 我们先来看一下相关模块的初始化。在上一篇介绍ReactActivity的启动过程中，我们已经看到了Native和Js交互的入口在CatalysInstanceImpl的实现类中，我们分别看下CatalysInstanceImpl的构造过程和c++部分的启动入口OnLoad.cpp  
@@ -559,10 +559,6 @@ void JavaNativeModule::invoke(unsigned int reactMethodId, folly::dynamic&& param
 可以看到其中根据callId的最后一位确定调用的是onFail还是onSucc然后从对应的队列中执行找到对应的js方法然后执行。  
 JsToNative的调用过程如下图：  
 ![](/images/react-native/js-to-native.jpg)  
-
-InvokeCallback的调用路径如下图： 
-
-![](/images/react-native/invockcallback.jpg)
 
 我对本文中涉及到的类画了一个简单的类图可以作为参照:  
 
