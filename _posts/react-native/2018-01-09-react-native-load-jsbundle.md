@@ -6,7 +6,7 @@ categories: react-native, android
 keywords: react-native, android, ReactNative, JsBundle
 
 ---
-上一篇我们分析了加载ReactNativeActivity的启动，在启动过程中会调用到CatalysInstanceImpl的runJSBundle，此篇我们来看react-native是如何加载JSBundle，我们就从CastalysInstanceImpl中的runJSBundle开始看起。  
+之前我们分析了加载ReactNativeActivitiy的启动，在启动过程中会调用到CatalysInstanceImpl的runJSBundle，此篇我们来看react-native是如何加载JSBundle，我们就从CastalysInstanceImpl中的runJSBundle开始看起。  
 
 ```
   @Override
@@ -164,5 +164,68 @@ void Instance::loadApplication(std::unique_ptr<RAMBundleRegistry> bundleRegistry
   nativeToJsBridge_->loadApplication(std::move(bundleRegistry), std::move(string),
                                      std::move(sourceURL));
 }
+```  
+
+我们来看加载Module的过程，是通过fromEntryFile加载的是一个JniJsModulesUnbunle, fromEntryFile方法中只是获取了文件路径，并设置了assetManager.然后在CatalysInstanceImpl.cpp中又通过singleBundleRegistry获取了一个RAMBundleRegistry对象，我们来看一下它的具体结构  
+
+```c++
+std::unique_ptr<RAMBundleRegistry> RAMBundleRegistry::singleBundleRegistry(std::unique_ptr<JSModulesUnbundle> mainBundle) {
+  RAMBundleRegistry *registry = new RAMBundleRegistry(std::move(mainBundle));
+  return std::unique_ptr<RAMBundleRegistry>(registry);
+}
 ```
-然后又走到了nativeToJsBridge_中的对应方法中， 可以看到Instance更多是承载着中转的功能，具体的调用在nativeToJsBridge，从名字上我们也能看出这是和Native和 JS交互的模块
+这里直接传入了之前获得的JNIJSModulesUnbundle到RAmBundleRegistry对象中，记录在unique_ram_bundle字段。 
+
+之后最终调用了NativeToJsBridge的loadApplication方法，和CatalystInstnaceImpl.cpp loadScruptFromString的调用最终路径一致，区别在于RanBundleRegistry的参数后者为空. 上一篇我们已经分析了Native和JS之间的通信机制，可以看到这里也是通过NativeToJsBridge来执行js文件的，我们来看loadApplication方法:   
+
+```c++
+  runOnExecutorQueue(
+      [bundleRegistryWrap=folly::makeMoveWrapper(std::move(bundleRegistry)),
+       startupScript=folly::makeMoveWrapper(std::move(startupScript)),
+       startupScriptSourceURL=std::move(startupScriptSourceURL)]
+        (JSExecutor* executor) mutable {
+    auto bundleRegistry = bundleRegistryWrap.move();
+    if (bundleRegistry) {
+      executor->setBundleRegistry(std::move(bundleRegistry));
+    }
+    executor->loadApplicationScript(std::move(*startupScript),
+                                    std::move(startupScriptSourceURL));
+  });
+```  
+和js通信机制一样在js的线程中调用了JSCExecutor的loadApplicationScript,区别在于含有RamBundleRegistry的额外调用了JSCExecutor的setBundleRegistry方法，我们先看setBundleRegistry方法:  
+
+```c++
+ void JSCExecutor::setBundleRegistry(std::unique_ptr<RAMBundleRegistry> bundleRegistry) {
+      if (!m_bundleRegistry) {
+        installNativeHook<&JSCExecutor::nativeRequire>("nativeRequire");
+      }
+      m_bundleRegistry = std::move(bundleRegistry);
+    }
+```  
+第一次本地m_bundleRegistry不存在的时候，添加了Hook，至于具体内容不是我们关心的不做套路，然后记录下了RAMBundleRegistry.之后如果出发到registerBundle的时候都回记录在这个BundleRegistry中。  
+
+我们接着看loadloadApplicationScript,此方法中最终掉到了ReactCommon/jschelpers/JSCHelpers.cpp 中的evaluateScript方法:   
+
+```c++
+JSValueRef evaluateScript(JSContextRef context, JSStringRef script, JSStringRef sourceURL) {
+  JSValueRef exn, result;
+  result = JSC_JSEvaluateScript(context, script, NULL, sourceURL, 0, &exn);
+  if (result == nullptr) {
+    throw JSException(context, exn, sourceURL);
+  }
+  return result;
+}
+```
+
+JSC_JSEJSC_JSEvaluateScript 定义在JavaScriptCore中。。。实际上是调用的webkitcore来加载js的。。。可以在ReactAndroid下的libs下的BUCK中找到远程的文件
+
+<pre>
+remote_file(
+    name = "android-jsc-aar",
+    sha1 = "880cedd93f43e0fc841f01f2fa185a63d9230f85",
+    url = "mvn:org.webkit:android-jsc:aar:r174650",
+</pre>
+
+在maven上可以找到此包，组组有3.9m大，，不难看出为什么RN比较大了。   
+
+
