@@ -90,10 +90,10 @@ comments_provider: disqus
 disqus_username: FSilence
 
 gitalk:
-        owner:FSilence
-        repo:fsilencee.github.io
-        clientID:a073265ffd7d4455c723
-        clientSecret:086275215b900344381193dd3ca903e4fef4cb44
+        owner: FSilence
+        repo: blog-comments 
+        clientID: a073265ffd7d4455c723
+        clientSecret: 086275215b900344381193dd3ca903e4fef4cb44
 # ---------------- #
 #    Analytics     #
 # ---------------- #
