@@ -4,12 +4,12 @@
 baseurl:
 url: https://fsilence.github.io
 date_format: "ordinal"
-title: FSilence's Blog
+title: 璐豪笔记
 subtitle: "多看！多读！多思！多写！不再沉默"
 description: "FSilence的个人博客"
 keywords: 沉默, FSilence, wlh, wei
 favicon: /favicon.ico
-timezone: Asia/Beijing
+timezone: Asia/：Beijing
 encoding: "utf-8"
 side_bar_repo_limit: 5
 
