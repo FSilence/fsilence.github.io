@@ -5,6 +5,9 @@ description: VI操作
 categories: vi
 keywords: uml, java
 ---
+
+[linux下命令大全](https://www.cnblogs.com/88999660/articles/1581524.html)
+
 1.首先以二进制方式编辑这个文件
 vi -b datafile
 
