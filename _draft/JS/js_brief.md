@@ -5,15 +5,15 @@ description: Interceptor介绍
 keywords: java, js, 学习, JS, JS简介
 categories: js
 ---
-最近由于工作需要，开始接触一些JS的东西。发现网上都是一些完整的JS介绍，对于一个java程序原来说，学习是有捷径的。所以萌生了编写此系列文章的想法，旨在描述一个java开发学习Js的方式，可以让Java开发者快速学习了解Js.
+最近由于工作需要，开始接触一些JS的东西。作者想要将自己的学习路程记录下来方便大家一起分享学习。作为一个Android程序原来，在学习Js中难免会和Java进行对比，所以本系列的Blogs是从一个熟练掌握java的开发者的角度出发的。其中一些基础的内容部分比如 if for等等，就不会进行专门的介绍，如果你是一个0基础的人选，推荐可以先看下 [菜鸟教程](https://www.runoob.com/js/js-tutorial.html) .如果你已经熟练掌握了java，同样建议先过一遍 [菜鸟教程](https://www.runoob.com/js/js-tutorial.html) ,你可能只需要2 3个小时就可以浏览完相关内容。
 
-进过深思之后，我决定分成以下内容进行Js学习路线的比较：
+进过深思之后，我决定分成以下内容进行Js的介绍：
 * JS的基础介绍
-* 动态类型
-* undefined 和 null
+* 动态类型和类型转换
 * == 和 ===
 * 全局变量和作用域
 * 变量提升
+* 对象
 * 原型链与继承
 * eval
 * 严格模式
@@ -24,7 +24,7 @@ categories: js
 * es6
 * es7
 
-此目录只作为初步设想，在后续编写过程中可能会做出局部调整。
+此目录只作为初步设想，在后续编写过程中可能会做出局部调整。下面我们现在简单看一下JS的基础介绍
 
 内容大纲: 
 <pre>
@@ -49,14 +49,15 @@ ECMAScript后续发布了若干版本，目前最新版本是2016年发布的ECM
 
 各浏览器和手机版本对es的支持可以参照 [http://kangax.github.io/compat-table/es6/](http://kangax.github.io/compat-table/es6/)
 
-和java相比，我们应该了解JavaScript的一些特性：  
+从一个java开发的角度出发，个人认为应该重点关注了解JavaScript的以下特性：  
 JS单线程模型，JS里是没有多线程操作的  
 没有IO操作，IO操作依赖它的载体  
 解释执行，不需要预先进行编译，而java需要先编译成字节码  
 动态类型，使用var声明变量，而变量类型是在运行时才确认的，而java的变量在编译时已确定  
-Eval(), JavaScript可以通过Eval()函数直接执行一段JavaScript脚本
+Eval(), JavaScript可以通过Eval()函数直接执行一段JavaScript脚本  
 
-从这些特性我们可以看到，javaScript是一门非常轻量简单的编程语言，之后我们将分别介绍JavaScript的使用和特性。
+从这些特性我们可以看到，javaScript是一门非常轻量简单的编程语言，之后我们将按照文章开头的目录一次对JavaScript的使用和特性进行介绍。  
+
 ----
 参考资料：  
 1. [JavaScript教程](https://www.runoob.com/js/js-tutorial.html)
