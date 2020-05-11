@@ -5,6 +5,8 @@ description: RecyclerView中关于ChildHelper的实现
 keywords: RecyclerView 源码 ChildHelper 
 categories: Android
 --- 
+RecyclerView childHelper 源码分析
+
 <pre>
 大纲: 
 1. ChildHelper的职责
